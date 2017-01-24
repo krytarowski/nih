@@ -10,8 +10,8 @@
 #include <pthread.h>
 #include <stdarg.h>
 
-#include <SupportDefs.h>
-#include <StorageDefs.h>
+#include <os/support/SupportDefs.h>
+#include <os/storage/StorageDefs.h>
 
 
 #ifdef __cplusplus

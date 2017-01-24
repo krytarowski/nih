@@ -6,7 +6,7 @@
 #define	_IMAGE_H
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 #include <sys/param.h>
 
 

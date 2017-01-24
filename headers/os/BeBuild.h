@@ -6,6 +6,7 @@
 #define _BE_BUILD_H
 
 
+#include <os/NetBSDCompat.h>
 #include <config/HaikuConfig.h>
 
 

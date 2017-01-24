@@ -10,7 +10,7 @@
 #define MENU_WINDOW_H
 
 
-#include <Window.h>
+#include <os/interface/Window.h>
 
 class BMenu;
 

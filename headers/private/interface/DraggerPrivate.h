@@ -6,7 +6,7 @@
 #define _DRAGGER_PRIVATE_H
 
 
-#include <Dragger.h>
+#include <os/interface/Dragger.h>
 
 
 class BDragger::Private {

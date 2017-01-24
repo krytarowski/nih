@@ -6,8 +6,8 @@
 #define _BITMAP_PRIVATE_H
 
 
-#include <Bitmap.h>
-#include <OS.h>
+#include <os/interface/Bitmap.h>
+#include <os/kernel/OS.h>
 
 
 // This structure is placed in the client/server shared memory area.

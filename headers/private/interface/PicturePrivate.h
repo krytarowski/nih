@@ -6,8 +6,8 @@
 #define _PICTURE_PRIVATE_H
 
 
-#include <Picture.h>
-#include <OS.h>
+#include <os/interface/Picture.h>
+#include <os/kernel/OS.h>
 
 
 void reconnect_pictures_to_app_server();

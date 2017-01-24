@@ -8,11 +8,11 @@
  */
 
 
-#include <Application.h>
-#include <Locker.h>
+#include <os/app/Application.h>
+#include <os/support/Locker.h>
 
-#include <ApplicationPrivate.h>
-#include <AppServerLink.h>
+#include <private/app/ApplicationPrivate.h>
+#include <private/app/AppServerLink.h>
 
 
 /**	AppServerLink provides proxied access to the application's

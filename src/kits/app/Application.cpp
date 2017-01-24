@@ -9,7 +9,7 @@
  */
 
 
-#include <Application.h>
+#include <os/app/Application.h>
 
 #include <new>
 #include <pthread.h>
@@ -19,36 +19,36 @@
 #include <strings.h>
 #include <unistd.h>
 
-#include <Alert.h>
-#include <AppFileInfo.h>
-#include <Cursor.h>
-#include <Debug.h>
-#include <Entry.h>
-#include <File.h>
-#include <Locker.h>
-#include <MessageRunner.h>
-#include <ObjectList.h>
-#include <Path.h>
-#include <PropertyInfo.h>
-#include <RegistrarDefs.h>
-#include <Resources.h>
-#include <Roster.h>
-#include <Window.h>
+#include <os/interface/Alert.h>
+#include <os/storage/AppFileInfo.h>
+#include <os/app/Cursor.h>
+#include <os/support/Debug.h>
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
+#include <os/support/Locker.h>
+#include <os/app/MessageRunner.h>
+#include <os/support/ObjectList.h>
+#include <os/storage/Path.h>
+#include <os/app/PropertyInfo.h>
+#include <private/app/RegistrarDefs.h>
+#include <os/storage/Resources.h>
+#include <os/app/Roster.h>
+#include <os/interface/Window.h>
 
-#include <AppMisc.h>
-#include <AppServerLink.h>
-#include <AutoLocker.h>
-#include <BitmapPrivate.h>
-#include <DraggerPrivate.h>
-#include <LaunchDaemonDefs.h>
-#include <LaunchRoster.h>
-#include <LooperList.h>
-#include <MenuWindow.h>
-#include <PicturePrivate.h>
-#include <PortLink.h>
-#include <RosterPrivate.h>
-#include <ServerMemoryAllocator.h>
-#include <ServerProtocol.h>
+#include <private/app/AppMisc.h>
+#include <private/app/AppServerLink.h>
+#include <private/shared/AutoLocker.h>
+#include <private/interface/BitmapPrivate.h>
+#include <private/interface/DraggerPrivate.h>
+#include <private/app/LaunchDaemonDefs.h>
+#include <private/app/LaunchRoster.h>
+#include <private/app/LooperList.h>
+#include <private/interface/MenuWindow.h>
+#include <private/interface/PicturePrivate.h>
+#include <private/app/PortLink.h>
+#include <private/app/RosterPrivate.h>
+#include <private/app/ServerMemoryAllocator.h>
+#include <private/app/ServerProtocol.h>
 
 
 using namespace BPrivate;

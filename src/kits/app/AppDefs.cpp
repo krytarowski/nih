@@ -4,8 +4,8 @@
  */
 
 
-#include <AppDefs.h>
-#include <SupportDefs.h>
+#include <os/app/AppDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 const uint8 B_HAND_CURSOR[] = {

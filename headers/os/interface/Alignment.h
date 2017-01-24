@@ -5,7 +5,7 @@
 #ifndef	_ALIGNMENT_H
 #define	_ALIGNMENT_H
 
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 
 class BAlignment {
 public:

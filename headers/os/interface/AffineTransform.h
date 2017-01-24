@@ -24,8 +24,8 @@
 #define _AFFINE_TRANSFORM_H
 
 
-#include <Flattenable.h>
-#include <Point.h>
+#include <os/support/Flattenable.h>
+#include <os/interface/Point.h>
 
 #include <math.h>
 

@@ -6,9 +6,9 @@
 #define	_WINDOW_H
 
 
-#include <Looper.h>
-#include <StorageDefs.h>
-#include <View.h>
+#include <os/app/Looper.h>
+#include <os/storage/StorageDefs.h>
+#include <os/interface/View.h>
 
 
 class BButton;

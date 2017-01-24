@@ -8,8 +8,8 @@
 
 #include <math.h>
 
-#include <Point.h>
-#include <Size.h>
+#include <os/interface/Point.h>
+#include <os/interface/Size.h>
 
 
 class BRect {

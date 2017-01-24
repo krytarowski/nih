@@ -6,9 +6,9 @@
 #define _GRADIENT_H
 
 
-#include <Archivable.h>
-#include <GraphicsDefs.h>
-#include <List.h>
+#include <os/support/Archivable.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/support/List.h>
 
 
 class BMessage;

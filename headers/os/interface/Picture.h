@@ -6,9 +6,9 @@
 #define	_PICTURE_H
 
 
-#include <InterfaceDefs.h>
-#include <Rect.h>
-#include <Archivable.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/interface/Rect.h>
+#include <os/support/Archivable.h>
 
 
 class BDataIO;
@@ -81,4 +81,3 @@ private:
 };
 
 #endif // _PICTURE_H
-

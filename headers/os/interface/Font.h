@@ -6,8 +6,8 @@
 #define _FONT_H_
 
 
-#include <SupportDefs.h>
-#include <InterfaceDefs.h>
+#include <os/support/SupportDefs.h>
+#include <os/interface/InterfaceDefs.h>
 
 
 class BPoint;

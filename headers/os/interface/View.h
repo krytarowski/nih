@@ -6,13 +6,13 @@
 #define	_VIEW_H
 
 
-#include <AffineTransform.h>
-#include <Alignment.h>
-#include <Font.h>
-#include <Handler.h>
-#include <InterfaceDefs.h>
-#include <Rect.h>
-#include <Gradient.h>
+#include <os/interface/AffineTransform.h>
+#include <os/interface/Alignment.h>
+#include <os/interface/Font.h>
+#include <os/app/Handler.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/interface/Rect.h>
+#include <os/interface/Gradient.h>
 
 
 // mouse button

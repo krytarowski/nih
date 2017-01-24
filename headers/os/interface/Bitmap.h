@@ -6,9 +6,9 @@
 #define	_BITMAP_H
 
 
-#include <Archivable.h>
-#include <InterfaceDefs.h>
-#include <Rect.h>
+#include <os/support/Archivable.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/interface/Rect.h>
 
 class BView;
 class BWindow;

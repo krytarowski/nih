@@ -6,8 +6,8 @@
 #define	_INTERFACE_DEFS_H
 
 
-#include <GraphicsDefs.h>
-#include <OS.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/kernel/OS.h>
 
 
 class BBitmap;

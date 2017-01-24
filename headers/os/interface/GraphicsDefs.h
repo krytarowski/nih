@@ -6,7 +6,7 @@
 #define _GRAPHICS_DEFS_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 // Pattern

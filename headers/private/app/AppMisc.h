@@ -6,10 +6,10 @@
 #define _APP_MISC_H
 
 
-#include <Handler.h>
-#include <Locker.h>
-#include <OS.h>
-#include <SupportDefs.h>
+#include <os/app/Handler.h>
+#include <os/support/Locker.h>
+#include <os/kernel/OS.h>
+#include <os/support/SupportDefs.h>
 
 
 struct entry_ref;

@@ -12,8 +12,8 @@
 //!	API classes - registrar interface.
 
 
-#include <Errors.h>
-#include <Roster.h>
+#include <os/support/Errors.h>
+#include <os/app/Roster.h>
 
 
 namespace BPrivate {
@@ -189,4 +189,3 @@ struct flat_app_info {
 
 
 #endif	// REGISTRAR_DEFS_H
-

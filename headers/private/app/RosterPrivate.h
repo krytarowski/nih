@@ -9,8 +9,8 @@
 #define _ROSTER_PRIVATE_H
 
 
-#include <Messenger.h>
-#include <Roster.h>
+#include <os/app/Messenger.h>
+#include <os/app/Roster.h>
 
 
 const int32 kMsgAppServerRestarted = 'ASRe';

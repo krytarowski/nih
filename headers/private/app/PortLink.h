@@ -9,7 +9,7 @@
 #define _PORT_LINK_H
 
 
-#include <ServerLink.h>
+#include <private/app/ServerLink.h>
 
 
 namespace BPrivate {

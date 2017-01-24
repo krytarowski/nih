@@ -11,9 +11,9 @@
 #define _SERVER_LINK_H
 
 
-#include <OS.h>
-#include <LinkReceiver.h>
-#include <LinkSender.h>
+#include <os/kernel/OS.h>
+#include <private/app/LinkReceiver.h>
+#include <private/app/LinkSender.h>
 
 class BShape;
 class BString;

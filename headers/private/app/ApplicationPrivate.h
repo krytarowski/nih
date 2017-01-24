@@ -9,7 +9,7 @@
 #define _APPLICATION_PRIVATE_H
 
 
-#include <Application.h>
+#include <os/app/Application.h>
 
 struct server_read_only_memory;
 

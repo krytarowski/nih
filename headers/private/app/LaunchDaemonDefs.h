@@ -12,8 +12,8 @@
 //!	launch_daemon interface
 
 
-#include <Errors.h>
-#include <Roster.h>
+#include <os/support/Errors.h>
+#include <os/app/Roster.h>
 
 
 namespace BPrivate {
@@ -47,4 +47,3 @@ enum {
 
 
 #endif	// LAUNCH_DAEMON_DEFS_H
-

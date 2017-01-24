@@ -11,7 +11,7 @@
 #define _LINK_SENDER_H
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 
 namespace BPrivate {

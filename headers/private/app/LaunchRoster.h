@@ -6,7 +6,7 @@
 #define _LAUNCH_ROSTER_H
 
 
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 
 
 // Flags for RegisterEvent()

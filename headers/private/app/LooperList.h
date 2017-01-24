@@ -11,9 +11,9 @@
 
 #include <vector>
 
-#include <Locker.h>
-#include <OS.h>
-#include <SupportDefs.h>
+#include <os/support/Locker.h>
+#include <os/kernel/OS.h>
+#include <os/support/SupportDefs.h>
 
 
 class BList;

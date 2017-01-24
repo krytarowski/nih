@@ -6,8 +6,8 @@
 #define _DEBUG_H
 
 
-#include <BeBuild.h>
-#include <OS.h>
+#include <os/BeBuild.h>
+#include <os/kernel/OS.h>
 
 #include <stdarg.h>
 #include <stdio.h>

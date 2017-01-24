@@ -6,10 +6,10 @@
 #define _BYTE_ORDER_H
 
 
-#include <BeBuild.h>
-#include <endian.h>
-#include <SupportDefs.h>
-#include <TypeConstants.h>
+#include <os/BeBuild.h>
+#include <sys/endian.h>
+#include <os/support/SupportDefs.h>
+#include <os/support/TypeConstants.h>
 	/* for convenience */
 
 

@@ -37,8 +37,8 @@ All rights reserved.
 
 #include <new>
 
-#include <List.h>
-#include <SupportDefs.h>
+#include <os/support/List.h>
+#include <os/support/SupportDefs.h>
 
 
 //

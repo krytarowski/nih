@@ -9,8 +9,8 @@
 #define _SUPPORT_DEFS_H
 
 
-#include <BeBuild.h>
-#include <Errors.h>
+#include <os/BeBuild.h>
+#include <os/support/Errors.h>
 
 #include <inttypes.h>
 #include <sys/types.h>

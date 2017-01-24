@@ -6,9 +6,9 @@
 #define _ARCHIVABLE_H
 
 
-#include <image.h>
-#include <Message.h>
-#include <SupportDefs.h>
+#include <os/kernel/image.h>
+#include <os/app/Message.h>
+#include <os/support/SupportDefs.h>
 
 
 class BMessage;

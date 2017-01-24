@@ -6,7 +6,7 @@
 #define	_LOCKER_H
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 
 class BLocker {

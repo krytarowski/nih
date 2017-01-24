@@ -6,7 +6,7 @@
 #define	_FLATTENABLE_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 class BFlattenable {

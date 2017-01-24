@@ -9,7 +9,7 @@
 #define _APP_DEFS_H
 
 
-#include <BeBuild.h>
+#include <os/BeBuild.h>
 
 
 // Old-style cursors

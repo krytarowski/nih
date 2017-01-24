@@ -6,7 +6,7 @@
 #define _MESSAGE_RUNNER_H
 
 
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 
 
 class BMessageRunner {

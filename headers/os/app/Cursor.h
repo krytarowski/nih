@@ -6,8 +6,8 @@
 #define _CURSOR_H
 
 
-#include <Archivable.h>
-#include <InterfaceDefs.h>
+#include <os/support/Archivable.h>
+#include <os/interface/InterfaceDefs.h>
 
 
 enum BCursorID {

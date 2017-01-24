@@ -11,15 +11,15 @@
 
 #include <new>
 
-#include <BeBuild.h>
-#include <DataIO.h>
-#include <Flattenable.h>
-#include <OS.h>
-#include <Rect.h>
-#include <Size.h>
+#include <os/BeBuild.h>
+#include <os/support/DataIO.h>
+#include <os/support/Flattenable.h>
+#include <os/kernel/OS.h>
+#include <os/interface/Rect.h>
+#include <os/interface/Size.h>
 
-#include <AppDefs.h>		/* For convenience */
-#include <TypeConstants.h>	/* For convenience */
+#include <os/app/AppDefs.h>		/* For convenience */
+#include <os/support/TypeConstants.h>	/* For convenience */
 
 
 class BAlignment;

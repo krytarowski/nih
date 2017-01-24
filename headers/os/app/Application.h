@@ -6,12 +6,12 @@
 #define _APPLICATION_H
 
 
-#include <AppDefs.h>
-#include <InterfaceDefs.h>
-#include <Looper.h>
-#include <Messenger.h>
-#include <Point.h>
-#include <Rect.h>
+#include <os/app/AppDefs.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/app/Looper.h>
+#include <os/app/Messenger.h>
+#include <os/interface/Point.h>
+#include <os/interface/Rect.h>
 
 
 class BCursor;

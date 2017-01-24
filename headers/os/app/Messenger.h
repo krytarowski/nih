@@ -9,9 +9,9 @@
 #define _MESSENGER_H
 
 
-#include <OS.h>
-#include <ByteOrder.h>
-#include <Message.h>
+#include <os/kernel/OS.h>
+#include <os/support/ByteOrder.h>
+#include <os/app/Message.h>
 
 
 class BHandler;

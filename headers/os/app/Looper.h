@@ -9,10 +9,10 @@
 #define _LOOPER_H
 
 
-#include <BeBuild.h>
-#include <Handler.h>
-#include <List.h>
-#include <OS.h>
+#include <os/BeBuild.h>
+#include <os/app/Handler.h>
+#include <os/support/List.h>
+#include <os/kernel/OS.h>
 
 
 class BMessage;

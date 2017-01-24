@@ -6,10 +6,10 @@
 #define _PROPERTY_INFO_H
 
 
-#include <BeBuild.h>
-#include <Flattenable.h>
-#include <SupportDefs.h>
-#include <TypeConstants.h>
+#include <os/BeBuild.h>
+#include <os/support/Flattenable.h>
+#include <os/support/SupportDefs.h>
+#include <os/support/TypeConstants.h>
 
 
 class BMessage;

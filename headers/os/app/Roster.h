@@ -6,9 +6,9 @@
 #define _ROSTER_H
 
 
-#include <Entry.h>
-#include <Messenger.h>
-#include <OS.h>
+#include <os/storage/Entry.h>
+#include <os/app/Messenger.h>
+#include <os/kernel/OS.h>
 
 class BFile;
 class BMimeType;

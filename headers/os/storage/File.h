@@ -6,9 +6,9 @@
 #define _FILE_H
 
 
-#include <DataIO.h>
-#include <Node.h>
-#include <StorageDefs.h>
+#include <os/support/DataIO.h>
+#include <os/storage/Node.h>
+#include <os/storage/StorageDefs.h>
 
 
 class BEntry;

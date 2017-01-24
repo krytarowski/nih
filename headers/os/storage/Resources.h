@@ -6,9 +6,9 @@
 #define _RESOURCES_H
 
 
-#include <Entry.h>
-#include <File.h>
-#include <image.h>
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
+#include <os/kernel/image.h>
 
 
 namespace BPrivate {

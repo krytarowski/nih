@@ -6,12 +6,12 @@
 #define _NODE_INFO_H
 
 
-#include <BeBuild.h>
-#include <Entry.h>
-#include <File.h>
-#include <Message.h>
-#include <Mime.h>
-#include <SupportDefs.h>
+#include <os/BeBuild.h>
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
+#include <os/app/Message.h>
+#include <os/storage/Mime.h>
+#include <os/support/SupportDefs.h>
 
 
 class BBitmap;

@@ -6,9 +6,9 @@
 #define _PATH_H
 
 
-#include <Flattenable.h>
-#include <Message.h>
-#include <StorageDefs.h>
+#include <os/support/Flattenable.h>
+#include <os/app/Message.h>
+#include <os/storage/StorageDefs.h>
 
 
 // Forward declarations

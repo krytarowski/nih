@@ -8,9 +8,9 @@
 
 #include <sys/types.h>
 
-#include <SupportDefs.h>
-#include <StorageDefs.h>
-#include <TypeConstants.h>
+#include <os/support/SupportDefs.h>
+#include <os/storage/StorageDefs.h>
+#include <os/support/TypeConstants.h>
 
 
 enum icon_size {
@@ -54,7 +54,7 @@ status_t get_named_icon(const char* name, uint8** _data, size_t* _size,
 	type_code* _type);
 
 /* include MimeType.h for convenience */
-#	include <MimeType.h>
+#	include <os/storage/MimeType.h>
 #endif	/* __cplusplus */
 
 #endif	/* _MIME_H */

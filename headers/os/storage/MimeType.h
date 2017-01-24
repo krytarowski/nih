@@ -6,13 +6,13 @@
 #define _MIME_TYPE_H
 
 
-#include <SupportDefs.h>
-#include <StorageDefs.h>
+#include <os/support/SupportDefs.h>
+#include <os/storage/StorageDefs.h>
 
-#include <Messenger.h>
-#include <Mime.h>
-#include <File.h>
-#include <Entry.h>
+#include <os/app/Messenger.h>
+#include <os/storage/Mime.h>
+#include <os/storage/File.h>
+#include <os/storage/Entry.h>
 
 
 class BBitmap;

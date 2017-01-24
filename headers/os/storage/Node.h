@@ -6,7 +6,7 @@
 #define _NODE_H
 
 
-#include <Statable.h>
+#include <os/storage/Statable.h>
 
 
 class BDirectory;

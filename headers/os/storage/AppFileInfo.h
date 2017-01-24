@@ -6,7 +6,7 @@
 #define _APP_FILE_INFO_H
 
 
-#include <NodeInfo.h>
+#include <os/storage/NodeInfo.h>
 
 
 class BBitmap;

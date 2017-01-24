@@ -8,9 +8,9 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
-#include <Statable.h>
+#include <os/storage/Statable.h>
 
 
 class BDirectory;

@@ -9,7 +9,7 @@
 #define _DIRECT_MESSAGE_TARGET_H
 
 
-#include <MessageQueue.h>
+#include <os/app/MessageQueue.h>
 
 
 namespace BPrivate {

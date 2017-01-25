@@ -13,8 +13,8 @@
 #include <map>
 #include <stack>
 
-#include <Locker.h>
-#include <SupportDefs.h>
+#include <os/support/Locker.h>
+#include <os/support/SupportDefs.h>
 
 
 // token types as specified in targets

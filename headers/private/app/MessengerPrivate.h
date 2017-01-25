@@ -6,8 +6,8 @@
 #define MESSENGER_PRIVATE_H
 
 
-#include <Messenger.h>
-#include <TokenSpace.h>
+#include <os/app/Messenger.h>
+#include <private/app/TokenSpace.h>
 
 
 class BMessenger::Private {

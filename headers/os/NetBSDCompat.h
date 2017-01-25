@@ -52,4 +52,8 @@ typedef uint32_t	__haiku_generic_addr_t;
 
 typedef	unsigned long	addr_t;
 
+#define  __HAIKU_PRI_PREFIX_32           "l"
+#define  __HAIKU_PRI_PREFIX_64           "ll"
+#define  __HAIKU_PRI_PREFIX_ADDR         "l"
+
 #endif /* !_NETBSD_COMPAT_H */

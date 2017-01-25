@@ -9,7 +9,7 @@
 #define _MESSAGE_FILTER_H
 
 
-#include <Handler.h>
+#include <os/app/Handler.h>
 
 
 class BMessage;

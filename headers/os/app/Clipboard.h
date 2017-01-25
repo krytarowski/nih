@@ -9,9 +9,9 @@
 #define	_CLIPBOARD_H
 
 
-#include <BeBuild.h>
-#include <Locker.h>
-#include <Messenger.h>
+#include <os/BeBuild.h>
+#include <os/support/Locker.h>
+#include <os/app/Messenger.h>
 
 class BMessage;
 

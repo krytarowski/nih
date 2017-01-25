@@ -6,8 +6,8 @@
 #define _MESSAGE_QUEUE_H
 
 
-#include <Locker.h>
-#include <Message.h>
+#include <os/support/Locker.h>
+#include <os/app/Message.h>
 	// For convenience
 
 

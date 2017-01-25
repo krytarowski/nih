@@ -8,15 +8,15 @@
  */
 
 
-#include <TokenSpace.h>
+#include <private/app/TokenSpace.h>
 
-#include <AppDefs.h>
-#include <Handler.h>
-#include <Looper.h>
-#include <Message.h>
-#include <MessageFilter.h>
-#include <Messenger.h>
-#include <PropertyInfo.h>
+#include <os/app/AppDefs.h>
+#include <os/app/Handler.h>
+#include <os/app/Looper.h>
+#include <os/app/Message.h>
+#include <os/app/MessageFilter.h>
+#include <os/app/Messenger.h>
+#include <os/app/PropertyInfo.h>
 
 #include <algorithm>
 #include <new>

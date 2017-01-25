@@ -7,11 +7,11 @@
  */
 
 
-#include <Clipboard.h>
+#include <os/app/Clipboard.h>
 
-#include <Application.h>
-#include <RegistrarDefs.h>
-#include <RosterPrivate.h>
+#include <os/app/Application.h>
+#include <private/app/RegistrarDefs.h>
+#include <private/app/RosterPrivate.h>
 
 #include <stdio.h>
 #include <stdlib.h>

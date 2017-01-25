@@ -15,11 +15,11 @@
 			to see a nice shadowes one, we will need to extend this one.
  */
 
-#include <AppDefs.h>
-#include <Cursor.h>
+#include <os/app/AppDefs.h>
+#include <os/app/Cursor.h>
 
-#include <AppServerLink.h>
-#include <ServerProtocol.h>
+#include <private/app/AppServerLink.h>
+#include <private/app/ServerProtocol.h>
 
 
 const BCursor *B_CURSOR_SYSTEM_DEFAULT;
@@ -167,4 +167,3 @@ BCursor::_FreeCursorData()
 		link.Flush();
 	}
 }
-

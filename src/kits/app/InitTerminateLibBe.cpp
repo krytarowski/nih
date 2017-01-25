@@ -12,11 +12,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <AppMisc.h>
-#include <LooperList.h>
-#include <MessagePrivate.h>
-#include <RosterPrivate.h>
-#include <TokenSpace.h>
+#include <private/app/AppMisc.h>
+#include <private/app/LooperList.h>
+#include <private/app/MessagePrivate.h>
+#include <private/app/RosterPrivate.h>
+#include <private/app/TokenSpace.h>
 
 
 extern void __initialize_locale_kit();
@@ -78,4 +78,3 @@ terminate_after()
 
 	DBG(OUT("terminate_after() done\n"));
 }
-

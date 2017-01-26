@@ -8,7 +8,7 @@
  */
 
 
-#include <Roster.h>
+#include <os/app/Roster.h>
 
 #include <ctype.h>
 #include <new>
@@ -17,41 +17,42 @@
 #include <strings.h>
 #include <unistd.h>
 
-#include <AppFileInfo.h>
-#include <Application.h>
-#include <Bitmap.h>
-#include <Directory.h>
-#include <File.h>
-#include <FindDirectory.h>
-#include <fs_index.h>
-#include <fs_info.h>
-#include <image.h>
-#include <List.h>
-#include <Mime.h>
-#include <Node.h>
-#include <NodeInfo.h>
-#include <OS.h>
-#include <Path.h>
-#include <Query.h>
-#include <RegistrarDefs.h>
-#include <String.h>
-#include <Volume.h>
-#include <VolumeRoster.h>
+#include <os/storage/AppFileInfo.h>
+#include <os/app/Application.h>
+#include <os/interface/Bitmap.h>
+#include <os/storage/Directory.h>
+#include <os/storage/File.h>
+#include <os/storage/FindDirectory.h>
+#include <os/kernel/fs_index.h>
+#include <os/kernel/fs_info.h>
+#include <os/kernel/image.h>
+#include <os/support/List.h>
+#include <os/storage/Mime.h>
+#include <os/storage/Node.h>
+#include <os/storage/NodeInfo.h>
+#include <os/kernel/OS.h>
+#include <os/storage/Path.h>
+#include <os/storage/Query.h>
+#include <private/app/RegistrarDefs.h>
+#include <os/support/String.h>
+#include <os/storage/Volume.h>
+#include <os/storage/VolumeRoster.h>
 
-#include <locks.h>
+#include <private/shared/locks.h>
 
-#include <AppMisc.h>
-#include <DesktopLink.h>
-#include <LaunchRoster.h>
-#include <MessengerPrivate.h>
-#include <PortLink.h>
-#include <RosterPrivate.h>
-#include <ServerProtocol.h>
+#include <private/app/AppMisc.h>
+#include <private/app/DesktopLink.h>
+#include <private/app/LaunchRoster.h>
+#include <private/app/MessengerPrivate.h>
+#include <private/app/PortLink.h>
+#include <private/app/RosterPrivate.h>
+#include <private/app/ServerProtocol.h>
 
 
 using namespace std;
 using namespace BPrivate;
 
+extern char **environ;
 
 // debugging
 //#define DBG(x) x

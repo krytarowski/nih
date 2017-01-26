@@ -8,10 +8,10 @@
  */
 
 
-#include <DirectMessageTarget.h>
-#include <TokenSpace.h>
+#include <private/app/DirectMessageTarget.h>
+#include <private/app/TokenSpace.h>
 
-#include <Autolock.h>
+#include <os/support/Autolock.h>
 
 
 namespace BPrivate {

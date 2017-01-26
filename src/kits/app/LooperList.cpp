@@ -10,10 +10,10 @@
 //! Maintains a global list of all loopers in a given team.
 
 
-#include "LooperList.h"
+#include "private/app/LooperList.h"
 
-#include <Autolock.h>
-#include <Looper.h>
+#include <os/support/Autolock.h>
+#include <os/app/Looper.h>
 
 #include <algorithm>
 #include <string.h>
@@ -270,4 +270,3 @@ BLooperList::FindPortPred::operator()(LooperData& data)
 }
 
 }	// namespace BPrivate
-

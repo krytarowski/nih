@@ -7,10 +7,10 @@
  */
 
 
-#include <ByteOrder.h>
-#include <DataIO.h>
-#include <Message.h>
-#include <PropertyInfo.h>
+#include <os/support/ByteOrder.h>
+#include <os/support/DataIO.h>
+#include <os/app/Message.h>
+#include <os/app/PropertyInfo.h>
 
 #include <string.h>
 #include <stdio.h>

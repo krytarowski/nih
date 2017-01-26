@@ -10,11 +10,11 @@
 //! Access class for BRoster members
 
 
-#include <RosterPrivate.h>
+#include <private/app/RosterPrivate.h>
 
-#include <Roster.h>
+#include <os/app/Roster.h>
 
-#include <locks.h>
+#include <private/shared/locks.h>
 
 
 /*!	\class BRoster::Private

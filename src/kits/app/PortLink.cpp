@@ -7,7 +7,7 @@
  */
 
 
-#include <PortLink.h>
+#include <private/app/PortLink.h>
 
 
 namespace BPrivate {

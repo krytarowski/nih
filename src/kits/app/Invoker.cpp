@@ -7,7 +7,7 @@
  */
 
 
-#include <Invoker.h>
+#include <os/app/Invoker.h>
 
 
 BInvoker::BInvoker(BMessage* message, BMessenger messenger)
@@ -215,4 +215,3 @@ BInvoker::operator=(const BInvoker &)
 {
 	return *this;
 }
-

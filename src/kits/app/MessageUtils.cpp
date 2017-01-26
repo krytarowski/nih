@@ -9,9 +9,9 @@
 /**	Extra messaging utility functions */
 
 #include <string.h>
-#include <ByteOrder.h>
+#include <os/support/ByteOrder.h>
 
-#include <MessageUtils.h>
+#include <private/app/MessageUtils.h>
 
 namespace BPrivate {
 

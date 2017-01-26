@@ -8,17 +8,17 @@
  */
 
 
-#include <Notification.h>
+#include <os/app/Notification.h>
 
 #include <new>
 
 #include <stdlib.h>
 #include <string.h>
 
-#include <notification/Notifications.h>
+#include <private/notification/Notifications.h>
 
-#include <Bitmap.h>
-#include <Message.h>
+#include <os/interface/Bitmap.h>
+#include <os/app/Message.h>
 
 
 BNotification::BNotification(notification_type type)

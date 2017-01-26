@@ -13,20 +13,20 @@
 /*! Class for low-overhead port-based messaging */
 
 
-#include <LinkReceiver.h>
+#include <private/app/LinkReceiver.h>
 
 #include <stdlib.h>
 #include <string.h>
 #include <new>
 
-#include <ServerProtocol.h>
-#include <String.h>
-#include <Region.h>
-#include <GradientLinear.h>
-#include <GradientRadial.h>
-#include <GradientRadialFocus.h>
-#include <GradientDiamond.h>
-#include <GradientConic.h>
+#include <private/app/ServerProtocol.h>
+#include <os/support/String.h>
+#include <os/interface/Region.h>
+#include <os/interface/GradientLinear.h>
+#include <os/interface/GradientRadial.h>
+#include <os/interface/GradientRadialFocus.h>
+#include <os/interface/GradientDiamond.h>
+#include <os/interface/GradientConic.h>
 
 #include "link_message.h"
 

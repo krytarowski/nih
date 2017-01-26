@@ -14,11 +14,11 @@
 #include <string.h>
 #include <new>
 
-#include <ServerProtocol.h>
-#include <LinkSender.h>
+#include <private/app/ServerProtocol.h>
+#include <private/app/LinkSender.h>
 
 #include "link_message.h"
-#include "syscalls.h"
+#include "private/system/syscalls.h"
 
 //#define DEBUG_BPORTLINK
 #ifdef DEBUG_BPORTLINK

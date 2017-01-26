@@ -7,7 +7,7 @@
  */
 
 
-#include <MessageFilter.h>
+#include <os/app/MessageFilter.h>
 
 
 BMessageFilter::BMessageFilter(uint32 inWhat, filter_hook func)

@@ -13,25 +13,25 @@
 // BLooper class spawns a thread that runs a message loop.
 
 
-#include <Looper.h>
+#include <os/app/Looper.h>
 
 #include <new>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <Autolock.h>
-#include <Message.h>
-#include <MessageFilter.h>
-#include <MessageQueue.h>
-#include <Messenger.h>
-#include <PropertyInfo.h>
+#include <os/support/Autolock.h>
+#include <os/app/Message.h>
+#include <os/app/MessageFilter.h>
+#include <os/app/MessageQueue.h>
+#include <os/app/Messenger.h>
+#include <os/app/PropertyInfo.h>
 
-#include <AppMisc.h>
-#include <AutoLocker.h>
-#include <DirectMessageTarget.h>
-#include <LooperList.h>
-#include <MessagePrivate.h>
-#include <TokenSpace.h>
+#include <private/app/AppMisc.h>
+#include <private/shared/AutoLocker.h>
+#include <private/app/DirectMessageTarget.h>
+#include <private/app/LooperList.h>
+#include <private/app/MessagePrivate.h>
+#include <private/app/TokenSpace.h>
 
 
 // debugging
@@ -40,8 +40,8 @@
 #define PRINT(x)	DBG({ printf("[%6ld] ", find_thread(NULL)); printf x; })
 
 /*
-#include <Autolock.h>
-#include <Locker.h>
+#include <os/support/Autolock.h>
+#include <os/support/Locker.h>
 static BLocker sDebugPrintLocker("BLooper debug print");
 #define PRINT(x)	DBG({						\
 	BAutolock _(sDebugPrintLocker);				\

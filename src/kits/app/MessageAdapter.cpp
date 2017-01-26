@@ -8,9 +8,9 @@
  */
 
 
-#include <MessageAdapter.h>
-#include <MessagePrivate.h>
-#include <MessageUtils.h>
+#include <private/app/MessageAdapter.h>
+#include <private/app/MessagePrivate.h>
+#include <private/app/MessageUtils.h>
 
 #include <stdlib.h>
 

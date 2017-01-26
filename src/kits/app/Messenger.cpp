@@ -7,26 +7,26 @@
  */
 
 
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 
 #include <new>
 #include <stdio.h>
 #include <strings.h>
 
-#include <Application.h>
-#include <AutoLocker.h>
-#include <Handler.h>
-#include <Looper.h>
-#include <Message.h>
-#include <OS.h>
-#include <Roster.h>
+#include <os/app/Application.h>
+#include <private/shared/AutoLocker.h>
+#include <os/app/Handler.h>
+#include <os/app/Looper.h>
+#include <os/app/Message.h>
+#include <os/kernel/OS.h>
+#include <os/app/Roster.h>
 
-#include <AppMisc.h>
-#include <LaunchRoster.h>
-#include <LooperList.h>
-#include <MessagePrivate.h>
-#include <MessageUtils.h>
-#include <TokenSpace.h>
+#include <private/app/AppMisc.h>
+#include <private/app/LaunchRoster.h>
+#include <private/app/LooperList.h>
+#include <private/app/MessagePrivate.h>
+#include <private/app/MessageUtils.h>
+#include <private/app/TokenSpace.h>
 
 
 // debugging

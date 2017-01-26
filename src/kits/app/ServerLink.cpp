@@ -11,28 +11,28 @@
 /*!	Class for low-overhead port-based messaging */
 
 
-#include <ServerLink.h>
+#include <private/app/ServerLink.h>
 
 #include <stdlib.h>
 #include <string.h>
 #include <new>
 
-#include <Gradient.h>
-#include <GradientLinear.h>
-#include <GradientRadial.h>
-#include <GradientRadialFocus.h>
-#include <GradientDiamond.h>
-#include <GradientConic.h>
-#include <Region.h>
-#include <Shape.h>
-#include <StackOrHeapArray.h>
+#include <os/interface/Gradient.h>
+#include <os/interface/GradientLinear.h>
+#include <os/interface/GradientRadial.h>
+#include <os/interface/GradientRadialFocus.h>
+#include <os/interface/GradientDiamond.h>
+#include <os/interface/GradientConic.h>
+#include <os/interface/Region.h>
+#include <os/interface/Shape.h>
+#include <os/support/StackOrHeapArray.h>
 
-#include <ServerProtocol.h>
+#include <private/app/ServerProtocol.h>
 
 
 //#define TRACE_SERVER_LINK_GRADIENTS
 #ifdef TRACE_SERVER_LINK_GRADIENTS
-#	include <OS.h>
+#	include <os/kernel/OS.h>
 #	define GTRACE(x) debug_printf x
 #else
 #	define GTRACE(x) ;

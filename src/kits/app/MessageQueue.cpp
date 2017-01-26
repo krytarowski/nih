@@ -11,9 +11,9 @@
 // Queue for holding BMessages
 
 
-#include <MessageQueue.h>
-#include <Autolock.h>
-#include <Message.h>
+#include <os/app/MessageQueue.h>
+#include <os/support/Autolock.h>
+#include <os/app/Message.h>
 
 
 BMessageQueue::BMessageQueue()
@@ -226,4 +226,3 @@ BMessageQueue::IsLocked()
 void BMessageQueue::_ReservedMessageQueue1() {}
 void BMessageQueue::_ReservedMessageQueue2() {}
 void BMessageQueue::_ReservedMessageQueue3() {}
-

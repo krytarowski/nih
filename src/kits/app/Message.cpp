@@ -7,29 +7,29 @@
  */
 
 
-#include <Message.h>
-#include <MessageAdapter.h>
-#include <MessagePrivate.h>
-#include <MessageUtils.h>
+#include <os/app/Message.h>
+#include <private/app/MessageAdapter.h>
+#include <private/app/MessagePrivate.h>
+#include <private/app/MessageUtils.h>
 
-#include <DirectMessageTarget.h>
-#include <MessengerPrivate.h>
-#include <TokenSpace.h>
-#include <util/KMessage.h>
+#include <private/app/DirectMessageTarget.h>
+#include <private/app/MessengerPrivate.h>
+#include <private/app/TokenSpace.h>
+#include <private/kernel/util/KMessage.h>
 
-#include <Alignment.h>
-#include <Application.h>
-#include <AppMisc.h>
-#include <BlockCache.h>
-#include <Entry.h>
-#include <GraphicsDefs.h>
-#include <MessageQueue.h>
-#include <Messenger.h>
-#include <Path.h>
-#include <Point.h>
-#include <Rect.h>
-#include <String.h>
-#include <StringList.h>
+#include <os/interface/Alignment.h>
+#include <os/app/Application.h>
+#include <private/app/AppMisc.h>
+#include <os/support/BlockCache.h>
+#include <os/storage/Entry.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/app/MessageQueue.h>
+#include <os/app/Messenger.h>
+#include <os/storage/Path.h>
+#include <os/interface/Point.h>
+#include <os/interface/Rect.h>
+#include <os/support/String.h>
+#include <os/support/StringList.h>
 
 #include <assert.h>
 #include <ctype.h>
@@ -37,7 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "tracing_config.h"
+#include "../build/config_headers/tracing_config.h"
 	// kernel tracing configuration
 
 //#define VERBOSE_DEBUG_OUTPUT

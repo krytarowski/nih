@@ -7,17 +7,18 @@
  */
 
 
-#include <LaunchRoster.h>
+#include <private/app/LaunchRoster.h>
 
-#include <Application.h>
-#include <String.h>
-#include <StringList.h>
+#include <os/app/Application.h>
+#include <os/support/String.h>
+#include <os/support/StringList.h>
 
-#include <launch.h>
-#include <LaunchDaemonDefs.h>
-#include <LaunchRosterPrivate.h>
-#include <MessengerPrivate.h>
+#include <private/libroot/launch.h>
+#include <private/app/LaunchDaemonDefs.h>
+#include <private/app/LaunchRosterPrivate.h>
+#include <private/app/MessengerPrivate.h>
 
+#include <unistd.h>
 
 using namespace BPrivate;
 

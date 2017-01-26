@@ -7,13 +7,13 @@
  */
 
 
-#include <MessageRunner.h>
+#include <os/app/MessageRunner.h>
 
-#include <Application.h>
-#include <AppMisc.h>
-#include <RegistrarDefs.h>
-#include <Roster.h>
-#include <RosterPrivate.h>
+#include <os/app/Application.h>
+#include <private/app/AppMisc.h>
+#include <private/app/RegistrarDefs.h>
+#include <os/app/Roster.h>
+#include <private/app/RosterPrivate.h>
 
 
 using namespace BPrivate;

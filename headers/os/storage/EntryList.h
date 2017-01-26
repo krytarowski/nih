@@ -8,7 +8,7 @@
 
 #include <dirent.h>
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 class BEntry;
@@ -46,5 +46,3 @@ private:
 
 
 #endif	// _ENTRY_LIST_H
-
-

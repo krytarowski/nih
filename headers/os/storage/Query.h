@@ -6,9 +6,9 @@
 #define _QUERY_H
 
 
-#include <EntryList.h>
-#include <Messenger.h>
-#include <OS.h>
+#include <os/storage/EntryList.h>
+#include <os/app/Messenger.h>
+#include <os/kernel/OS.h>
 
 class BVolume;
 struct entry_ref;

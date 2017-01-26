@@ -6,7 +6,7 @@
 #define _DISK_DEVICE_DEFS_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 typedef int32 partition_id;

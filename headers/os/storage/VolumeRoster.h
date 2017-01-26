@@ -6,9 +6,9 @@
 #define _VOLUME_ROSTER_H
 
 
-#include <Application.h>
-#include <SupportDefs.h>
-#include <Volume.h>
+#include <os/app/Application.h>
+#include <os/support/SupportDefs.h>
+#include <os/storage/Volume.h>
 
 
 class BVolume;

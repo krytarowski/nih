@@ -8,10 +8,10 @@
 
 #include <sys/types.h>
 
-#include <fs_info.h>
-#include <Mime.h>
-#include <StorageDefs.h>
-#include <SupportDefs.h>
+#include <os/kernel/fs_info.h>
+#include <os/storage/Mime.h>
+#include <os/storage/StorageDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 class BDirectory;

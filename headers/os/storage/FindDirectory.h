@@ -6,7 +6,7 @@
 #define _FIND_DIRECTORY_H
 
 
-#include <image.h>
+#include <os/kernel/image.h>
 
 
 typedef enum {

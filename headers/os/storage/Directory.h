@@ -6,9 +6,9 @@
 #define _DIRECTORY_H
 
 
-#include <Node.h>
-#include <EntryList.h>
-#include <StorageDefs.h>
+#include <os/storage/Node.h>
+#include <os/storage/EntryList.h>
+#include <os/storage/StorageDefs.h>
 
 
 class BFile;

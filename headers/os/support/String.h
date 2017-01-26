@@ -9,7 +9,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 class BStringList;

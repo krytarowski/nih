@@ -6,10 +6,10 @@
 #define _STRING_LIST_H
 
 
-#include <BeBuild.h>
-#include <Flattenable.h>
-#include <List.h>
-#include <String.h>
+#include <os/BeBuild.h>
+#include <os/support/Flattenable.h>
+#include <os/support/List.h>
+#include <os/support/String.h>
 
 
 class BStringList : public BFlattenable {

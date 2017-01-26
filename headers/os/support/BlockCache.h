@@ -23,8 +23,8 @@
 #define _BLOCK_CACHE_H
 
 
-#include <BeBuild.h>
-#include <Locker.h>
+#include <os/BeBuild.h>
+#include <os/support/Locker.h>
 
 
 // The allocation type to be used in the constructor

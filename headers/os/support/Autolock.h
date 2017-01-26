@@ -6,8 +6,8 @@
 #define	_AUTOLOCK_H
 
 
-#include <Locker.h>
-#include <Looper.h>
+#include <os/support/Locker.h>
+#include <os/app/Looper.h>
 
 
 class BAutolock {

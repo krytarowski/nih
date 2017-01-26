@@ -1,11 +1,11 @@
 #ifndef _MESSAGE_UTILS_H_
 #define _MESSAGE_UTILS_H_
 
-#include <ByteOrder.h>
-#include <DataIO.h>
-#include <Entry.h>
-#include <Message.h>
-#include <SupportDefs.h>
+#include <os/support/ByteOrder.h>
+#include <os/support/DataIO.h>
+#include <os/storage/Entry.h>
+#include <os/app/Message.h>
+#include <os/support/SupportDefs.h>
 
 
 namespace BPrivate {	// Only putting these here because Be did

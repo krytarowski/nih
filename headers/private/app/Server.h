@@ -9,7 +9,7 @@
 #define _SERVER_H
 
 
-#include <Application.h>
+#include <os/app/Application.h>
 
 
 class BServer : public BApplication {

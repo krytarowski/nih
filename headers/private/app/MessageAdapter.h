@@ -9,8 +9,8 @@
 #define _MESSAGE_ADAPTER_H_
 
 
-#include <Message.h>
-#include <util/KMessage.h>
+#include <os/app/Message.h>
+#include <private/kernel/util/KMessage.h>
 
 
 // message formats

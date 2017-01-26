@@ -6,7 +6,7 @@
 #define	_REGION_H
 
 
-#include <Rect.h>
+#include <os/interface/Rect.h>
 
 
 namespace BPrivate {

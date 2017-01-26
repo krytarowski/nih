@@ -6,7 +6,7 @@
 #define _SHAPE_H
 
 
-#include <Archivable.h>
+#include <os/support/Archivable.h>
 
 
 class BPoint;

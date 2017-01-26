@@ -6,7 +6,7 @@
 #define _GRADIENT_LINEAR_H
 
 
-#include <Gradient.h>
+#include <os/interface/Gradient.h>
 
 
 class BPoint;

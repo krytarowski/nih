@@ -8,8 +8,8 @@
 
 #include <string.h>
 
-#include <OS.h>
-#include <TypeConstants.h>
+#include <os/kernel/OS.h>
+#include <os/support/TypeConstants.h>
 
 
 #ifdef __cplusplus

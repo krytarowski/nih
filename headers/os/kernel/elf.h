@@ -6,8 +6,8 @@
 #define _ELF_H
 
 
-#include <SupportDefs.h>
-#include <ByteOrder.h>
+#include <os/support/SupportDefs.h>
+#include <os/support/ByteOrder.h>
 
 
 typedef uint32 Elf32_Addr;

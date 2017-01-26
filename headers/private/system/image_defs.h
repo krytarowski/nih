@@ -6,8 +6,8 @@
 #define _SYSTEM_IMAGE_DEFS_H
 
 
-#include <SupportDefs.h>
-#include <image.h>
+#include <os/support/SupportDefs.h>
+#include <os/kernel/image.h>
 
 
 #define B_SHARED_OBJECT_HAIKU_VERSION_VARIABLE		_gSharedObjectHaikuVersion

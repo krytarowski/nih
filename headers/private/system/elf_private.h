@@ -11,9 +11,13 @@
 
 #include <os/kernel/elf.h>
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
-#include <arch_elf.h>
+#if defined(__x86_64__)
+#include <private/system/arch/x86_64/arch_elf.h>
+#else
+#error port me
+#endif
 
 
 // Determine the correct ELF types to use for the architecture

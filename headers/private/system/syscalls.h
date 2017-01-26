@@ -5,13 +5,16 @@
 #ifndef _SYSTEM_SYSCALLS_H
 #define _SYSTEM_SYSCALLS_H
 
-
-#include <arch_config.h>
-#include <DiskDeviceDefs.h>
-#include <elf_private.h>
-#include <image.h>
-#include <image_defs.h>
-#include <OS.h>
+#if defined(__x86_64__)
+#include <private/system/arch/x86_64/arch_config.h>
+#else
+#error port me
+#endif
+#include <os/storage/DiskDeviceDefs.h>
+#include <private/system/elf_private.h>
+#include <os/kernel/image.h>
+#include <private/system/image_defs.h>
+#include <os/kernel/OS.h>
 
 #include <signal.h>
 #include <sys/socket.h>

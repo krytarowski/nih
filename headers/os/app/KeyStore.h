@@ -6,7 +6,7 @@
 #define _KEY_STORE_H
 
 
-#include <Key.h>
+#include <os/app/Key.h>
 
 
 class BKeyStore {

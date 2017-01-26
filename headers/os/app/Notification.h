@@ -6,10 +6,10 @@
 #define _NOTIFICATION_H
 
 
-#include <Archivable.h>
-#include <Entry.h>
-#include <List.h>
-#include <String.h>
+#include <os/support/Archivable.h>
+#include <os/storage/Entry.h>
+#include <os/support/List.h>
+#include <os/support/String.h>
 
 
 // notification types

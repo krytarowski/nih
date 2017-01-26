@@ -6,10 +6,10 @@
 #define _KEY_H
 
 
-#include <DataIO.h>
-#include <Message.h>
-#include <ObjectList.h>
-#include <String.h>
+#include <os/support/DataIO.h>
+#include <os/app/Message.h>
+#include <os/support/ObjectList.h>
+#include <os/support/String.h>
 
 
 enum BKeyPurpose {

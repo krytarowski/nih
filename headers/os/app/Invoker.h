@@ -9,8 +9,8 @@
 #define	_INVOKER_H
 
 
-#include <BeBuild.h>
-#include <Messenger.h>
+#include <os/BeBuild.h>
+#include <os/app/Messenger.h>
 
 
 class BHandler;

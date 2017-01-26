@@ -5,7 +5,7 @@
 #ifndef _NOTIFICATIONS_H
 #define _NOTIFICATIONS_H
 
-#include <Mime.h>
+#include <os/storage/Mime.h>
 
 #define kNotificationServerSignature "application/x-vnd.Haiku-notification_server"
 

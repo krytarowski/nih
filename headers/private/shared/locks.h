@@ -5,7 +5,7 @@
 #ifndef _LOCKS_H_
 #define _LOCKS_H_
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,7 +102,7 @@ status_t	__init_once(int32* control, status_t (*initRoutine)(void*),
 } // extern "C"
 
 
-#include <AutoLocker.h>
+#include <private/shared/AutoLocker.h>
 
 class MutexLocking {
 public:

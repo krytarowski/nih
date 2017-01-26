@@ -6,8 +6,8 @@
 #define _LIBROOT_LAUNCH_H
 
 
-#include <LaunchDaemonDefs.h>
-#include <OS.h>
+#include <private/app/LaunchDaemonDefs.h>
+#include <os/kernel/OS.h>
 
 
 #ifdef __cplusplus

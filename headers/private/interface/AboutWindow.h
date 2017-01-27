@@ -10,9 +10,9 @@
 #define B_ABOUT_WINDOW_H
 
 
-#include <GroupView.h>
-#include <Window.h>
-#include <View.h>
+#include <os/interface/GroupView.h>
+#include <os/interface/Window.h>
+#include <os/interface/View.h>
 
 
 namespace BPrivate {

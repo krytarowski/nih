@@ -17,7 +17,7 @@
 #define _ABSTRACT_SPINNER_H
 
 
-#include <Control.h>
+#include <os/interface/Control.h>
 
 
 typedef enum {

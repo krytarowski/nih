@@ -7,7 +7,7 @@
 
 
 #include <Locker.h>
-#include <TextView.h>
+#include <os/interface/TextView.h>
 
 #include "TextViewSupportBuffer.h"
 

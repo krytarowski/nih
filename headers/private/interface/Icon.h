@@ -6,7 +6,7 @@
 #define _INTERFACE__ICON_H_
 
 
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 #include <ObjectList.h>
 #include <Rect.h>
 

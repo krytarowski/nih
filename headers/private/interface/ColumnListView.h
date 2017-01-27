@@ -47,8 +47,8 @@ All rights reserved.
 #define _COLUMN_LIST_VIEW_H
 
 #include <BeBuild.h>
-#include <View.h>
-#include <List.h>
+#include <os/interface/View.h>
+#include <os/support/List.h>
 #include <Invoker.h>
 #include <ListView.h>
 

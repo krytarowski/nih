@@ -10,13 +10,13 @@
 #define VIEW_PRIVATE_H
 
 
-#include <Font.h>
-#include <InterfaceDefs.h>
+#include <os/interface/Font.h>
+#include <os/interface/InterfaceDefs.h>
 #include <Point.h>
 #include <Rect.h>
 #include <Region.h>
 #include <ServerProtocolStructs.h>
-#include <View.h>
+#include <os/interface/View.h>
 
 
 const static uint32 kDeleteReplicant = 'JAHA';

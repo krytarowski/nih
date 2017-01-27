@@ -6,7 +6,7 @@
 #define __INPUT_GLOBALS_H
 
 
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 #include <SupportDefs.h>
 
 class BMessage;

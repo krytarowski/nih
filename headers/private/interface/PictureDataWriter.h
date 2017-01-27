@@ -11,8 +11,8 @@
 
 
 #include <AffineTransform.h>
-#include <InterfaceDefs.h>
-#include <Font.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/interface/Font.h>
 #include <OS.h>
 
 #include <stack>

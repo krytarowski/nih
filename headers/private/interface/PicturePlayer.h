@@ -14,7 +14,7 @@
 
 
 #include <GraphicsDefs.h>
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 #include <Point.h>
 #include <Rect.h>
 

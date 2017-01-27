@@ -9,7 +9,7 @@
 #define _VIEW_PORT_H
 
 
-#include <View.h>
+#include <os/interface/View.h>
 
 
 namespace BPrivate {

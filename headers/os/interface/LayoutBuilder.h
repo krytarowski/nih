@@ -8,19 +8,19 @@
 
 #include <new>
 
-#include <CardLayout.h>
-#include <CardView.h>
-#include <GridLayout.h>
-#include <GridView.h>
-#include <GroupLayout.h>
-#include <GroupView.h>
-#include <Menu.h>
-#include <MenuField.h>
-#include <MenuItem.h>
-#include <SpaceLayoutItem.h>
-#include <SplitView.h>
-#include <TextControl.h>
-#include <Window.h>
+#include <os/interface/CardLayout.h>
+#include <os/interface/CardView.h>
+#include <os/interface/GridLayout.h>
+#include <os/interface/GridView.h>
+#include <os/interface/GroupLayout.h>
+#include <os/interface/GroupView.h>
+#include <os/interface/Menu.h>
+#include <os/interface/MenuField.h>
+#include <os/interface/MenuItem.h>
+#include <os/interface/SpaceLayoutItem.h>
+#include <os/interface/SplitView.h>
+#include <os/interface/TextControl.h>
+#include <os/interface/Window.h>
 
 
 namespace BLayoutBuilder {

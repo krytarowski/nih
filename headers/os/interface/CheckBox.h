@@ -6,7 +6,7 @@
 #define _CHECK_BOX_H
 
 
-#include <Control.h>
+#include <os/interface/Control.h>
 
 
 class BCheckBox : public BControl {

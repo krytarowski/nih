@@ -6,7 +6,7 @@
 #define	_GRID_LAYOUT_H
 
 
-#include <TwoDimensionalLayout.h>
+#include <os/interface/TwoDimensionalLayout.h>
 
 
 class BGridLayout : public BTwoDimensionalLayout {

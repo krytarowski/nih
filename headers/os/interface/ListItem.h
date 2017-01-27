@@ -6,8 +6,8 @@
 #define _LIST_ITEM_H
 
 
-#include <Archivable.h>
-#include <Rect.h>
+#include <os/support/Archivable.h>
+#include <os/interface/Rect.h>
 
 
 class BFont;

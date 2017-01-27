@@ -5,7 +5,7 @@
 #ifndef	_CARD_LAYOUT_H
 #define	_CARD_LAYOUT_H
 
-#include <AbstractLayout.h>
+#include <os/interface/AbstractLayout.h>
 
 
 class BCardLayout : public BAbstractLayout {

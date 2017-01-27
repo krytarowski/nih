@@ -6,9 +6,9 @@
 #define _MENU_H
 
 
-#include <InterfaceDefs.h>
-#include <List.h>
-#include <View.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/support/List.h>
+#include <os/interface/View.h>
 
 
 class BMenu;

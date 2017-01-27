@@ -6,7 +6,7 @@
 #define _ICON_UTILS_H
 
 
-#include <Mime.h>
+#include <os/storage/Mime.h>
 
 class BBitmap;
 class BNode;

@@ -6,7 +6,7 @@
 #define	_SCROLL_BAR_H
 
 
-#include <View.h>
+#include <os/interface/View.h>
 
 
 #define B_V_SCROLL_BAR_WIDTH	14.0f

@@ -6,7 +6,7 @@
 #define _POP_UP_MENU_H
 
 
-#include <Menu.h>
+#include <os/interface/Menu.h>
 
 
 class BPopUpMenu : public BMenu {

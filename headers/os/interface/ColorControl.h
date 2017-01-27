@@ -6,7 +6,7 @@
 #define _COLOR_CONTROL_H
 
 
-#include <Control.h>
+#include <os/interface/Control.h>
 
 
 enum color_control_layout {

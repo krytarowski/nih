@@ -6,8 +6,8 @@
 #define _STATUS_BAR_H
 
 
-#include <String.h>
-#include <View.h>
+#include <os/support/String.h>
+#include <os/interface/View.h>
 
 
 class BStatusBar : public BView {

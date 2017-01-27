@@ -9,8 +9,8 @@
 //! BChannelControl is the base class for controls that have several
 // independent values, with minima and maxima.
 
-#include <Control.h>
-#include <String.h>
+#include <os/interface/Control.h>
+#include <os/support/String.h>
 
 
 class BChannelControl : public BControl {

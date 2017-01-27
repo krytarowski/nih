@@ -7,7 +7,7 @@
 
 
 #include <Bitmap.h>
-#include <Control.h>
+#include <os/interface/Control.h>
 
 
 class BRadioButton : public BControl {

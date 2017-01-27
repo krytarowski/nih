@@ -6,8 +6,8 @@
 #define _TEXTVIEW_H
 
 
-#include <Locker.h>
-#include <View.h>
+#include <os/support/Locker.h>
+#include <os/interface/View.h>
 
 
 class BBitmap;

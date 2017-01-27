@@ -6,7 +6,7 @@
 #define _MULTI_CHANNEL_CONTROL_H
 
 
-#include <Control.h>
+#include <os/interface/Control.h>
 
 
 class BMultiChannelControl : public BControl {

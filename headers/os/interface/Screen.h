@@ -6,10 +6,10 @@
 #define _SCREEN_H
 
 
-#include <Accelerant.h>
-#include <GraphicsDefs.h>
-#include <Rect.h>
-#include <OS.h>
+#include <os/add-ons/graphics/Accelerant.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/interface/Rect.h>
+#include <os/kernel/OS.h>
 
 
 class BBitmap;

@@ -6,7 +6,7 @@
 #define	_DESKBAR_H
 
 
-#include <Rect.h>
+#include <os/interface/Rect.h>
 
 class BMessenger;
 class BView;

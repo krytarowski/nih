@@ -6,10 +6,10 @@
 #define _CONTROL_LOOK_H
 
 
-#include <Alignment.h>
-#include <Font.h>
-#include <Rect.h>
-#include <Slider.h>
+#include <os/interface/Alignment.h>
+#include <os/interface/Font.h>
+#include <os/interface/Rect.h>
+#include <os/interface/Slider.h>
 
 
 class BBitmap;

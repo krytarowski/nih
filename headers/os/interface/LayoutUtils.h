@@ -6,10 +6,10 @@
 #define	_LAYOUT_UTILS_H
 
 
-#include <Alignment.h>
-#include <Rect.h>
-#include <Size.h>
-#include <String.h>
+#include <os/interface/Alignment.h>
+#include <os/interface/Rect.h>
+#include <os/interface/Size.h>
+#include <os/support/String.h>
 
 
 class BLayoutItem;

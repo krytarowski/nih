@@ -5,9 +5,9 @@
 #ifndef	_ABSTRACT_LAYOUT_H
 #define	_ABSTRACT_LAYOUT_H
 
-#include <Alignment.h>
-#include <Layout.h>
-#include <Size.h>
+#include <os/interface/Alignment.h>
+#include <os/interface/Layout.h>
+#include <os/interface/Size.h>
 
 class BAbstractLayout : public BLayout {
 public:

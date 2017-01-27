@@ -6,9 +6,9 @@
 #define _MENU_BAR_H
 
 
-#include <InterfaceDefs.h>
-#include <Menu.h>
-#include <OS.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/interface/Menu.h>
+#include <os/kernel/OS.h>
 
 
 enum menu_bar_border {

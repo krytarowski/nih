@@ -5,8 +5,8 @@
 #ifndef	_GRID_VIEW_H
 #define	_GRID_VIEW_H
 
-#include <GridLayout.h>
-#include <View.h>
+#include <os/interface/GridLayout.h>
+#include <os/interface/View.h>
 
 
 class BGridView : public BView {

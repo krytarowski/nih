@@ -5,9 +5,9 @@
 #ifndef _CONTROL_H
 #define _CONTROL_H
 
-#include <Invoker.h>
-#include <Message.h>	// For convenience
-#include <View.h>
+#include <os/app/Invoker.h>
+#include <os/app/Message.h>	// For convenience
+#include <os/interface/View.h>
 
 
 enum {

@@ -6,8 +6,8 @@
 #define _POLYGON_H
 
 
-#include <InterfaceDefs.h>
-#include <Rect.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/interface/Rect.h>
 
 
 //namespace BPrivate { class BAffineTransform; }

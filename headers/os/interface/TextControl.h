@@ -6,8 +6,8 @@
 #define	_TEXT_CONTROL_H
 
 
-#include <Control.h>
-#include <TextView.h>
+#include <os/interface/Control.h>
+#include <os/interface/TextView.h>
 
 
 class BLayoutItem;

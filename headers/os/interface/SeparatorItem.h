@@ -6,7 +6,7 @@
 #define _SEPARATOR_ITEM_H
 
 
-#include <MenuItem.h>
+#include <os/interface/MenuItem.h>
 
 class BMessage;
 

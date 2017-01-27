@@ -5,9 +5,9 @@
 #ifndef	_GROUP_LAYOUT_BUILDER_H
 #define	_GROUP_LAYOUT_BUILDER_H
 
-#include <GroupLayout.h>
-#include <GroupView.h>
-#include <List.h>
+#include <os/interface/GroupLayout.h>
+#include <os/interface/GroupView.h>
+#include <os/support/List.h>
 
 class BGroupLayoutBuilder {
 public:

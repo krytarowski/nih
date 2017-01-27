@@ -6,7 +6,7 @@
 #define _BOX_H
 
 
-#include <View.h>
+#include <os/interface/View.h>
 
 
 class BBox : public BView {

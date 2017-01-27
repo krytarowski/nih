@@ -6,7 +6,7 @@
 #define _STRING_VIEW_H
 
 
-#include <View.h>
+#include <os/interface/View.h>
 
 
 class BStringView : public BView {

@@ -5,7 +5,7 @@
 #ifndef	_SPLIT_VIEW_H
 #define	_SPLIT_VIEW_H
 
-#include <View.h>
+#include <os/interface/View.h>
 
 class BSplitLayout;
 

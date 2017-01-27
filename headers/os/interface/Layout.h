@@ -6,11 +6,11 @@
 #define	_LAYOUT_H
 
 
-#include <Alignment.h>
-#include <Archivable.h>
-#include <LayoutItem.h>
-#include <List.h>
-#include <Size.h>
+#include <os/interface/Alignment.h>
+#include <os/support/Archivable.h>
+#include <os/interface/LayoutItem.h>
+#include <os/support/List.h>
+#include <os/interface/Size.h>
 
 
 class BLayoutContext;

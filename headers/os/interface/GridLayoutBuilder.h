@@ -5,7 +5,7 @@
 #ifndef	_GRID_LAYOUT_BUILDER_H
 #define	_GRID_LAYOUT_BUILDER_H
 
-#include <GridView.h>
+#include <os/interface/GridView.h>
 
 class BGridLayoutBuilder {
 public:

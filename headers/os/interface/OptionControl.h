@@ -6,7 +6,7 @@
 #define _OPTION_CONTROL_H
 
 
-#include <Control.h>
+#include <os/interface/Control.h>
 
 
 enum {

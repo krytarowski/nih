@@ -8,8 +8,8 @@
 
 #include <Dragger.h>
 #include <Handler.h>
-#include <List.h>
-#include <Locker.h>
+#include <os/support/List.h>
+#include <os/support/Locker.h>
 
 
 class BDataIO;

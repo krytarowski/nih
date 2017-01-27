@@ -6,7 +6,7 @@
 #define _SCROLL_VIEW_H
 
 
-#include <ScrollBar.h>
+#include <os/interface/ScrollBar.h>
 
 
 /*!	The BScrollView is a convenience class to add a scrolling

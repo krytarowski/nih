@@ -6,7 +6,7 @@
 #define _SLIDER_H
 
 
-#include <Control.h>
+#include <os/interface/Control.h>
 
 
 enum hash_mark_location {

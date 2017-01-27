@@ -6,7 +6,7 @@
 #define _CHANNEL_SLIDER_H
 
 
-#include <ChannelControl.h>
+#include <os/interface/ChannelControl.h>
 
 
 class BChannelSlider : public BChannelControl {

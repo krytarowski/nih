@@ -6,7 +6,7 @@
 #define _TAB_VIEW_H
 
 
-#include <View.h>
+#include <os/interface/View.h>
 
 
 class BTabView;

@@ -6,8 +6,8 @@
 #define	_GROUP_VIEW_H
 
 
-#include <GroupLayout.h>
-#include <View.h>
+#include <os/interface/GroupLayout.h>
+#include <os/interface/View.h>
 
 
 class BGroupView : public BView {

@@ -6,9 +6,9 @@
 #define _SEPARATOR_VIEW_H
 
 
-#include <Alignment.h>
-#include <String.h>
-#include <View.h>
+#include <os/interface/Alignment.h>
+#include <os/support/String.h>
+#include <os/interface/View.h>
 
 
 class BSeparatorView : public BView {

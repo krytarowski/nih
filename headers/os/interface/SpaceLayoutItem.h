@@ -5,7 +5,7 @@
 #ifndef	_SPACE_LAYOUT_ITEM_H
 #define	_SPACE_LAYOUT_ITEM_H
 
-#include <LayoutItem.h>
+#include <os/interface/LayoutItem.h>
 
 
 class BSpaceLayoutItem : public BLayoutItem {

@@ -6,7 +6,7 @@
 #define	_TWO_DIMENSIONAL_LAYOUT_H
 
 
-#include <AbstractLayout.h>
+#include <os/interface/AbstractLayout.h>
 
 class BLayoutContext;
 

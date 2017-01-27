@@ -5,7 +5,7 @@
 #ifndef	_SPLIT_LAYOUT_BUILDER_H
 #define	_SPLIT_LAYOUT_BUILDER_H
 
-#include <SplitView.h>
+#include <os/interface/SplitView.h>
 
 class BSplitLayoutBuilder {
 public:

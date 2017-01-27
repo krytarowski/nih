@@ -6,10 +6,10 @@
 #define _MENU_ITEM_H
 
 
-#include <Archivable.h>
-#include <InterfaceDefs.h>
-#include <Invoker.h>
-#include <Menu.h>
+#include <os/support/Archivable.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/app/Invoker.h>
+#include <os/interface/Menu.h>
 
 
 class BMessage;
@@ -112,6 +112,6 @@ private:
 
 // BSeparatorItem now has its own declaration file, but for source
 // compatibility we're exporting that class from here too.
-#include <SeparatorItem.h>
+#include <os/interface/SeparatorItem.h>
 
 #endif // _MENU_ITEM_H

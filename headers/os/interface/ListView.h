@@ -6,10 +6,10 @@
 #define _LIST_VIEW_H
 
 
-#include <Invoker.h>
-#include <List.h>
+#include <os/app/Invoker.h>
+#include <os/support/List.h>
 #include <ListItem.h>
-#include <View.h>
+#include <os/interface/View.h>
 
 
 struct track_data;

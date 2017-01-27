@@ -5,7 +5,7 @@
 #ifndef _CARD_VIEW_H
 #define _CARD_VIEW_H
 
-#include <View.h>
+#include <os/interface/View.h>
 
 class BCardLayout;
 

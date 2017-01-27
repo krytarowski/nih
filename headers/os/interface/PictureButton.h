@@ -6,7 +6,7 @@
 #define _PICTURE_BUTTON_H
 
 
-#include <Control.h>
+#include <os/interface/Control.h>
 #include <Picture.h>
 
 

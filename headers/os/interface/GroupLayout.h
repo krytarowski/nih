@@ -5,7 +5,7 @@
 #ifndef	_GROUP_LAYOUT_H
 #define	_GROUP_LAYOUT_H
 
-#include <TwoDimensionalLayout.h>
+#include <os/interface/TwoDimensionalLayout.h>
 
 class BGroupLayout : public BTwoDimensionalLayout {
 public:

@@ -6,7 +6,7 @@
 #define _SYSTEM_CATALOG_H_
 
 
-#include <Catalog.h>
+#include <os/locale/Catalog.h>
 
 namespace BPrivate {
 

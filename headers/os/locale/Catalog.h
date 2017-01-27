@@ -6,10 +6,10 @@
 #define _CATALOG_H_
 
 
-#include <LocaleRoster.h>
-#include <Locker.h>
-#include <SupportDefs.h>
-#include <String.h>
+#include <os/locale/LocaleRoster.h>
+#include <os/support/Locker.h>
+#include <os/support/SupportDefs.h>
+#include <os/support/String.h>
 
 
 class BCatalogData;

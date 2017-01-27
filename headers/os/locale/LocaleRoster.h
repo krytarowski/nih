@@ -8,8 +8,8 @@
 
 #include <pthread.h>
 
-#include <Entry.h>
-#include <String.h>
+#include <os/storage/Entry.h>
+#include <os/support/String.h>
 
 
 class BBitmap;

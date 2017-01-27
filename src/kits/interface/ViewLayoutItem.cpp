@@ -10,8 +10,8 @@
 #include <new>
 
 #include <Layout.h>
-#include <View.h>
-#include <ViewPrivate.h>
+#include <os/interface/View.h>
+#include <private/interface/ViewPrivate.h>
 
 
 namespace {

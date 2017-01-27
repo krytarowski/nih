@@ -20,15 +20,15 @@
 #include <string.h>
 
 #include <CardLayout.h>
-#include <ControlLook.h>
+#include <os/interface/ControlLook.h>
 #include <GroupLayout.h>
-#include <LayoutUtils.h>
+#include <os/interface/LayoutUtils.h>
 #include <List.h>
-#include <Message.h>
-#include <PropertyInfo.h>
+#include <os/app/Message.h>
+#include <os/app/PropertyInfo.h>
 #include <Rect.h>
 #include <Region.h>
-#include <String.h>
+#include <os/support/String.h>
 
 #include <binary_compatibility/Support.h>
 

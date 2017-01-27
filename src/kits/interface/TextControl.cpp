@@ -16,13 +16,13 @@
 
 #include <string.h>
 
-#include <AbstractLayoutItem.h>
-#include <ControlLook.h>
-#include <LayoutUtils.h>
-#include <Message.h>
-#include <PropertyInfo.h>
+#include <os/interface/AbstractLayoutItem.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
+#include <os/app/PropertyInfo.h>
 #include <Region.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 #include <binary_compatibility/Support.h>

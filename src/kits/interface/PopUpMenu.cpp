@@ -10,9 +10,9 @@
 
 #include <Application.h>
 #include <Looper.h>
-#include <MenuItem.h>
+#include <os/interface/MenuItem.h>
 #include <PopUpMenu.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <new>
 

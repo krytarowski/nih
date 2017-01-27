@@ -8,7 +8,7 @@
 
 #include <algorithm>
 
-#include <AbstractLayout.h>
+#include <os/interface/AbstractLayout.h>
 #include <ScrollBar.h>
 
 #include "ViewLayoutItem.h"

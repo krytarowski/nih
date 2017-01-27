@@ -4,11 +4,11 @@
  */
 
 
-#include <AbstractLayout.h>
-#include <LayoutUtils.h>
-#include <Message.h>
-#include <View.h>
-#include <ViewPrivate.h>
+#include <os/interface/AbstractLayout.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
+#include <os/interface/View.h>
+#include <private/interface/ViewPrivate.h>
 
 
 namespace {

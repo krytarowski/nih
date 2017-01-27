@@ -19,13 +19,13 @@
 #include <utf8_functions.h>
 
 #include <Autolock.h>
-#include <Font.h>
+#include <os/interface/Font.h>
 #include <Locker.h>
-#include <Message.h>
+#include <os/app/Message.h>
 #include <PortLink.h>
 #include <Rect.h>
 #include <Shape.h>
-#include <String.h>
+#include <os/support/String.h>
 
 #include <new>
 #include <stdio.h>

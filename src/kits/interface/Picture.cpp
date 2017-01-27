@@ -21,7 +21,7 @@
 #include <ByteOrder.h>
 #include <Debug.h>
 #include <List.h>
-#include <Message.h>
+#include <os/app/Message.h>
 
 #include <AppServerLink.h>
 #include <Autolock.h>

@@ -11,10 +11,10 @@
 
 #include <Deskbar.h>
 #include <Messenger.h>
-#include <Message.h>
-#include <View.h>
+#include <os/app/Message.h>
+#include <os/interface/View.h>
 #include <Rect.h>
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 #include <Node.h>
 
 #include <string.h>

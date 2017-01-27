@@ -21,8 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <ControlLook.h>
-#include <Window.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

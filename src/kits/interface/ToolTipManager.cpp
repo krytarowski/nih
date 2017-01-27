@@ -11,9 +11,9 @@
 #include <pthread.h>
 
 #include <Autolock.h>
-#include <LayoutBuilder.h>
-#include <MessageRunner.h>
-#include <Screen.h>
+#include <os/interface/LayoutBuilder.h>
+#include <os/app/MessageRunner.h>
+#include <os/interface/Screen.h>
 
 #include <WindowPrivate.h>
 #include <ToolTip.h>

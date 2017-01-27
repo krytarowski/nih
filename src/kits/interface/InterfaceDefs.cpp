@@ -15,25 +15,25 @@
 /*!	Global functions and variables for the Interface Kit */
 
 
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 
 #include <new>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <Clipboard.h>
-#include <ControlLook.h>
-#include <Font.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/Font.h>
 #include <Menu.h>
-#include <Point.h>
-#include <Roster.h>
-#include <Screen.h>
+#include <os/interface/Point.h>
+#include <os/app/Roster.h>
+#include <os/interface/Screen.h>
 #include <ScrollBar.h>
-#include <String.h>
-#include <TextView.h>
-#include <Window.h>
+#include <os/support/String.h>
+#include <os/interface/TextView.h>
+#include <os/interface/Window.h>
 
 #include <ApplicationPrivate.h>
 #include <AppServerLink.h>

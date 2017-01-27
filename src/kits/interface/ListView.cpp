@@ -18,12 +18,12 @@
 #include <stdio.h>
 
 #include <Autolock.h>
-#include <LayoutUtils.h>
-#include <PropertyInfo.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/PropertyInfo.h>
 #include <ScrollBar.h>
-#include <ScrollView.h>
+#include <os/interface/ScrollView.h>
 #include <Thread.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

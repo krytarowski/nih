@@ -11,7 +11,7 @@
 
 #include <new>
 
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <ApplicationPrivate.h>
 #include <MessengerPrivate.h>

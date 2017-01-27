@@ -6,10 +6,10 @@
  *		Marc Flerackers (mflerackers@androme.be)
  */
 
-#include <Alert.h>
-#include <Message.h>
+#include <os/interface/Alert.h>
+#include <os/app/Message.h>
 #include <MimeType.h>
-#include <String.h>
+#include <os/support/String.h>
 #include <SystemCatalog.h>
 
 #include "ZombieReplicantView.h"

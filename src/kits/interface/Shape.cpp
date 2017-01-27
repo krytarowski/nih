@@ -12,8 +12,8 @@
 
 #include <Shape.h>
 
-#include <Message.h>
-#include <Point.h>
+#include <os/app/Message.h>
+#include <os/interface/Point.h>
 #include <Rect.h>
 
 #include <ShapePrivate.h>

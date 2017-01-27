@@ -14,14 +14,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <ControlLook.h>
-#include <InterfaceDefs.h>
-#include <LayoutUtils.h>
-#include <Message.h>
-#include <String.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
+#include <os/support/String.h>
 #include <TextControl.h>
-#include <TextView.h>
-#include <Window.h>
+#include <os/interface/TextView.h>
+#include <os/interface/Window.h>
 
 
 namespace BPrivate {

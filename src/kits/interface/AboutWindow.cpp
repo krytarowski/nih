@@ -9,34 +9,34 @@
  */
 
 
-#include <AboutWindow.h>
+#include <private/interface/AboutWindow.h>
 
 #include <stdarg.h>
 #include <time.h>
 
-#include <Alert.h>
-#include <AppFileInfo.h>
-#include <Bitmap.h>
-#include <Button.h>
-#include <File.h>
-#include <Font.h>
-#include <GroupLayoutBuilder.h>
-#include <GroupView.h>
-#include <InterfaceDefs.h>
-#include <LayoutBuilder.h>
-#include <Message.h>
-#include <MessageFilter.h>
-#include <Point.h>
-#include <Roster.h>
-#include <Screen.h>
-#include <ScrollView.h>
-#include <Size.h>
-#include <String.h>
-#include <StringView.h>
-#include <SystemCatalog.h>
-#include <TextView.h>
-#include <View.h>
-#include <Window.h>
+#include <os/interface/Alert.h>
+#include <os/storage/AppFileInfo.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/Button.h>
+#include <os/storage/File.h>
+#include <os/interface/Font.h>
+#include <os/interface/GroupLayoutBuilder.h>
+#include <os/interface/GroupView.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/interface/LayoutBuilder.h>
+#include <os/app/Message.h>
+#include <os/app/MessageFilter.h>
+#include <os/interface/Point.h>
+#include <os/app/Roster.h>
+#include <os/interface/Screen.h>
+#include <os/interface/ScrollView.h>
+#include <os/interface/Size.h>
+#include <os/support/String.h>
+#include <os/interface/StringView.h>
+#include <private/locale/SystemCatalog.h>
+#include <os/interface/TextView.h>
+#include <os/interface/View.h>
+#include <os/interface/Window.h>
 
 
 static const float kStripeWidth = 30.0;

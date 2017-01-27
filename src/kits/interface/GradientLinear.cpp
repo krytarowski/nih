@@ -6,9 +6,9 @@
  *		Artur Wyszynski <harakash@gmail.com>
  */
 
-#include <Point.h>
+#include <os/interface/Point.h>
 #include <Gradient.h>
-#include <GradientLinear.h>
+#include <os/interface/GradientLinear.h>
 
 
 // constructor

@@ -13,9 +13,9 @@
 
 #include <AutoDeleter.h>
 #include <LayoutContext.h>
-#include <Message.h>
-#include <View.h>
-#include <ViewPrivate.h>
+#include <os/app/Message.h>
+#include <os/interface/View.h>
+#include <private/interface/ViewPrivate.h>
 
 #include "ViewLayoutItem.h"
 

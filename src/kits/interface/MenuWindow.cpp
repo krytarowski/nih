@@ -11,10 +11,10 @@
 
 #include <MenuWindow.h>
 
-#include <ControlLook.h>
+#include <os/interface/ControlLook.h>
 #include <Debug.h>
 #include <Menu.h>
-#include <MenuItem.h>
+#include <os/interface/MenuItem.h>
 
 #include <MenuPrivate.h>
 #include <WindowPrivate.h>

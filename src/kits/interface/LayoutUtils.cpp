@@ -9,13 +9,13 @@
  *		Ingo Weinhold, ingo_weinhold@gmx.de
  */
 
-#include <LayoutUtils.h>
+#include <os/interface/LayoutUtils.h>
 
 #include <algorithm>
 #include <typeinfo>
 
 #include <Layout.h>
-#include <View.h>
+#include <os/interface/View.h>
 
 #include "ViewLayoutItem.h"
 

@@ -11,13 +11,13 @@
  */
 
 
-#include <ScrollView.h>
+#include <os/interface/ScrollView.h>
 
-#include <ControlLook.h>
-#include <LayoutUtils.h>
-#include <Message.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
 #include <Region.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

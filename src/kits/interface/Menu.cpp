@@ -20,26 +20,26 @@
 #include <string.h>
 
 #include <Application.h>
-#include <Bitmap.h>
-#include <ControlLook.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/ControlLook.h>
 #include <Debug.h>
-#include <File.h>
-#include <FindDirectory.h>
+#include <os/storage/File.h>
+#include <os/storage/FindDirectory.h>
 #include <Layout.h>
-#include <LayoutUtils.h>
+#include <os/interface/LayoutUtils.h>
 #include <MenuBar.h>
-#include <MenuItem.h>
+#include <os/interface/MenuItem.h>
 #include <Messenger.h>
-#include <Path.h>
-#include <PropertyInfo.h>
-#include <Screen.h>
+#include <os/storage/Path.h>
+#include <os/app/PropertyInfo.h>
+#include <os/interface/Screen.h>
 #include <ScrollBar.h>
 #include <SystemCatalog.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <AppServerLink.h>
 #include <binary_compatibility/Interface.h>
-#include <BMCPrivate.h>
+#include <private/interface/BMCPrivate.h>
 #include <MenuPrivate.h>
 #include <MenuWindow.h>
 #include <ServerProtocol.h>

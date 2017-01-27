@@ -6,7 +6,7 @@
  */
 
 
-#include <GroupView.h>
+#include <os/interface/GroupView.h>
 
 
 BGroupView::BGroupView(orientation orientation, float spacing)

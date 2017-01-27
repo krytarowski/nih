@@ -16,16 +16,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <Alert.h>
+#include <os/interface/Alert.h>
 #include <Beep.h>
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <Dragger.h>
-#include <MenuItem.h>
-#include <Message.h>
+#include <os/interface/MenuItem.h>
+#include <os/app/Message.h>
 #include <PopUpMenu.h>
 #include <Shelf.h>
 #include <SystemCatalog.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <AutoLocker.h>
 
@@ -33,7 +33,7 @@
 #include <DragTrackingFilter.h>
 #include <binary_compatibility/Interface.h>
 #include <ServerProtocol.h>
-#include <ViewPrivate.h>
+#include <private/interface/ViewPrivate.h>
 
 #include "ZombieReplicantView.h"
 

@@ -11,8 +11,8 @@
 
 #include <ListItem.h>
 
-#include <Message.h>
-#include <View.h>
+#include <os/app/Message.h>
+#include <os/interface/View.h>
 
 
 BListItem::BListItem(uint32 level, bool expanded)

@@ -15,8 +15,8 @@
 #include <string.h>
 
 #include <Control.h>
-#include <PropertyInfo.h>
-#include <Window.h>
+#include <os/app/PropertyInfo.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 #include <Icon.h>

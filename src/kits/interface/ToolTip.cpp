@@ -8,8 +8,8 @@
 
 #include <new>
 
-#include <Message.h>
-#include <TextView.h>
+#include <os/app/Message.h>
+#include <os/interface/TextView.h>
 #include <ToolTipManager.h>
 
 

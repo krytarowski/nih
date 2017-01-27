@@ -12,10 +12,10 @@
 #include <new>
 #include <string.h>
 
-#include <ControlLook.h>
-#include <LayoutItem.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/LayoutItem.h>
 #include <List.h>
-#include <Message.h>
+#include <os/app/Message.h>
 
 #include "ViewLayoutItem.h"
 

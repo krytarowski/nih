@@ -6,7 +6,7 @@
  *		Artur Wyszynski <harakash@gmail.com>
  */
 
-#include <Point.h>
+#include <os/interface/Point.h>
 #include <Gradient.h>
 #include <GradientConic.h>
 

@@ -14,9 +14,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <ControlLook.h>
-#include <Message.h>
-#include <View.h>
+#include <os/interface/ControlLook.h>
+#include <os/app/Message.h>
+#include <os/interface/View.h>
 
 
 BStringItem::BStringItem(const char* text, uint32 level, bool expanded)

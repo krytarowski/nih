@@ -8,9 +8,9 @@
 
 #include <GroupLayout.h>
 
-#include <ControlLook.h>
-#include <LayoutItem.h>
-#include <Message.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/LayoutItem.h>
+#include <os/app/Message.h>
 
 #include <new>
 

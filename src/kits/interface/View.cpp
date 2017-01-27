@@ -12,7 +12,7 @@
  */
 
 
-#include <View.h>
+#include <os/interface/View.h>
 
 #include <algorithm>
 #include <new>
@@ -21,33 +21,33 @@
 #include <stdio.h>
 
 #include <Application.h>
-#include <Bitmap.h>
-#include <Button.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/Button.h>
 #include <Cursor.h>
-#include <File.h>
-#include <GradientLinear.h>
+#include <os/storage/File.h>
+#include <os/interface/GradientLinear.h>
 #include <GradientRadial.h>
 #include <GradientRadialFocus.h>
 #include <GradientDiamond.h>
 #include <GradientConic.h>
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 #include <Layout.h>
 #include <LayoutContext.h>
-#include <LayoutUtils.h>
+#include <os/interface/LayoutUtils.h>
 #include <MenuBar.h>
-#include <Message.h>
+#include <os/app/Message.h>
 #include <MessageQueue.h>
 #include <ObjectList.h>
 #include <Picture.h>
-#include <Point.h>
+#include <os/interface/Point.h>
 #include <Polygon.h>
-#include <PropertyInfo.h>
+#include <os/app/PropertyInfo.h>
 #include <Region.h>
 #include <ScrollBar.h>
 #include <Shape.h>
 #include <Shelf.h>
-#include <String.h>
-#include <Window.h>
+#include <os/support/String.h>
+#include <os/interface/Window.h>
 
 #include <AppMisc.h>
 #include <AppServerLink.h>
@@ -62,7 +62,7 @@
 #include <ToolTip.h>
 #include <ToolTipManager.h>
 #include <TokenSpace.h>
-#include <ViewPrivate.h>
+#include <private/interface/ViewPrivate.h>
 
 using std::nothrow;
 

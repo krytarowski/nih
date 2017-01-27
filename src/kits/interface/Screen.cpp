@@ -8,9 +8,9 @@
  */
 
 
-#include <Screen.h>
+#include <os/interface/Screen.h>
 
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <PrivateScreen.h>
 

@@ -12,9 +12,9 @@
 #include <stdio.h>
 
 #include <Autolock.h>
-#include <FindDirectory.h>
-#include <Path.h>
-#include <Resources.h>
+#include <os/storage/FindDirectory.h>
+#include <os/storage/Path.h>
+#include <os/storage/Resources.h>
 #include <SystemCatalog.h>
 
 #include <DecoratorPrivate.h>

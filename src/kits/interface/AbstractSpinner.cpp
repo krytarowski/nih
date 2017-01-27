@@ -15,24 +15,24 @@
  */
 
 
-#include <AbstractSpinner.h>
+#include <private/interface/AbstractSpinner.h>
 
 #include <algorithm>
 
-#include <AbstractLayoutItem.h>
-#include <Alignment.h>
-#include <ControlLook.h>
-#include <Font.h>
-#include <GradientLinear.h>
-#include <LayoutItem.h>
-#include <LayoutUtils.h>
-#include <Message.h>
-#include <MessageFilter.h>
-#include <Point.h>
-#include <PropertyInfo.h>
-#include <TextView.h>
-#include <View.h>
-#include <Window.h>
+#include <os/interface/AbstractLayoutItem.h>
+#include <os/interface/Alignment.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/Font.h>
+#include <os/interface/GradientLinear.h>
+#include <os/interface/LayoutItem.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
+#include <os/app/MessageFilter.h>
+#include <os/interface/Point.h>
+#include <os/app/PropertyInfo.h>
+#include <os/interface/TextView.h>
+#include <os/interface/View.h>
+#include <os/interface/Window.h>
 
 #include "Thread.h"
 

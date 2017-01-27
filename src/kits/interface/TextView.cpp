@@ -23,7 +23,7 @@
 // - Double buffering doesn't work well (disabled by default)
 
 
-#include <TextView.h>
+#include <os/interface/TextView.h>
 
 #include <new>
 
@@ -32,21 +32,21 @@
 
 #include <Application.h>
 #include <Beep.h>
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <Clipboard.h>
 #include <Debug.h>
 #include <Entry.h>
 #include <Input.h>
-#include <LayoutBuilder.h>
-#include <LayoutUtils.h>
-#include <MessageRunner.h>
-#include <Path.h>
+#include <os/interface/LayoutBuilder.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/MessageRunner.h>
+#include <os/storage/Path.h>
 #include <PopUpMenu.h>
-#include <PropertyInfo.h>
+#include <os/app/PropertyInfo.h>
 #include <Region.h>
 #include <ScrollBar.h>
 #include <SystemCatalog.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

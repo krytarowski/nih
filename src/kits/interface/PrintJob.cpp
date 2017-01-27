@@ -16,25 +16,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Alert.h>
+#include <os/interface/Alert.h>
 #include <Application.h>
-#include <Button.h>
+#include <os/interface/Button.h>
 #include <Debug.h>
 #include <Entry.h>
-#include <File.h>
-#include <FindDirectory.h>
+#include <os/storage/File.h>
+#include <os/storage/FindDirectory.h>
 #include <Messenger.h>
 #include <NodeInfo.h>
 #include <OS.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <Region.h>
-#include <Roster.h>
+#include <os/app/Roster.h>
 #include <SystemCatalog.h>
-#include <View.h>
+#include <os/interface/View.h>
 
 #include <AutoDeleter.h>
 #include <pr_server.h>
-#include <ViewPrivate.h>
+#include <private/interface/ViewPrivate.h>
 
 using BPrivate::gSystemCatalog;
 

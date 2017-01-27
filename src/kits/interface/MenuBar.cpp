@@ -15,16 +15,16 @@
 
 #include <Application.h>
 #include <Autolock.h>
-#include <ControlLook.h>
-#include <LayoutUtils.h>
-#include <MenuItem.h>
-#include <Window.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/interface/MenuItem.h>
+#include <os/interface/Window.h>
 
 #include <AppMisc.h>
 #include <binary_compatibility/Interface.h>
 #include <MenuPrivate.h>
 #include <TokenSpace.h>
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 
 #include "BMCPrivate.h"
 

@@ -9,19 +9,19 @@
  */
 
 
-#include <ControlLook.h>
+#include <os/interface/ControlLook.h>
 
 #include <algorithm>
 
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <Control.h>
-#include <GradientLinear.h>
-#include <LayoutUtils.h>
+#include <os/interface/GradientLinear.h>
+#include <os/interface/LayoutUtils.h>
 #include <Region.h>
 #include <Shape.h>
-#include <String.h>
-#include <View.h>
-#include <Window.h>
+#include <os/support/String.h>
+#include <os/interface/View.h>
+#include <os/interface/Window.h>
 #include <WindowPrivate.h>
 
 

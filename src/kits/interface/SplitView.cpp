@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #include <Archivable.h>
-#include <ControlLook.h>
+#include <os/interface/ControlLook.h>
 #include <Cursor.h>
 
 #include "SplitLayout.h"

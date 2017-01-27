@@ -21,9 +21,9 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include <AffineTransform.h>
+#include <os/interface/AffineTransform.h>
 
-#include <TypeConstants.h>
+#include <os/support/TypeConstants.h>
 
 
 const BAffineTransform B_AFFINE_IDENTITY_TRANSFORM;

@@ -9,17 +9,17 @@
  */
 
 
-#include <BMCPrivate.h>
+#include <private/interface/BMCPrivate.h>
 
 #include <algorithm>
 
-#include <ControlLook.h>
-#include <LayoutUtils.h>
-#include <MenuField.h>
-#include <MenuItem.h>
-#include <Message.h>
-#include <MessageRunner.h>
-#include <Window.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/interface/MenuField.h>
+#include <os/interface/MenuItem.h>
+#include <os/app/Message.h>
+#include <os/app/MessageRunner.h>
+#include <os/interface/Window.h>
 
 
 static const float kPopUpIndicatorWidth = 13.0f;

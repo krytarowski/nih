@@ -15,12 +15,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Bitmap.h>
-#include <ControlLook.h>
-#include <MenuItem.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/MenuItem.h>
 #include <Shape.h>
-#include <String.h>
-#include <Window.h>
+#include <os/support/String.h>
+#include <os/interface/Window.h>
 
 #include <MenuPrivate.h>
 

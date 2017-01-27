@@ -13,10 +13,10 @@
 #include <algorithm>
 
 #include <Box.h>
-#include <ControlLook.h>
+#include <os/interface/ControlLook.h>
 #include <Debug.h>
-#include <LayoutUtils.h>
-#include <Window.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

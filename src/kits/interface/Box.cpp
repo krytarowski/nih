@@ -17,10 +17,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <ControlLook.h>
+#include <os/interface/ControlLook.h>
 #include <Layout.h>
-#include <LayoutUtils.h>
-#include <Message.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
 #include <Region.h>
 
 #include <binary_compatibility/Interface.h>

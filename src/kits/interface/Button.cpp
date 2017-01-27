@@ -12,17 +12,17 @@
  */
 
 
-#include <Button.h>
+#include <os/interface/Button.h>
 
 #include <algorithm>
 #include <new>
 
-#include <Bitmap.h>
-#include <ControlLook.h>
-#include <Font.h>
-#include <LayoutUtils.h>
-#include <String.h>
-#include <Window.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/Font.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/support/String.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

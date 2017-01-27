@@ -13,7 +13,7 @@
 #include <string.h>
 
 #include <DataIO.h>
-#include <Point.h>
+#include <os/interface/Point.h>
 #include <Rect.h>
 #include <Region.h>
 

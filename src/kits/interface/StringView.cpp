@@ -19,11 +19,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <LayoutUtils.h>
-#include <Message.h>
-#include <PropertyInfo.h>
-#include <View.h>
-#include <Window.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
+#include <os/app/PropertyInfo.h>
+#include <os/interface/View.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

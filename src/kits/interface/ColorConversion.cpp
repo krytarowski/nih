@@ -13,9 +13,9 @@
 
 #include "ColorConversion.h"
 
-#include <InterfaceDefs.h>
+#include <os/interface/InterfaceDefs.h>
 #include <Locker.h>
-#include <Point.h>
+#include <os/interface/Point.h>
 
 #include <Palette.h>
 

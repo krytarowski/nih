@@ -11,12 +11,12 @@
 
 #include <new>
 
-#include <Bitmap.h>
-#include <ControlLook.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/ControlLook.h>
 #include <Debug.h>
-#include <PropertyInfo.h>
-#include <Screen.h>
-#include <Window.h>
+#include <os/app/PropertyInfo.h>
+#include <os/interface/Screen.h>
+#include <os/interface/Window.h>
 
 
 const static unsigned char

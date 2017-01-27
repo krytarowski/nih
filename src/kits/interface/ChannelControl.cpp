@@ -5,7 +5,7 @@
 
 
 #include <ChannelControl.h>
-#include <PropertyInfo.h>
+#include <os/app/PropertyInfo.h>
 
 #include <map>
 #include <string>

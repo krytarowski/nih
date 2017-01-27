@@ -17,14 +17,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Bitmap.h>
-#include <ControlLook.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/ControlLook.h>
 #include <Errors.h>
-#include <LayoutUtils.h>
-#include <Message.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
 #include <Region.h>
-#include <String.h>
-#include <Window.h>
+#include <os/support/String.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

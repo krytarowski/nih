@@ -12,8 +12,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <PropertyInfo.h>
-#include <TextView.h>
+#include <os/app/PropertyInfo.h>
+#include <os/interface/TextView.h>
 
 
 static double

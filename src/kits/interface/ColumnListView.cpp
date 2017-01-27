@@ -52,19 +52,19 @@ All rights reserved.
 #include <stdlib.h>
 
 #include <Application.h>
-#include <Bitmap.h>
-#include <ControlLook.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/ControlLook.h>
 #include <Cursor.h>
 #include <Debug.h>
 #include <GraphicsDefs.h>
-#include <LayoutUtils.h>
-#include <MenuItem.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/interface/MenuItem.h>
 #include <PopUpMenu.h>
 #include <Region.h>
 #include <ScrollBar.h>
-#include <String.h>
+#include <os/support/String.h>
 #include <SupportDefs.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <ObjectListPrivate.h>
 

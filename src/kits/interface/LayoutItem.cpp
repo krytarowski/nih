@@ -5,12 +5,12 @@
  */
 
 
-#include <LayoutItem.h>
+#include <os/interface/LayoutItem.h>
 
 #include <Layout.h>
-#include <LayoutUtils.h>
-#include <View.h>
-#include <ViewPrivate.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/interface/View.h>
+#include <private/interface/ViewPrivate.h>
 
 #include <algorithm>
 

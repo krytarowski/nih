@@ -12,8 +12,8 @@
 #include <math.h>
 #include <stdio.h>
 
-#include <ControlLook.h>
-#include <LayoutUtils.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/LayoutUtils.h>
 #include <Region.h>
 
 

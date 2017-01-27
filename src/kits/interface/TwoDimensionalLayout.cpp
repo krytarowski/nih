@@ -8,13 +8,13 @@
 
 #include <stdio.h>
 
-#include <ControlLook.h>
+#include <os/interface/ControlLook.h>
 #include <LayoutContext.h>
-#include <LayoutItem.h>
-#include <LayoutUtils.h>
+#include <os/interface/LayoutItem.h>
+#include <os/interface/LayoutUtils.h>
 #include <List.h>
-#include <Message.h>
-#include <View.h>
+#include <os/app/Message.h>
+#include <os/interface/View.h>
 
 #include <Referenceable.h>
 

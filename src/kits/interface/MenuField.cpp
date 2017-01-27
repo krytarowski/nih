@@ -10,7 +10,7 @@
  */
 
 
-#include <MenuField.h>
+#include <os/interface/MenuField.h>
 
 #include <algorithm>
 
@@ -19,19 +19,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <AbstractLayoutItem.h>
+#include <os/interface/AbstractLayoutItem.h>
 #include <Archivable.h>
-#include <BMCPrivate.h>
-#include <ControlLook.h>
-#include <LayoutUtils.h>
+#include <private/interface/BMCPrivate.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/LayoutUtils.h>
 #include <MenuBar.h>
-#include <MenuItem.h>
+#include <os/interface/MenuItem.h>
 #include <MenuItemPrivate.h>
 #include <MenuPrivate.h>
-#include <Message.h>
-#include <MessageFilter.h>
+#include <os/app/Message.h>
+#include <os/app/MessageFilter.h>
 #include <Thread.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 #include <binary_compatibility/Support.h>

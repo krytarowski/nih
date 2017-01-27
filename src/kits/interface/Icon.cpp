@@ -14,7 +14,7 @@
 
 #include <new>
 
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 
 #include <AutoDeleter.h>
 

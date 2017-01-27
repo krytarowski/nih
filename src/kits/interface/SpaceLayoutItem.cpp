@@ -9,8 +9,8 @@
 
 #include <new>
 
-#include <ControlLook.h>
-#include <Message.h>
+#include <os/interface/ControlLook.h>
+#include <os/app/Message.h>
 
 
 namespace {

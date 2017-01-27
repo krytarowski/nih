@@ -21,13 +21,13 @@
 
 #include <iostream>
 
-#include <ControlLook.h>
-#include <Bitmap.h>
+#include <os/interface/ControlLook.h>
+#include <os/interface/Bitmap.h>
 #include <TextControl.h>
 #include <Region.h>
-#include <Screen.h>
+#include <os/interface/Screen.h>
 #include <SystemCatalog.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 using BPrivate::gSystemCatalog;
 

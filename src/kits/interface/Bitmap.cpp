@@ -15,7 +15,7 @@
 */
 
 
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 
 #include <algorithm>
 #include <limits.h>
@@ -27,8 +27,8 @@
 #include <Application.h>
 #include <GraphicsDefs.h>
 #include <Locker.h>
-#include <View.h>
-#include <Window.h>
+#include <os/interface/View.h>
+#include <os/interface/Window.h>
 
 #include <ApplicationPrivate.h>
 #include <AppServerLink.h>

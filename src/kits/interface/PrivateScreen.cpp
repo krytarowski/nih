@@ -21,10 +21,10 @@
 
 #include <Application.h>
 #include <Autolock.h>
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <Locker.h>
 #include <ObjectList.h>
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <AutoLocker.h>
 

@@ -8,7 +8,7 @@
 
 #include <MenuPrivate.h>
 
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <Menu.h>
 
 

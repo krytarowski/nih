@@ -6,7 +6,7 @@
 #define	_SPLIT_LAYOUT_H
 
 
-#include <AbstractLayout.h>
+#include <os/interface/AbstractLayout.h>
 #include <Point.h>
 
 

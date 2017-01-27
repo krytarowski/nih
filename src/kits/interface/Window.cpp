@@ -10,7 +10,7 @@
  */
 
 
-#include <Window.h>
+#include <os/interface/Window.h>
 
 #include <ctype.h>
 #include <math.h>
@@ -22,28 +22,28 @@
 #include <AppServerLink.h>
 #include <ApplicationPrivate.h>
 #include <Autolock.h>
-#include <Bitmap.h>
-#include <Button.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/Button.h>
 #include <DirectMessageTarget.h>
-#include <FindDirectory.h>
+#include <os/storage/FindDirectory.h>
 #include <InputServerTypes.h>
 #include <Layout.h>
-#include <LayoutUtils.h>
+#include <os/interface/LayoutUtils.h>
 #include <MenuBar.h>
-#include <MenuItem.h>
+#include <os/interface/MenuItem.h>
 #include <MenuPrivate.h>
 #include <MessagePrivate.h>
 #include <MessageQueue.h>
-#include <MessageRunner.h>
-#include <Path.h>
+#include <os/app/MessageRunner.h>
+#include <os/storage/Path.h>
 #include <PortLink.h>
-#include <PropertyInfo.h>
-#include <Roster.h>
+#include <os/app/PropertyInfo.h>
+#include <os/app/Roster.h>
 #include <RosterPrivate.h>
-#include <Screen.h>
+#include <os/interface/Screen.h>
 #include <ServerProtocol.h>
-#include <String.h>
-#include <TextView.h>
+#include <os/support/String.h>
+#include <os/interface/TextView.h>
 #include <TokenSpace.h>
 #include <ToolTipManager.h>
 #include <ToolTipWindow.h>

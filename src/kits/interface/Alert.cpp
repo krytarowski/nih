@@ -12,25 +12,25 @@
 //!	BAlert displays a modal alert window.
 
 
-#include <Alert.h>
+#include <os/interface/Alert.h>
 
 #include <new>
 
 #include <stdio.h>
 
-#include <Bitmap.h>
-#include <Button.h>
-#include <ControlLook.h>
-#include <FindDirectory.h>
-#include <IconUtils.h>
-#include <LayoutBuilder.h>
-#include <MenuField.h>
-#include <MessageFilter.h>
-#include <Path.h>
-#include <Resources.h>
-#include <Screen.h>
-#include <String.h>
-#include <Window.h>
+#include <os/interface/Bitmap.h>
+#include <os/interface/Button.h>
+#include <os/interface/ControlLook.h>
+#include <os/storage/FindDirectory.h>
+#include <os/interface/IconUtils.h>
+#include <os/interface/LayoutBuilder.h>
+#include <os/interface/MenuField.h>
+#include <os/app/MessageFilter.h>
+#include <os/storage/Path.h>
+#include <os/storage/Resources.h>
+#include <os/interface/Screen.h>
+#include <os/support/String.h>
+#include <os/interface/Window.h>
 
 #include <binary_compatibility/Interface.h>
 

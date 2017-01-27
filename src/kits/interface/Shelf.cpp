@@ -21,18 +21,18 @@
 #include <Beep.h>
 #include <Dragger.h>
 #include <Entry.h>
-#include <File.h>
+#include <os/storage/File.h>
 #include <Looper.h>
-#include <Message.h>
-#include <MessageFilter.h>
+#include <os/app/Message.h>
+#include <os/app/MessageFilter.h>
 #include <Messenger.h>
-#include <Point.h>
-#include <PropertyInfo.h>
+#include <os/interface/Point.h>
+#include <os/app/PropertyInfo.h>
 #include <Rect.h>
-#include <String.h>
-#include <View.h>
+#include <os/support/String.h>
+#include <os/interface/View.h>
 
-#include <ViewPrivate.h>
+#include <private/interface/ViewPrivate.h>
 
 #include "ZombieReplicantView.h"
 

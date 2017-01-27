@@ -11,7 +11,7 @@
 
 #include <SeparatorItem.h>
 
-#include <Font.h>
+#include <os/interface/Font.h>
 
 
 BSeparatorItem::BSeparatorItem()

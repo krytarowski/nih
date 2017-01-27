@@ -5,10 +5,10 @@
  */
 
 
-#include <AbstractLayoutItem.h>
+#include <os/interface/AbstractLayoutItem.h>
 
-#include <LayoutUtils.h>
-#include <Message.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/app/Message.h>
 
 
 namespace {

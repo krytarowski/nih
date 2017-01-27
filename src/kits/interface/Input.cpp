@@ -14,7 +14,7 @@
 
 #include <Input.h>
 #include <List.h>
-#include <Message.h>
+#include <os/app/Message.h>
 
 #include <input_globals.h>
 #include <InputServerTypes.h>

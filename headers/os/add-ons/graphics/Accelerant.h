@@ -6,8 +6,8 @@
 #define _ACCELERANT_H_
 
 
-#include <GraphicsDefs.h>
-#include <OS.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/kernel/OS.h>
 
 
 #if defined(__cplusplus)

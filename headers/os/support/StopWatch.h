@@ -6,8 +6,8 @@
 #define _STOP_WATCH_H
 
 
-#include <BeBuild.h>
-#include <SupportDefs.h>
+#include <os/BeBuild.h>
+#include <os/support/SupportDefs.h>
 
 
 class BStopWatch {

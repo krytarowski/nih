@@ -6,9 +6,9 @@
 #define _UTF8_H
 
 
-#include <BeBuild.h>
+#include <os/BeBuild.h>
 #include <InterfaceDefs.h>
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 /*  Conversion Flavors */

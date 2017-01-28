@@ -6,8 +6,8 @@
 #define _TLS_H
 
 
-#include <BeBuild.h>
-#include <SupportDefs.h>
+#include <os/BeBuild.h>
+#include <os/support/SupportDefs.h>
 
 
 /* A maximum of 64 keys is allowed to store in TLS - the key is reserved

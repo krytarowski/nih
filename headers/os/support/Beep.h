@@ -6,8 +6,8 @@
 #define _BEEP_H
 
 
-#include <BeBuild.h>
-#include <SupportDefs.h>
+#include <os/BeBuild.h>
+#include <os/support/SupportDefs.h>
 
 
 #ifdef __cplusplus

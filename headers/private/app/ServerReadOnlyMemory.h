@@ -9,8 +9,8 @@
 #define SERVER_READ_ONLY_MEMORY_H
 
 
-#include <GraphicsDefs.h>
-#include <InterfaceDefs.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/interface/InterfaceDefs.h>
 
 
 // Update kColorWhichLastContinuous with the largest color constant which

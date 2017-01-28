@@ -11,9 +11,9 @@
 #define _BMC_PRIVATE_H
 
 
-#include <BeBuild.h>
-#include <MenuBar.h>
-#include <MessageFilter.h>
+#include <os/BeBuild.h>
+#include <os/interface/MenuBar.h>
+#include <os/app/MessageFilter.h>
 
 
 static const float kVMargin = 2.0f;

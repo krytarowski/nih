@@ -9,7 +9,7 @@
 #define __MENU_ITEM_PRIVATE_H
 
 
-#include <MenuItem.h>
+#include <os/interface/MenuItem.h>
 
 
 class BMenu;

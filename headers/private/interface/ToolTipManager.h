@@ -6,9 +6,9 @@
 #define _TOOL_TIP_MANAGER_H
 
 
-#include <Locker.h>
-#include <Messenger.h>
-#include <Point.h>
+#include <os/support/Locker.h>
+#include <os/app/Messenger.h>
+#include <os/interface/Point.h>
 
 
 class BToolTip;

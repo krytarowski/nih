@@ -7,8 +7,8 @@
 
 
 #include <os/interface/InterfaceDefs.h>
-#include <ObjectList.h>
-#include <Rect.h>
+#include <os/support/ObjectList.h>
+#include <os/interface/Rect.h>
 
 
 class BBitmap;

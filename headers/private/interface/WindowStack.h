@@ -6,7 +6,7 @@
 #define WINDOW_STACK_H
 
 
-#include <Window.h>
+#include <os/interface/Window.h>
 
 
 class BWindowStack {

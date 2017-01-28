@@ -27,8 +27,8 @@
 #ifndef _ZOMBIE_REPLICANT_VIEW_H
 #define _ZOMBIE_REPLICANT_VIEW_H
 
-#include <BeBuild.h>
-#include <Box.h>
+#include <os/BeBuild.h>
+#include <os/interface/Box.h>
 
 
 const static rgb_color kZombieColor = {220, 220, 220, 255};

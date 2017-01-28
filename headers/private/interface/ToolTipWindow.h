@@ -6,7 +6,7 @@
 #define TOOL_TIP_WINDOW_H
 
 
-#include <Window.h>
+#include <os/interface/Window.h>
 
 
 namespace BPrivate {

@@ -2,7 +2,7 @@
 #define _COLOR_CONVERSION_H_
 
 
-#include <GraphicsDefs.h>
+#include <os/interface/GraphicsDefs.h>
 
 class BPoint;
 

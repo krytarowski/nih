@@ -6,7 +6,7 @@
 #define _WINDOW_PRIVATE_H
 
 
-#include <Window.h>
+#include <os/interface/Window.h>
 
 
 /* Private window looks */

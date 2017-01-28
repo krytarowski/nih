@@ -49,7 +49,7 @@ SOFTWARE.
 #ifndef __REGION_SUPPORT_H
 #define __REGION_SUPPORT_H
 
-#include <Region.h>
+#include <os/interface/Region.h>
 
 class BRegion::Support {
  public:

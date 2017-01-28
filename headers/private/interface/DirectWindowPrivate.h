@@ -6,7 +6,7 @@
 #define _DIRECT_WINDOW_PRIVATE_H
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 
 #define DIRECT_BUFFER_INFO_AREA_SIZE B_PAGE_SIZE

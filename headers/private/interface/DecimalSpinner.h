@@ -9,7 +9,7 @@
 #define _DECIMAL_SPINNER_H
 
 
-#include <Spinner.h>
+#include <private/interface/Spinner.h>
 
 
 class BDecimalSpinner : public BAbstractSpinner {

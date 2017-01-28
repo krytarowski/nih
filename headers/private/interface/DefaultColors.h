@@ -6,7 +6,7 @@
 #define _DEFAULT_COLORS_H
 
 
-#include <GraphicsDefs.h>
+#include <os/interface/GraphicsDefs.h>
 
 
 namespace BPrivate {

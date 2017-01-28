@@ -7,7 +7,7 @@
 
 
 #include <os/interface/InterfaceDefs.h>
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 class BMessage;
 

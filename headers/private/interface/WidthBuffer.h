@@ -6,7 +6,7 @@
 #define __WIDTHBUFFER_H
 
 
-#include <Locker.h>
+#include <os/support/Locker.h>
 #include <os/interface/TextView.h>
 
 #include "TextViewSupportBuffer.h"

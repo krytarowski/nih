@@ -26,8 +26,8 @@
 #ifndef __CLIPPING_H
 #define __CLIPPING_H
 
-#include <Region.h>
-#include <SupportDefs.h>
+#include <os/interface/Region.h>
+#include <os/support/SupportDefs.h>
 
 
 /*	Some methods to manipulate clipping_rects.

@@ -9,9 +9,9 @@
 #ifndef SHAPE_PRIVATE_H
 #define SHAPE_PRIVATE_H
 
-#include <Point.h>
-#include <Rect.h>
-#include <Referenceable.h>
+#include <os/interface/Point.h>
+#include <os/interface/Rect.h>
+#include <os/support/Referenceable.h>
 
 #include <string.h>
 #include <stdio.h>

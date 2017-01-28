@@ -9,8 +9,8 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <OS.h>
-#include <SupportDefs.h>
+#include <os/kernel/OS.h>
+#include <os/support/SupportDefs.h>
 
 
 // _BTextViewSupportBuffer_ class ----------------------------------------------

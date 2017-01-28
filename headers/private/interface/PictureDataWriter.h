@@ -10,10 +10,10 @@
 #define _PICTURE_DATA_WRITER_H
 
 
-#include <AffineTransform.h>
+#include <os/interface/AffineTransform.h>
 #include <os/interface/InterfaceDefs.h>
 #include <os/interface/Font.h>
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 #include <stack>
 

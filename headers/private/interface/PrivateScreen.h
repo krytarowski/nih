@@ -10,10 +10,10 @@
 #define _PRIVATE_SCREEN_H_
 
 
-#include <Accelerant.h>
-#include <GraphicsDefs.h>
-#include <ObjectList.h>
-#include <Rect.h>
+#include <os/add-ons/graphics/Accelerant.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/support/ObjectList.h>
+#include <os/interface/Rect.h>
 
 
 struct color_map;

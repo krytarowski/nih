@@ -13,10 +13,10 @@
 /*!	PicturePlayer is used to play picture data. */
 
 
-#include <GraphicsDefs.h>
+#include <os/interface/GraphicsDefs.h>
 #include <os/interface/InterfaceDefs.h>
-#include <Point.h>
-#include <Rect.h>
+#include <os/interface/Point.h>
+#include <os/interface/Rect.h>
 
 
 class BAffineTransform;

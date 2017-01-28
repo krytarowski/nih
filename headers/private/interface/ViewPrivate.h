@@ -12,10 +12,10 @@
 
 #include <os/interface/Font.h>
 #include <os/interface/InterfaceDefs.h>
-#include <Point.h>
-#include <Rect.h>
-#include <Region.h>
-#include <ServerProtocolStructs.h>
+#include <os/interface/Point.h>
+#include <os/interface/Rect.h>
+#include <os/interface/Region.h>
+#include <private/app/ServerProtocolStructs.h>
 #include <os/interface/View.h>
 
 

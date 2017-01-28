@@ -6,10 +6,10 @@
 #define _TOOL_TIP_H
 
 
-#include <Alignment.h>
-#include <Archivable.h>
-#include <Point.h>
-#include <Referenceable.h>
+#include <os/interface/Alignment.h>
+#include <os/support/Archivable.h>
+#include <os/interface/Point.h>
+#include <os/support/Referenceable.h>
 
 
 class BView;

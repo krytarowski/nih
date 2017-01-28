@@ -6,7 +6,7 @@
 #define DECORATOR_PRIVATE_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 class BString;

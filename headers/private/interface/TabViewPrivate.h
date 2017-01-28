@@ -9,7 +9,7 @@
 #define TABVIEW_PRIVATE_H
 
 
-#include <TabView.h>
+#include <os/interface/TabView.h>
 
 
 class BTab::Private {

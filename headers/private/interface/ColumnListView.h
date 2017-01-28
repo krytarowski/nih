@@ -46,11 +46,11 @@ All rights reserved.
 #ifndef _COLUMN_LIST_VIEW_H
 #define _COLUMN_LIST_VIEW_H
 
-#include <BeBuild.h>
+#include <os/BeBuild.h>
 #include <os/interface/View.h>
 #include <os/support/List.h>
-#include <Invoker.h>
-#include <ListView.h>
+#include <os/app/Invoker.h>
+#include <os/interface/ListView.h>
 
 class BScrollBar;
 

@@ -9,8 +9,8 @@
 #define _INTERFACE_PRIVATE_H
 
 
-#include <GraphicsDefs.h>
-#include <SupportDefs.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 void _init_global_fonts_();

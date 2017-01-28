@@ -10,7 +10,7 @@
 
 
 #include <os/interface/InterfaceDefs.h>
-#include <MenuItem.h>
+#include <os/interface/MenuItem.h>
 
 
 class BColorMenuItem : public BMenuItem {

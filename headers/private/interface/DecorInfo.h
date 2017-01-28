@@ -8,11 +8,11 @@
 #define DECOR_INFO_H
 
 
-#include <Directory.h>
-#include <Entry.h>
-#include <Locker.h>
-#include <ObjectList.h>
-#include <String.h>
+#include <os/storage/Directory.h>
+#include <os/storage/Entry.h>
+#include <os/support/Locker.h>
+#include <os/support/ObjectList.h>
+#include <os/support/String.h>
 
 
 class BWindow;

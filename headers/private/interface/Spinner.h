@@ -9,7 +9,7 @@
 #define _SPINNER_H
 
 
-#include <AbstractSpinner.h>
+#include <private/interface/AbstractSpinner.h>
 
 
 class BSpinner : public BAbstractSpinner {

@@ -6,7 +6,7 @@
 #define _BINARY_COMPATIBILITY_SUPPORT_H_
 
 
-#include <binary_compatibility/Global.h>
+#include <private/binary_compatibility/Global.h>
 
 
 struct perform_data_all_unarchived {

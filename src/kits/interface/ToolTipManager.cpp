@@ -10,12 +10,12 @@
 
 #include <pthread.h>
 
-#include <Autolock.h>
+#include <os/support/Autolock.h>
 #include <os/interface/LayoutBuilder.h>
 #include <os/app/MessageRunner.h>
 #include <os/interface/Screen.h>
 
-#include <WindowPrivate.h>
+#include <private/interface/WindowPrivate.h>
 #include <ToolTip.h>
 
 

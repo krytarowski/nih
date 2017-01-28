@@ -7,13 +7,13 @@
  *		Stephan Aßmus <superstippi@gmx.de>
  */
 
-#include <ChannelSlider.h>
+#include <os/interface/ChannelSlider.h>
 
 #include <new>
 
 #include <os/interface/Bitmap.h>
 #include <os/interface/ControlLook.h>
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <os/app/PropertyInfo.h>
 #include <os/interface/Screen.h>
 #include <os/interface/Window.h>

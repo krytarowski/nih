@@ -25,7 +25,7 @@
 #include <os/interface/View.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 static property_info sPropertyList[] = {

@@ -10,10 +10,10 @@
 
 //!	Graphics functions and variables for the Interface Kit
 
-#include <GraphicsDefs.h>
+#include <os/interface/GraphicsDefs.h>
 
-#include <AppServerLink.h>
-#include <ServerProtocol.h>
+#include <private/app/AppServerLink.h>
+#include <private/app/ServerProtocol.h>
 
 
 // patterns

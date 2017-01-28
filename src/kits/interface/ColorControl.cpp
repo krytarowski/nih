@@ -12,7 +12,7 @@
 
 /**	BColorControl displays a palette of selectable colors. */
 
-#include <ColorControl.h>
+#include <os/interface/ColorControl.h>
 
 #include <algorithm>
 
@@ -23,15 +23,15 @@
 
 #include <os/interface/ControlLook.h>
 #include <os/interface/Bitmap.h>
-#include <TextControl.h>
-#include <Region.h>
+#include <os/interface/TextControl.h>
+#include <os/interface/Region.h>
 #include <os/interface/Screen.h>
-#include <SystemCatalog.h>
+#include <private/locale/SystemCatalog.h>
 #include <os/interface/Window.h>
 
 using BPrivate::gSystemCatalog;
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 #undef B_TRANSLATION_CONTEXT

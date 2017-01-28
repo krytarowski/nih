@@ -9,20 +9,20 @@
  */
 
 
-#include <MenuBar.h>
+#include <os/interface/MenuBar.h>
 
 #include <math.h>
 
-#include <Application.h>
-#include <Autolock.h>
+#include <os/app/Application.h>
+#include <os/support/Autolock.h>
 #include <os/interface/ControlLook.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/interface/MenuItem.h>
 #include <os/interface/Window.h>
 
 #include <AppMisc.h>
-#include <binary_compatibility/Interface.h>
-#include <MenuPrivate.h>
+#include <private/binary_compatibility/Interface.h>
+#include <private/interface/MenuPrivate.h>
 #include <TokenSpace.h>
 #include <os/interface/InterfaceDefs.h>
 

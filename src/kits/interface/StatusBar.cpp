@@ -17,12 +17,12 @@
 #include <string.h>
 
 #include <os/interface/ControlLook.h>
-#include <Layout.h>
+#include <os/interface/Layout.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
-#include <Region.h>
+#include <os/interface/Region.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 enum internalFlags {
 	kCustomBarColor = 1

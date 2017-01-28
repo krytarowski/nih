@@ -24,21 +24,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Application.h>
-#include <GraphicsDefs.h>
-#include <Locker.h>
+#include <os/app/Application.h>
+#include <os/interface/GraphicsDefs.h>
+#include <os/support/Locker.h>
 #include <os/interface/View.h>
 #include <os/interface/Window.h>
 
-#include <ApplicationPrivate.h>
-#include <AppServerLink.h>
-#include <Autolock.h>
-#include <ObjectList.h>
-#include <ServerMemoryAllocator.h>
-#include <ServerProtocol.h>
+#include <private/app/ApplicationPrivate.h>
+#include <private/app/AppServerLink.h>
+#include <os/support/Autolock.h>
+#include <os/support/ObjectList.h>
+#include <private/app/ServerMemoryAllocator.h>
+#include <private/app/ServerProtocol.h>
 
-#include "ColorConversion.h"
-#include "BitmapPrivate.h"
+#include "private/interface/ColorConversion.h"
+#include "private/interface/BitmapPrivate.h"
 
 
 using namespace BPrivate;

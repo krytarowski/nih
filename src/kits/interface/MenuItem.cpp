@@ -18,11 +18,11 @@
 #include <os/interface/Bitmap.h>
 #include <os/interface/ControlLook.h>
 #include <os/interface/MenuItem.h>
-#include <Shape.h>
+#include <os/interface/Shape.h>
 #include <os/support/String.h>
 #include <os/interface/Window.h>
 
-#include <MenuPrivate.h>
+#include <private/interface/MenuPrivate.h>
 
 #include "utf8_functions.h"
 

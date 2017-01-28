@@ -9,11 +9,11 @@
 /
 *******************************************************************************/
 
-#include "ColumnTypes.h"
+#include "private/interface/ColumnTypes.h"
 
 #include <os/interface/View.h>
 
-#include <parsedate.h>
+#include <os/support/parsedate.h>
 #include <stdio.h>
 
 

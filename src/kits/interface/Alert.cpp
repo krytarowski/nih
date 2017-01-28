@@ -32,7 +32,7 @@
 #include <os/support/String.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 //#define DEBUG_ALERT

@@ -12,7 +12,7 @@
 /*!	BTextControl displays text that can act like a control. */
 
 
-#include <TextControl.h>
+#include <os/interface/TextControl.h>
 
 #include <string.h>
 
@@ -21,11 +21,11 @@
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
 #include <os/app/PropertyInfo.h>
-#include <Region.h>
+#include <os/interface/Region.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
-#include <binary_compatibility/Support.h>
+#include <private/binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Support.h>
 
 #include "TextInput.h"
 

@@ -6,7 +6,7 @@
  *		Stefano Ceccherini (stefano.ceccherini@gmail.com)
  */
 
-#include <MenuPrivate.h>
+#include <private/interface/MenuPrivate.h>
 
 #include <os/interface/Bitmap.h>
 #include <Menu.h>

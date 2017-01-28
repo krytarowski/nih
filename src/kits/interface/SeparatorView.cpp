@@ -14,7 +14,7 @@
 
 #include <os/interface/ControlLook.h>
 #include <os/interface/LayoutUtils.h>
-#include <Region.h>
+#include <os/interface/Region.h>
 
 
 static const float kMinBorderLength = 5.0f;

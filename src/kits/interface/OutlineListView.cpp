@@ -24,7 +24,7 @@
 #include <os/interface/ControlLook.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 typedef int (*compare_func)(const BListItem* a, const BListItem* b);

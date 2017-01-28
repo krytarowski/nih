@@ -14,8 +14,8 @@
 
 #include <stdio.h>
 
-#include <SupportDefs.h>
-#include <Rect.h>
+#include <os/support/SupportDefs.h>
+#include <os/interface/Rect.h>
 
 
 const BPoint B_ORIGIN(0, 0);

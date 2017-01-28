@@ -18,7 +18,7 @@
 
 #include <os/interface/AffineTransform.h>
 #include <PictureProtocol.h>
-#include <Shape.h>
+#include <os/interface/Shape.h>
 
 
 using BPrivate::PicturePlayer;

@@ -30,25 +30,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <Application.h>
-#include <Beep.h>
+#include <os/app/Application.h>
+#include <os/support/Beep.h>
 #include <os/interface/Bitmap.h>
 #include <Clipboard.h>
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <Entry.h>
 #include <Input.h>
 #include <os/interface/LayoutBuilder.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/MessageRunner.h>
 #include <os/storage/Path.h>
-#include <PopUpMenu.h>
+#include <os/interface/PopUpMenu.h>
 #include <os/app/PropertyInfo.h>
-#include <Region.h>
-#include <ScrollBar.h>
-#include <SystemCatalog.h>
+#include <os/interface/Region.h>
+#include <os/interface/ScrollBar.h>
+#include <private/locale/SystemCatalog.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 #include "InlineInput.h"
 #include "LineBuffer.h"

@@ -11,7 +11,7 @@
 // BCheckBox displays an on/off control.
 
 
-#include <CheckBox.h>
+#include <os/interface/CheckBox.h>
 
 #include <algorithm>
 #include <new>
@@ -21,7 +21,7 @@
 #include <os/interface/LayoutUtils.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 BCheckBox::BCheckBox(BRect frame, const char* name, const char* label,

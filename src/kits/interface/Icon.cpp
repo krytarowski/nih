@@ -8,7 +8,7 @@
  */
 
 
-#include <Icon.h>
+#include <private/interface/Icon.h>
 
 #include <string.h>
 

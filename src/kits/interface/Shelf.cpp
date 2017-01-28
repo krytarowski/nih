@@ -12,23 +12,23 @@
 
 /*!	BShelf stores replicant views that are dropped onto it */
 
-#include <Shelf.h>
+#include <os/interface/Shelf.h>
 
 #include <pthread.h>
 
 #include <AutoDeleter.h>
 #include <AutoLock.h>
-#include <Beep.h>
-#include <Dragger.h>
+#include <os/support/Beep.h>
+#include <os/interface/Dragger.h>
 #include <Entry.h>
 #include <os/storage/File.h>
 #include <Looper.h>
 #include <os/app/Message.h>
 #include <os/app/MessageFilter.h>
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 #include <os/interface/Point.h>
 #include <os/app/PropertyInfo.h>
-#include <Rect.h>
+#include <os/interface/Rect.h>
 #include <os/support/String.h>
 #include <os/interface/View.h>
 

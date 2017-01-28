@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #include <os/interface/AbstractLayout.h>
-#include <ScrollBar.h>
+#include <os/interface/ScrollBar.h>
 
 #include "ViewLayoutItem.h"
 

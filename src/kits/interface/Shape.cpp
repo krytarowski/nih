@@ -10,11 +10,11 @@
  */
 
 
-#include <Shape.h>
+#include <os/interface/Shape.h>
 
 #include <os/app/Message.h>
 #include <os/interface/Point.h>
-#include <Rect.h>
+#include <os/interface/Rect.h>
 
 #include <ShapePrivate.h>
 

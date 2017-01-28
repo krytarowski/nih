@@ -8,15 +8,15 @@
  */
 
 
-#include <Application.h>
+#include <os/app/Application.h>
 #include <Looper.h>
 #include <os/interface/MenuItem.h>
-#include <PopUpMenu.h>
+#include <os/interface/PopUpMenu.h>
 #include <os/interface/Window.h>
 
 #include <new>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 struct popup_menu_data {

@@ -11,7 +11,7 @@
 
 #include <new>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 BPictureButton::BPictureButton(BRect frame, const char* name,

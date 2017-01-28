@@ -7,7 +7,7 @@
  */
 
 
-#include "ColorMenuItem.h"
+#include "private/interface/ColorMenuItem.h"
 
 #include <math.h>
 #include <string.h>
@@ -16,7 +16,7 @@
 #include <algorithm>
 
 #include <os/interface/MenuField.h>
-#include <MenuPrivate.h>
+#include <private/interface/MenuPrivate.h>
 
 
 // golden ratio

@@ -22,11 +22,11 @@
 #include <Errors.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
-#include <Region.h>
+#include <os/interface/Region.h>
 #include <os/support/String.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 #define USE_OFF_SCREEN_VIEW 0

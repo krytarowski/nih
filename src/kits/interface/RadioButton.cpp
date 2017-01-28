@@ -12,13 +12,13 @@
 
 #include <algorithm>
 
-#include <Box.h>
+#include <os/interface/Box.h>
 #include <os/interface/ControlLook.h>
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 BRadioButton::BRadioButton(BRect frame, const char* name, const char* label,

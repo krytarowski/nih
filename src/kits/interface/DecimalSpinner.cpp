@@ -7,7 +7,7 @@
  */
 
 
-#include <DecimalSpinner.h>
+#include <private/interface/DecimalSpinner.h>
 
 #include <stdio.h>
 #include <stdlib.h>

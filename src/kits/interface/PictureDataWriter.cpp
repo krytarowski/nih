@@ -14,8 +14,8 @@
 
 #include <DataIO.h>
 #include <os/interface/Point.h>
-#include <Rect.h>
-#include <Region.h>
+#include <os/interface/Rect.h>
+#include <os/interface/Region.h>
 
 #include <PictureProtocol.h>
 

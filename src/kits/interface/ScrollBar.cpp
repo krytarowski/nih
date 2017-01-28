@@ -11,7 +11,7 @@
  */
 
 
-#include <ScrollBar.h>
+#include <os/interface/ScrollBar.h>
 
 #include <math.h>
 #include <stdio.h>
@@ -22,10 +22,10 @@
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
 #include <OS.h>
-#include <Shape.h>
+#include <os/interface/Shape.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 //#define TRACE_SCROLLBAR

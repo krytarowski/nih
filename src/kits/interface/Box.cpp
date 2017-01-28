@@ -11,19 +11,19 @@
  */
 
 
-#include <Box.h>
+#include <os/interface/Box.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <os/interface/ControlLook.h>
-#include <Layout.h>
+#include <os/interface/Layout.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
-#include <Region.h>
+#include <os/interface/Region.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 struct BBox::LayoutData {

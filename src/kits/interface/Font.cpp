@@ -11,20 +11,20 @@
  */
 
 
-#include <AppServerLink.h>
-#include <FontPrivate.h>
-#include <ObjectList.h>
-#include <ServerProtocol.h>
-#include <truncate_string.h>
-#include <utf8_functions.h>
+#include <private/app/AppServerLink.h>
+#include <private/interface/FontPrivate.h>
+#include <os/support/ObjectList.h>
+#include <private/app/ServerProtocol.h>
+#include <private/interface/truncate_string.h>
+#include <private/interface/utf8_functions.h>
 
-#include <Autolock.h>
+#include <os/support/Autolock.h>
 #include <os/interface/Font.h>
-#include <Locker.h>
+#include <os/support/Locker.h>
 #include <os/app/Message.h>
-#include <PortLink.h>
-#include <Rect.h>
-#include <Shape.h>
+#include <private/app/PortLink.h>
+#include <os/interface/Rect.h>
+#include <os/interface/Shape.h>
 #include <os/support/String.h>
 
 #include <new>

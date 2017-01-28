@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <typeinfo>
 
-#include <Layout.h>
+#include <os/interface/Layout.h>
 #include <os/interface/View.h>
 
 #include "ViewLayoutItem.h"

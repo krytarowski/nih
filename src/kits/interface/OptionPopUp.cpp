@@ -10,7 +10,7 @@
 #include <os/interface/MenuField.h>
 #include <os/interface/MenuItem.h>
 #include <OptionPopUp.h>
-#include <PopUpMenu.h>
+#include <os/interface/PopUpMenu.h>
 
 #include <stdio.h>
 

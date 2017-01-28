@@ -7,8 +7,8 @@
  */
 
 #include <os/interface/Point.h>
-#include <Gradient.h>
-#include <GradientDiamond.h>
+#include <os/interface/Gradient.h>
+#include <os/interface/GradientDiamond.h>
 
 
 // constructor

@@ -10,7 +10,7 @@
 #include <os/app/Message.h>
 #include <MimeType.h>
 #include <os/support/String.h>
-#include <SystemCatalog.h>
+#include <private/locale/SystemCatalog.h>
 
 #include "ZombieReplicantView.h"
 

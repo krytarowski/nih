@@ -19,7 +19,7 @@
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
 #include <os/support/String.h>
-#include <TextControl.h>
+#include <os/interface/TextControl.h>
 #include <os/interface/TextView.h>
 #include <os/interface/Window.h>
 

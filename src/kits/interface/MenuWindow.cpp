@@ -12,12 +12,12 @@
 #include <MenuWindow.h>
 
 #include <os/interface/ControlLook.h>
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <Menu.h>
 #include <os/interface/MenuItem.h>
 
-#include <MenuPrivate.h>
-#include <WindowPrivate.h>
+#include <private/interface/MenuPrivate.h>
+#include <private/interface/WindowPrivate.h>
 
 
 namespace BPrivate {

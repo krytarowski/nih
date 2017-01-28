@@ -4,8 +4,8 @@
  */
 
 
-#include <CardLayout.h>
-#include <CardView.h>
+#include <os/interface/CardLayout.h>
+#include <os/interface/CardView.h>
 
 
 BCardView::BCardView()

@@ -19,18 +19,18 @@
 #include <math.h>
 #include <string.h>
 
-#include <CardLayout.h>
+#include <os/interface/CardLayout.h>
 #include <os/interface/ControlLook.h>
 #include <GroupLayout.h>
 #include <os/interface/LayoutUtils.h>
 #include <List.h>
 #include <os/app/Message.h>
 #include <os/app/PropertyInfo.h>
-#include <Rect.h>
-#include <Region.h>
+#include <os/interface/Rect.h>
+#include <os/interface/Region.h>
 #include <os/support/String.h>
 
-#include <binary_compatibility/Support.h>
+#include <private/binary_compatibility/Support.h>
 
 
 static property_info sPropertyList[] = {

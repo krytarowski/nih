@@ -9,13 +9,13 @@
  */
 
 
-#include <Deskbar.h>
-#include <Messenger.h>
+#include <os/interface/Deskbar.h>
+#include <os/app/Messenger.h>
 #include <os/app/Message.h>
 #include <os/interface/View.h>
-#include <Rect.h>
+#include <os/interface/Rect.h>
 #include <os/interface/InterfaceDefs.h>
-#include <Node.h>
+#include <os/storage/Node.h>
 
 #include <string.h>
 

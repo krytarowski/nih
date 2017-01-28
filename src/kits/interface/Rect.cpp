@@ -8,7 +8,7 @@
  */
 
 
-#include <Rect.h>
+#include <os/interface/Rect.h>
 
 #include <algorithm>
 

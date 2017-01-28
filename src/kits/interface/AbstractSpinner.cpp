@@ -34,8 +34,7 @@
 #include <os/interface/View.h>
 #include <os/interface/Window.h>
 
-#include "Thread.h"
-
+#include <private/shared/Thread.h>
 
 static const float kFrameMargin			= 2.0f;
 

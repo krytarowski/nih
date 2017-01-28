@@ -43,7 +43,7 @@ All rights reserved.
 /
 *******************************************************************************/
 
-#include "ColumnListView.h"
+#include "private/interface/ColumnListView.h"
 
 #include <typeinfo>
 
@@ -51,24 +51,24 @@ All rights reserved.
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <Application.h>
+#include <os/app/Application.h>
 #include <os/interface/Bitmap.h>
 #include <os/interface/ControlLook.h>
-#include <Cursor.h>
-#include <Debug.h>
-#include <GraphicsDefs.h>
+#include <os/app/Cursor.h>
+#include <os/support/Debug.h>
+#include <os/interface/GraphicsDefs.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/interface/MenuItem.h>
-#include <PopUpMenu.h>
-#include <Region.h>
-#include <ScrollBar.h>
+#include <os/interface/PopUpMenu.h>
+#include <os/interface/Region.h>
+#include <os/interface/ScrollBar.h>
 #include <os/support/String.h>
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 #include <os/interface/Window.h>
 
-#include <ObjectListPrivate.h>
+#include <private/support/ObjectListPrivate.h>
 
-#include "ObjectList.h"
+#include "os/support/ObjectList.h"
 
 
 #define DOUBLE_BUFFERED_COLUMN_RESIZE 1
@@ -5020,5 +5020,3 @@ RecursiveOutlineIterator::CurrentLevel() const
 {
 	return fCurrentListDepth;
 }
-
-

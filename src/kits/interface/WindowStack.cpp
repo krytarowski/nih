@@ -13,10 +13,10 @@
 
 #include <os/interface/Window.h>
 
-#include <ApplicationPrivate.h>
+#include <private/app/ApplicationPrivate.h>
 #include <MessengerPrivate.h>
-#include <PortLink.h>
-#include <ServerProtocol.h>
+#include <private/app/PortLink.h>
+#include <private/app/ServerProtocol.h>
 
 #include "StackAndTilePrivate.h"
 

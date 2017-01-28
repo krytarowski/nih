@@ -14,15 +14,15 @@
 #include <algorithm>
 
 #include <os/interface/Bitmap.h>
-#include <Control.h>
+#include <os/interface/Control.h>
 #include <os/interface/GradientLinear.h>
 #include <os/interface/LayoutUtils.h>
-#include <Region.h>
-#include <Shape.h>
+#include <os/interface/Region.h>
+#include <os/interface/Shape.h>
 #include <os/support/String.h>
 #include <os/interface/View.h>
 #include <os/interface/Window.h>
-#include <WindowPrivate.h>
+#include <private/interface/WindowPrivate.h>
 
 
 namespace BPrivate {

@@ -17,19 +17,19 @@
 #include <string.h>
 
 #include <os/interface/Alert.h>
-#include <Application.h>
+#include <os/app/Application.h>
 #include <os/interface/Button.h>
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <Entry.h>
 #include <os/storage/File.h>
 #include <os/storage/FindDirectory.h>
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 #include <NodeInfo.h>
 #include <OS.h>
 #include <os/storage/Path.h>
-#include <Region.h>
+#include <os/interface/Region.h>
 #include <os/app/Roster.h>
-#include <SystemCatalog.h>
+#include <private/locale/SystemCatalog.h>
 #include <os/interface/View.h>
 
 #include <AutoDeleter.h>

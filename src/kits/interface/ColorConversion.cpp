@@ -11,13 +11,13 @@
  *	and a palette <-> true color conversion class.
  */
 
-#include "ColorConversion.h"
+#include "private/interface/ColorConversion.h"
 
 #include <os/interface/InterfaceDefs.h>
-#include <Locker.h>
+#include <os/support/Locker.h>
 #include <os/interface/Point.h>
 
-#include <Palette.h>
+#include <private/interface/Palette.h>
 
 #include <new>
 #include <string.h>

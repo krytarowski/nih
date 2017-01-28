@@ -6,18 +6,18 @@
  */
 
 
-#include <DecorInfo.h>
+#include <private/interface/DecorInfo.h>
 
 #include <new>
 #include <stdio.h>
 
-#include <Autolock.h>
+#include <os/support/Autolock.h>
 #include <os/storage/FindDirectory.h>
 #include <os/storage/Path.h>
 #include <os/storage/Resources.h>
-#include <SystemCatalog.h>
+#include <private/locale/SystemCatalog.h>
 
-#include <DecoratorPrivate.h>
+#include <private/interface/DecoratorPrivate.h>
 
 
 #define B_TRANSLATION_CONTEXT "Default decorator about box"

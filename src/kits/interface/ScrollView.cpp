@@ -16,10 +16,10 @@
 #include <os/interface/ControlLook.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
-#include <Region.h>
+#include <os/interface/Region.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 static const float kFancyBorderSize = 2;

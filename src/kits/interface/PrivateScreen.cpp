@@ -19,18 +19,18 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-#include <Application.h>
-#include <Autolock.h>
+#include <os/app/Application.h>
+#include <os/support/Autolock.h>
 #include <os/interface/Bitmap.h>
-#include <Locker.h>
-#include <ObjectList.h>
+#include <os/support/Locker.h>
+#include <os/support/ObjectList.h>
 #include <os/interface/Window.h>
 
-#include <AutoLocker.h>
+#include <private/shared/AutoLocker.h>
 
 #include <AppMisc.h>
-#include <AppServerLink.h>
-#include <ServerProtocol.h>
+#include <private/app/AppServerLink.h>
+#include <private/app/ServerProtocol.h>
 
 
 using namespace BPrivate;

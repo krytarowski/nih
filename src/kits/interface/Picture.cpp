@@ -19,15 +19,15 @@
 
 //#define DEBUG 1
 #include <ByteOrder.h>
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <List.h>
 #include <os/app/Message.h>
 
-#include <AppServerLink.h>
-#include <Autolock.h>
-#include <ObjectList.h>
+#include <private/app/AppServerLink.h>
+#include <os/support/Autolock.h>
+#include <os/support/ObjectList.h>
 #include <PicturePlayer.h>
-#include <ServerProtocol.h>
+#include <private/app/ServerProtocol.h>
 
 #include "PicturePrivate.h"
 

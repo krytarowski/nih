@@ -17,22 +17,22 @@
 #include <stdlib.h>
 
 #include <os/interface/Alert.h>
-#include <Beep.h>
+#include <os/support/Beep.h>
 #include <os/interface/Bitmap.h>
-#include <Dragger.h>
+#include <os/interface/Dragger.h>
 #include <os/interface/MenuItem.h>
 #include <os/app/Message.h>
-#include <PopUpMenu.h>
-#include <Shelf.h>
-#include <SystemCatalog.h>
+#include <os/interface/PopUpMenu.h>
+#include <os/interface/Shelf.h>
+#include <private/locale/SystemCatalog.h>
 #include <os/interface/Window.h>
 
-#include <AutoLocker.h>
+#include <private/shared/AutoLocker.h>
 
-#include <AppServerLink.h>
-#include <DragTrackingFilter.h>
-#include <binary_compatibility/Interface.h>
-#include <ServerProtocol.h>
+#include <private/app/AppServerLink.h>
+#include <private/shared/DragTrackingFilter.h>
+#include <private/binary_compatibility/Interface.h>
+#include <private/app/ServerProtocol.h>
 #include <private/interface/ViewPrivate.h>
 
 #include "ZombieReplicantView.h"

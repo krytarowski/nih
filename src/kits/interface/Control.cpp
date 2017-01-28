@@ -14,12 +14,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Control.h>
+#include <os/interface/Control.h>
 #include <os/app/PropertyInfo.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
-#include <Icon.h>
+#include <private/binary_compatibility/Interface.h>
+#include <private/interface/Icon.h>
 
 
 static property_info sPropertyList[] = {

@@ -30,26 +30,26 @@
 #include <os/interface/Point.h>
 #include <os/app/Roster.h>
 #include <os/interface/Screen.h>
-#include <ScrollBar.h>
+#include <os/interface/ScrollBar.h>
 #include <os/support/String.h>
 #include <os/interface/TextView.h>
 #include <os/interface/Window.h>
 
-#include <ApplicationPrivate.h>
-#include <AppServerLink.h>
-#include <ColorConversion.h>
-#include <DecorInfo.h>
+#include <private/app/ApplicationPrivate.h>
+#include <private/app/AppServerLink.h>
+#include <private/interface/ColorConversion.h>
+#include <private/interface/DecorInfo.h>
 #include <DefaultColors.h>
 #include <DesktopLink.h>
 #include <InputServerTypes.h>
 #include <input_globals.h>
 #include <InterfacePrivate.h>
-#include <MenuPrivate.h>
+#include <private/interface/MenuPrivate.h>
 #include <pr_server.h>
-#include <ServerProtocol.h>
+#include <private/app/ServerProtocol.h>
 #include <ServerReadOnlyMemory.h>
-#include <truncate_string.h>
-#include <utf8_functions.h>
+#include <private/interface/truncate_string.h>
+#include <private/interface/utf8_functions.h>
 #include <WidthBuffer.h>
 #include <WindowInfo.h>
 

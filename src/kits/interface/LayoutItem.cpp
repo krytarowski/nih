@@ -7,7 +7,7 @@
 
 #include <os/interface/LayoutItem.h>
 
-#include <Layout.h>
+#include <os/interface/Layout.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/interface/View.h>
 #include <private/interface/ViewPrivate.h>

@@ -19,30 +19,30 @@
 #include <ctype.h>
 #include <string.h>
 
-#include <Application.h>
+#include <os/app/Application.h>
 #include <os/interface/Bitmap.h>
 #include <os/interface/ControlLook.h>
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <os/storage/File.h>
 #include <os/storage/FindDirectory.h>
-#include <Layout.h>
+#include <os/interface/Layout.h>
 #include <os/interface/LayoutUtils.h>
-#include <MenuBar.h>
+#include <os/interface/MenuBar.h>
 #include <os/interface/MenuItem.h>
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 #include <os/storage/Path.h>
 #include <os/app/PropertyInfo.h>
 #include <os/interface/Screen.h>
-#include <ScrollBar.h>
-#include <SystemCatalog.h>
+#include <os/interface/ScrollBar.h>
+#include <private/locale/SystemCatalog.h>
 #include <os/interface/Window.h>
 
-#include <AppServerLink.h>
-#include <binary_compatibility/Interface.h>
+#include <private/app/AppServerLink.h>
+#include <private/binary_compatibility/Interface.h>
 #include <private/interface/BMCPrivate.h>
-#include <MenuPrivate.h>
+#include <private/interface/MenuPrivate.h>
 #include <MenuWindow.h>
-#include <ServerProtocol.h>
+#include <private/app/ServerProtocol.h>
 
 #include "utf8_functions.h"
 

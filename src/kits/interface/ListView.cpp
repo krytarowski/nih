@@ -17,15 +17,15 @@
 
 #include <stdio.h>
 
-#include <Autolock.h>
+#include <os/support/Autolock.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/PropertyInfo.h>
-#include <ScrollBar.h>
+#include <os/interface/ScrollBar.h>
 #include <os/interface/ScrollView.h>
-#include <Thread.h>
+#include <private/shared/Thread.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Interface.h>
 
 
 struct track_data {

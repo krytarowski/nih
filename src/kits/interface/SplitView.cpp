@@ -10,7 +10,7 @@
 
 #include <Archivable.h>
 #include <os/interface/ControlLook.h>
-#include <Cursor.h>
+#include <os/app/Cursor.h>
 
 #include "SplitLayout.h"
 

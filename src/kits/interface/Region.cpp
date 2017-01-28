@@ -8,12 +8,12 @@
  */
 
 
-#include <Region.h>
+#include <os/interface/Region.h>
 
 #include <stdlib.h>
 #include <string.h>
 
-#include <Debug.h>
+#include <os/support/Debug.h>
 
 #include "clipping.h"
 #include "RegionSupport.h"

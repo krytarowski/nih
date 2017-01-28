@@ -24,17 +24,17 @@
 #include <private/interface/BMCPrivate.h>
 #include <os/interface/ControlLook.h>
 #include <os/interface/LayoutUtils.h>
-#include <MenuBar.h>
+#include <os/interface/MenuBar.h>
 #include <os/interface/MenuItem.h>
 #include <MenuItemPrivate.h>
-#include <MenuPrivate.h>
+#include <private/interface/MenuPrivate.h>
 #include <os/app/Message.h>
 #include <os/app/MessageFilter.h>
-#include <Thread.h>
+#include <private/shared/Thread.h>
 #include <os/interface/Window.h>
 
-#include <binary_compatibility/Interface.h>
-#include <binary_compatibility/Support.h>
+#include <private/binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Support.h>
 
 
 #ifdef CALLED

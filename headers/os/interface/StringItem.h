@@ -6,7 +6,7 @@
 #define _STRING_ITEM_H
 
 
-#include <ListItem.h>
+#include <os/interface/ListItem.h>
 
 
 class BStringItem : public BListItem {

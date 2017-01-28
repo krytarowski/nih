@@ -6,8 +6,8 @@
 #define _SHELF_H
 
 
-#include <Dragger.h>
-#include <Handler.h>
+#include <os/interface/Dragger.h>
+#include <os/app/Handler.h>
 #include <os/support/List.h>
 #include <os/support/Locker.h>
 

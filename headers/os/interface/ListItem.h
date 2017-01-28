@@ -98,7 +98,7 @@ BListItem::Bottom(void) const
 }
 
 
-#include <StringItem.h>
+#include <os/interface/StringItem.h>
 	// to maintain source compatibility
 
 

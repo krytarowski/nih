@@ -11,7 +11,7 @@
 
 
 #include <driver_settings.h>
-#include <Message.h>
+#include <os/app/Message.h>
 
 
 class DriverSettingsConverter {

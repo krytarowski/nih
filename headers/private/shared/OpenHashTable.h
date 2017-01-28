@@ -48,7 +48,7 @@ All rights reserved.
 #include <stdlib.h>
 #include <new>
 
-// don't include <Debug.h>
+// don't include <os/support/Debug.h>
 #ifndef _OPEN_HASH_TABLE_ASSERT
 #	define _OPEN_HASH_TABLE_ASSERT(E)	(void)0
 #endif

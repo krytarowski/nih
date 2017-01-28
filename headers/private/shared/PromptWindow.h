@@ -6,7 +6,7 @@
 #define PROMPT_WINDOW_H_
 
 
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 #include <Window.h>
 
 

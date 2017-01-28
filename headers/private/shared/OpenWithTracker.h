@@ -6,10 +6,10 @@
 #define _OPEN_WITH_TRACKER_H
 
 
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <FindDirectory.h>
-#include <Message.h>
-#include <Messenger.h>
+#include <os/app/Message.h>
+#include <os/app/Messenger.h>
 #include <Path.h>
 
 

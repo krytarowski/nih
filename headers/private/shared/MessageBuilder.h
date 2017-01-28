@@ -6,7 +6,7 @@
 #define MESSAGE_BUILDER_H
 
 
-#include <Message.h>
+#include <os/app/Message.h>
 #include <ObjectList.h>
 #include <String.h>
 

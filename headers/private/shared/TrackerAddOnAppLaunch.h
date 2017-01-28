@@ -7,7 +7,7 @@
 #define _TRACKER_ADDON_APP_LAUNCH_H
 
 
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <image.h>
 #include <Roster.h>
 #include <TrackerAddOn.h>

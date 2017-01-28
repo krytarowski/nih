@@ -35,12 +35,12 @@ All rights reserved.
 #define __THREAD__
 
 
-#include <Debug.h>
-#include <Looper.h>
-#include <OS.h>
+#include <os/support/Debug.h>
+#include <os/app/Looper.h>
+#include <os/kernel/OS.h>
 
-#include "ObjectList.h"
-#include "FunctionObject.h"
+#include "os/support/ObjectList.h"
+#include "private/shared/FunctionObject.h"
 
 
 namespace BPrivate {

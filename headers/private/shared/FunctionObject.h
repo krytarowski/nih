@@ -35,12 +35,12 @@ All rights reserved.
 #define __FUNCTION_OBJECT__
 
 
-#include <Message.h>
-#include <Messenger.h>
-#include <MessageFilter.h>
+#include <os/app/Message.h>
+#include <os/app/Messenger.h>
+#include <os/app/MessageFilter.h>
 
-#include <Entry.h>
-#include <Node.h>
+#include <os/storage/Entry.h>
+#include <os/storage/Node.h>
 
 
 // parameter binders serve to store a copy of a struct and

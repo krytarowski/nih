@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include <List.h>
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 
 class BMessage;

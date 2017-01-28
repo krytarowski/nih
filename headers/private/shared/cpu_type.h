@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <strings.h>
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 
 #ifdef __cplusplus

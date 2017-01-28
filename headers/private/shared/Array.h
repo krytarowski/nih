@@ -13,7 +13,7 @@
 #include <SupportDefs.h>
 
 #if DEBUG
-#	include <OS.h>
+#	include <os/kernel/OS.h>
 #endif
 
 

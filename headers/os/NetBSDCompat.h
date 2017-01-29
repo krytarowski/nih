@@ -56,4 +56,16 @@ typedef	unsigned long	addr_t;
 #define  __HAIKU_PRI_PREFIX_64           "ll"
 #define  __HAIKU_PRI_PREFIX_ADDR         "l"
 
+#ifndef SIZE_MAX
+#define SIZE_MAX (size_t)(-1)
+#endif
+
+#ifndef INT32_MAX
+#define INT32_MAX 0x7fffffff
+#endif
+
+#ifndef INT32_MIN
+#define INT32_MIN (-0x7fffffff-1)
+#endif
+
 #endif /* !_NETBSD_COMPAT_H */

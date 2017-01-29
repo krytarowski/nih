@@ -13,7 +13,7 @@
 #include "InlineInput.h"
 #include "StyleBuffer.h"
 
-#include <View.h>
+#include <os/interface/View.h>
 
 #include <stdio.h>
 

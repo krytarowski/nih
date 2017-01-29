@@ -9,10 +9,10 @@
 #define __LINE_BUFFER_H
 
 
-#include <SupportDefs.h>
-#include <TextView.h>
+#include <os/support/SupportDefs.h>
+#include <os/interface/TextView.h>
 
-#include "TextViewSupportBuffer.h"
+#include "private/interface/TextViewSupportBuffer.h"
 
 struct STELine {
 	long		offset;		// offset of first character of line

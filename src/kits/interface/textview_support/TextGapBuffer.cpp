@@ -12,10 +12,10 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <utf8_functions.h>
+#include <private/interface/utf8_functions.h>
 
-#include <File.h>
-#include <InterfaceDefs.h> // for B_UTF8_BULLET
+#include <os/storage/File.h>
+#include <os/interface/InterfaceDefs.h> // for B_UTF8_BULLET
 
 #include "TextGapBuffer.h"
 

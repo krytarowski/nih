@@ -9,7 +9,7 @@
 #ifndef __UNDOBUFFER_H
 #define __UNDOBUFFER_H
 
-#include <TextView.h>
+#include <os/interface/TextView.h>
 
 
 class BClipboard;

@@ -9,8 +9,8 @@
 #define __TEXTGAPBUFFER_H
 
 
-#include <SupportDefs.h>
-#include <TextView.h>
+#include <os/support/SupportDefs.h>
+#include <os/interface/TextView.h>
 
 
 class BFile;

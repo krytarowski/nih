@@ -10,9 +10,9 @@
 
 
 #include "UndoBuffer.h"
-#include "utf8_functions.h"
+#include "private/interface/utf8_functions.h"
 
-#include <Clipboard.h>
+#include <os/app/Clipboard.h>
 
 #include <stdio.h>
 #include <stdlib.h>

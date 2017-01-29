@@ -9,8 +9,8 @@
 #ifndef __INLINEINPUT_H
 #define __INLINEINPUT_H
 
-#include <Messenger.h>
-#include <TextView.h>
+#include <os/app/Messenger.h>
+#include <os/interface/TextView.h>
 
 struct clause;
 

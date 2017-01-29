@@ -9,14 +9,14 @@
 //!	Caches string widths in a hash table, to avoid a trip to the app server.
 
 
-#include "utf8_functions.h"
+#include "private/interface/utf8_functions.h"
 #include "TextGapBuffer.h"
-#include "WidthBuffer.h"
+#include "private/interface/WidthBuffer.h"
 
-#include <Autolock.h>
-#include <Debug.h>
-#include <Font.h>
-#include <Locker.h>
+#include <os/support/Autolock.h>
+#include <os/support/Debug.h>
+#include <os/interface/Font.h>
+#include <os/support/Locker.h>
 
 #include <stdio.h>
 
@@ -393,4 +393,3 @@ StringWidth__14_BWidthBuffer_PCcllPC5BFont(_BWidthBuffer_* widthBuffer,
 }
 
 #endif // __GNUC__ < 3
-

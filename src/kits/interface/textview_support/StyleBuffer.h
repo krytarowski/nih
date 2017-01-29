@@ -8,12 +8,12 @@
  */
 
 
-#include <Font.h>
-#include <InterfaceDefs.h>
-#include <SupportDefs.h>
-#include <TextView.h>
+#include <os/interface/Font.h>
+#include <os/interface/InterfaceDefs.h>
+#include <os/support/SupportDefs.h>
+#include <os/interface/TextView.h>
 
-#include "TextViewSupportBuffer.h"
+#include "private/interface/TextViewSupportBuffer.h"
 
 
 struct STEStyle {

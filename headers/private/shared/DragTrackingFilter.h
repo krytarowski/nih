@@ -6,7 +6,7 @@
 #define DRAG_TRACKING_FILTER_H
 
 #include <os/app/MessageFilter.h>
-#include <Point.h>
+#include <os/interface/Point.h>
 
 class BView;
 class BHandler;

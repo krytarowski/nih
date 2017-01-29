@@ -6,7 +6,7 @@
 #define	_RADIO_BUTTON_H
 
 
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <os/interface/Control.h>
 
 

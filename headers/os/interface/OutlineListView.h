@@ -6,7 +6,7 @@
 #define _OUTLINE_LIST_VIEW_H
 
 
-#include <ListView.h>
+#include <os/interface/ListView.h>
 
 
 class BOutlineListView : public BListView {

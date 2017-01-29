@@ -6,7 +6,7 @@
 #define _OPTION_POP_UP_H
 
 
-#include <OptionControl.h>
+#include <os/interface/OptionControl.h>
 
 
 class BMenuField;

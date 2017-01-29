@@ -7,7 +7,7 @@
 
 
 #include <os/interface/Control.h>
-#include <Picture.h>
+#include <os/interface/Picture.h>
 
 
 enum {

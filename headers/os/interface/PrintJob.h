@@ -6,7 +6,7 @@
 #define	_PRINTSESSION_H
 
 
-#include <Picture.h>
+#include <os/interface/Picture.h>
 
 
 class BFile;

@@ -147,6 +147,20 @@ SRCS+=	interface/Window.cpp
 SRCS+=	interface/WindowStack.cpp
 SRCS+=	interface/ZombieReplicantView.cpp
 
+SRCS+=	interface/layouter/CollapsingLayouter.cpp
+SRCS+=	interface/layouter/ComplexLayouter.cpp
+SRCS+=	interface/layouter/LayoutOptimizer.cpp
+SRCS+=	interface/layouter/Layouter.cpp
+SRCS+=	interface/layouter/OneElementLayouter.cpp
+SRCS+=	interface/layouter/SimpleLayouter.cpp
+
+SRCS+=	interface/textview_support/InlineInput.cpp
+SRCS+=	interface/textview_support/LineBuffer.cpp
+SRCS+=	interface/textview_support/StyleBuffer.cpp
+SRCS+=	interface/textview_support/TextGapBuffer.cpp
+SRCS+=	interface/textview_support/UndoBuffer.cpp
+SRCS+=	interface/textview_support/WidthBuffer.cpp
+
 LIB=	be
 
 NOMAN=	yes

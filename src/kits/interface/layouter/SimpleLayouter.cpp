@@ -7,9 +7,9 @@
 
 #include <math.h>
 
-#include <LayoutUtils.h>
-#include <List.h>
-#include <Size.h>
+#include <os/interface/LayoutUtils.h>
+#include <os/support/List.h>
+#include <os/interface/Size.h>
 
 
 // no lround() under BeOS R5 x86

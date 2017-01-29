@@ -5,7 +5,7 @@
 
 #include "OneElementLayouter.h"
 
-#include <Size.h>
+#include <os/interface/Size.h>
 
 
 class OneElementLayouter::MyLayoutInfo : public LayoutInfo {

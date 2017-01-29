@@ -9,8 +9,8 @@
 #include "OneElementLayouter.h"
 #include "SimpleLayouter.h"
 
-#include <ObjectList.h>
-#include <Size.h>
+#include <os/support/ObjectList.h>
+#include <os/interface/Size.h>
 
 
 class CollapsingLayouter::ProxyLayoutInfo : public LayoutInfo {

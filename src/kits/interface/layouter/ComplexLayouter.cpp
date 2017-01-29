@@ -11,10 +11,10 @@
 
 #include <new>
 
-#include <OS.h>
-#include <Size.h>
+#include <os/kernel/OS.h>
+#include <os/interface/Size.h>
 
-#include <AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 
 #include "LayoutOptimizer.h"
 #include "SimpleLayouter.h"

@@ -10,7 +10,7 @@
 
 #include <new>
 
-#include <AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 
 
 //#define TRACE_LAYOUT_OPTIMIZER	1

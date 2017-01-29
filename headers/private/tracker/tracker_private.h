@@ -35,7 +35,7 @@ All rights reserved.
 #ifndef _TRACKER_PRIVATE_H
 #define _TRACKER_PRIVATE_H
 
-#include <BeBuild.h>
+#include <os/BeBuild.h>
 
 #define kTrackerSignature "application/x-vnd.Be-TRAK"
 #define kTrackerSuites "suite/x-vnd.Be-TRAK"

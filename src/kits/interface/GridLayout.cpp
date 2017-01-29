@@ -6,7 +6,7 @@
  */
 
 
-#include <GridLayout.h>
+#include <os/interface/GridLayout.h>
 
 #include <algorithm>
 #include <new>
@@ -14,7 +14,7 @@
 
 #include <os/interface/ControlLook.h>
 #include <os/interface/LayoutItem.h>
-#include <List.h>
+#include <os/support/List.h>
 #include <os/app/Message.h>
 
 #include "ViewLayoutItem.h"

@@ -10,14 +10,14 @@
 
 /**	PicturePlayer is used to play picture data. */
 
-#include <PicturePlayer.h>
+#include <private/interface/PicturePlayer.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <os/interface/AffineTransform.h>
-#include <PictureProtocol.h>
+#include <private/interface/PictureProtocol.h>
 #include <os/interface/Shape.h>
 
 

@@ -5,7 +5,7 @@
  */
 
 
-#include <SpaceLayoutItem.h>
+#include <os/interface/SpaceLayoutItem.h>
 
 #include <new>
 

@@ -3,7 +3,7 @@
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
-#include <SplitLayoutBuilder.h>
+#include <os/interface/SplitLayoutBuilder.h>
 
 #include <new>
 
@@ -95,4 +95,3 @@ BSplitLayoutBuilder::operator BSplitView*()
 {
 	return fView;
 }
-

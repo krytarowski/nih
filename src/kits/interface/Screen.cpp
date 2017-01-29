@@ -12,7 +12,7 @@
 
 #include <os/interface/Window.h>
 
-#include <PrivateScreen.h>
+#include <private/interface/PrivateScreen.h>
 
 
 using namespace BPrivate;

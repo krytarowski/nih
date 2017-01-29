@@ -7,9 +7,9 @@
  */
 
 
-#include <MenuItemPrivate.h>
+#include <private/interface/MenuItemPrivate.h>
 
-#include <Menu.h>
+#include <os/interface/Menu.h>
 
 
 namespace BPrivate {

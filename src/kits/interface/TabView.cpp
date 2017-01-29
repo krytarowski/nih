@@ -11,8 +11,8 @@
  */
 
 
-#include <TabView.h>
-#include <TabViewPrivate.h>
+#include <os/interface/TabView.h>
+#include <private/interface/TabViewPrivate.h>
 
 #include <new>
 
@@ -21,9 +21,9 @@
 
 #include <os/interface/CardLayout.h>
 #include <os/interface/ControlLook.h>
-#include <GroupLayout.h>
+#include <os/interface/GroupLayout.h>
 #include <os/interface/LayoutUtils.h>
-#include <List.h>
+#include <os/support/List.h>
 #include <os/app/Message.h>
 #include <os/app/PropertyInfo.h>
 #include <os/interface/Rect.h>

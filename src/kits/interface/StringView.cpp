@@ -13,7 +13,7 @@
 //!	BStringView draws a non-editable text string.
 
 
-#include <StringView.h>
+#include <os/interface/StringView.h>
 
 #include <stdio.h>
 #include <stdlib.h>

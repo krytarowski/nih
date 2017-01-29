@@ -10,7 +10,7 @@
 // Records a series of drawing instructions that can be "replayed" later.
 
 
-#include <Picture.h>
+#include <os/interface/Picture.h>
 
 #include <new>
 #include <stdio.h>
@@ -18,18 +18,18 @@
 #include <string.h>
 
 //#define DEBUG 1
-#include <ByteOrder.h>
+#include <os/support/ByteOrder.h>
 #include <os/support/Debug.h>
-#include <List.h>
+#include <os/support/List.h>
 #include <os/app/Message.h>
 
 #include <private/app/AppServerLink.h>
 #include <os/support/Autolock.h>
 #include <os/support/ObjectList.h>
-#include <PicturePlayer.h>
+#include <private/interface/PicturePlayer.h>
 #include <private/app/ServerProtocol.h>
 
-#include "PicturePrivate.h"
+#include "private/interface/PicturePrivate.h"
 
 
 static BObjectList<BPicture> sPictureList;

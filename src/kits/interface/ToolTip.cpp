@@ -4,13 +4,13 @@
  */
 
 
-#include <ToolTip.h>
+#include <private/interface/ToolTip.h>
 
 #include <new>
 
 #include <os/app/Message.h>
 #include <os/interface/TextView.h>
-#include <ToolTipManager.h>
+#include <private/interface/ToolTipManager.h>
 
 
 BToolTip::BToolTip()
@@ -224,4 +224,3 @@ BTextToolTip::_InitData(const char* text)
 	fTextView->SetFontAndColor(NULL, 0, &color);
 	fTextView->SetWordWrap(false);
 }
-

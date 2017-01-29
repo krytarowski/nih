@@ -11,8 +11,8 @@
 #include <new>
 #include <syslog.h>
 
-#include <AutoDeleter.h>
-#include <LayoutContext.h>
+#include <private/shared/AutoDeleter.h>
+#include <os/interface/LayoutContext.h>
 #include <os/app/Message.h>
 #include <os/interface/View.h>
 #include <private/interface/ViewPrivate.h>

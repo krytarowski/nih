@@ -13,7 +13,7 @@
 */
 
 
-#include <PrivateScreen.h>
+#include <private/interface/PrivateScreen.h>
 
 #include <new>
 #include <pthread.h>
@@ -28,7 +28,7 @@
 
 #include <private/shared/AutoLocker.h>
 
-#include <AppMisc.h>
+#include <private/app/AppMisc.h>
 #include <private/app/AppServerLink.h>
 #include <private/app/ServerProtocol.h>
 

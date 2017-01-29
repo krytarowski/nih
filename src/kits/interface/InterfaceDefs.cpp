@@ -23,10 +23,10 @@
 #include <string.h>
 
 #include <os/interface/Bitmap.h>
-#include <Clipboard.h>
+#include <os/app/Clipboard.h>
 #include <os/interface/ControlLook.h>
 #include <os/interface/Font.h>
-#include <Menu.h>
+#include <os/interface/Menu.h>
 #include <os/interface/Point.h>
 #include <os/app/Roster.h>
 #include <os/interface/Screen.h>
@@ -39,19 +39,19 @@
 #include <private/app/AppServerLink.h>
 #include <private/interface/ColorConversion.h>
 #include <private/interface/DecorInfo.h>
-#include <DefaultColors.h>
-#include <DesktopLink.h>
-#include <InputServerTypes.h>
-#include <input_globals.h>
-#include <InterfacePrivate.h>
+#include <private/interface/DefaultColors.h>
+#include <private/app/DesktopLink.h>
+#include <private/input/InputServerTypes.h>
+#include <private/interface/input_globals.h>
+#include <private/interface/InterfacePrivate.h>
 #include <private/interface/MenuPrivate.h>
-#include <pr_server.h>
+#include <private/print/pr_server.h>
 #include <private/app/ServerProtocol.h>
-#include <ServerReadOnlyMemory.h>
+#include <private/app/ServerReadOnlyMemory.h>
 #include <private/interface/truncate_string.h>
 #include <private/interface/utf8_functions.h>
-#include <WidthBuffer.h>
-#include <WindowInfo.h>
+#include <private/interface/WidthBuffer.h>
+#include <private/interface/WindowInfo.h>
 
 
 using namespace BPrivate;

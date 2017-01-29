@@ -16,7 +16,7 @@
 #include <os/interface/Point.h>
 #include <os/interface/Rect.h>
 
-#include <ShapePrivate.h>
+#include <private/interface/ShapePrivate.h>
 
 #include <new>
 #include <stdlib.h>

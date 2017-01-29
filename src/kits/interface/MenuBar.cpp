@@ -20,13 +20,13 @@
 #include <os/interface/MenuItem.h>
 #include <os/interface/Window.h>
 
-#include <AppMisc.h>
+#include <private/app/AppMisc.h>
 #include <private/binary_compatibility/Interface.h>
 #include <private/interface/MenuPrivate.h>
-#include <TokenSpace.h>
+#include <private/app/TokenSpace.h>
 #include <os/interface/InterfaceDefs.h>
 
-#include "BMCPrivate.h"
+#include "private/interface/BMCPrivate.h"
 
 
 using BPrivate::gDefaultTokens;

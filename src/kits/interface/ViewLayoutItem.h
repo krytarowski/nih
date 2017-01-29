@@ -5,7 +5,7 @@
 #ifndef	_VIEW_LAYOUT_ITEM_H
 #define	_VIEW_LAYOUT_ITEM_H
 
-#include <LayoutItem.h>
+#include <os/interface/LayoutItem.h>
 
 
 class BViewLayoutItem : public BLayoutItem {

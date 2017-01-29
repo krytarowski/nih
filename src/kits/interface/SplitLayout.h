@@ -7,7 +7,7 @@
 
 
 #include <os/interface/AbstractLayout.h>
-#include <Point.h>
+#include <os/interface/Point.h>
 
 
 namespace BPrivate {

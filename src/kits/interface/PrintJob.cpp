@@ -10,7 +10,7 @@
  */
 
 
-#include <PrintJob.h>
+#include <os/interface/PrintJob.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,20 +20,20 @@
 #include <os/app/Application.h>
 #include <os/interface/Button.h>
 #include <os/support/Debug.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <os/storage/File.h>
 #include <os/storage/FindDirectory.h>
 #include <os/app/Messenger.h>
-#include <NodeInfo.h>
-#include <OS.h>
+#include <os/storage/NodeInfo.h>
+#include <os/kernel/OS.h>
 #include <os/storage/Path.h>
 #include <os/interface/Region.h>
 #include <os/app/Roster.h>
 #include <private/locale/SystemCatalog.h>
 #include <os/interface/View.h>
 
-#include <AutoDeleter.h>
-#include <pr_server.h>
+#include <private/shared/AutoDeleter.h>
+#include <private/print/pr_server.h>
 #include <private/interface/ViewPrivate.h>
 
 using BPrivate::gSystemCatalog;

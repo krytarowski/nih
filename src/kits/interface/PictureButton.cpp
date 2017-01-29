@@ -7,7 +7,7 @@
  */
 
 
-#include <PictureButton.h>
+#include <os/interface/PictureButton.h>
 
 #include <new>
 
@@ -492,4 +492,3 @@ BPictureButton::operator=(const BPictureButton &button)
 {
 	return *this;
 }
-

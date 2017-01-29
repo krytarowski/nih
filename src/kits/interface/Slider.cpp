@@ -9,7 +9,7 @@
  */
 
 
-#include <Slider.h>
+#include <os/interface/Slider.h>
 
 #include <algorithm>
 
@@ -19,7 +19,7 @@
 
 #include <os/interface/Bitmap.h>
 #include <os/interface/ControlLook.h>
-#include <Errors.h>
+#include <os/support/Errors.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
 #include <os/interface/Region.h>

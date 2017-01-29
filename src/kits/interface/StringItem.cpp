@@ -9,7 +9,7 @@
  */
 
 
-#include <StringItem.h>
+#include <os/interface/StringItem.h>
 
 #include <stdlib.h>
 #include <string.h>

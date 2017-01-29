@@ -7,7 +7,7 @@
 
 #include <new>
 
-#include <SpaceLayoutItem.h>
+#include <os/interface/SpaceLayoutItem.h>
 
 
 using std::nothrow;

@@ -10,7 +10,7 @@
  */
 
 /*! BStatusBar displays a "percentage-of-completion" gauge. */
-#include <StatusBar.h>
+#include <os/interface/StatusBar.h>
 
 #include <stdio.h>
 #include <stdlib.h>

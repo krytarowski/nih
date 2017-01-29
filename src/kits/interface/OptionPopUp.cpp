@@ -6,10 +6,10 @@
  *		Stefano Ceccherini <stefano.ceccherini@gmail.com>
  */
 
-#include <GroupLayout.h>
+#include <os/interface/GroupLayout.h>
 #include <os/interface/MenuField.h>
 #include <os/interface/MenuItem.h>
-#include <OptionPopUp.h>
+#include <os/interface/OptionPopUp.h>
 #include <os/interface/PopUpMenu.h>
 
 #include <stdio.h>

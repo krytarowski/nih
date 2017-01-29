@@ -6,7 +6,7 @@
  */
 
 
-#include <GridView.h>
+#include <os/interface/GridView.h>
 
 
 BGridView::BGridView(float horizontalSpacing, float verticalSpacing)

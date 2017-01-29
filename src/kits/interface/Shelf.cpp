@@ -16,13 +16,13 @@
 
 #include <pthread.h>
 
-#include <AutoDeleter.h>
-#include <AutoLock.h>
+#include <private/shared/AutoDeleter.h>
+#include <private/tracker/AutoLock.h>
 #include <os/support/Beep.h>
 #include <os/interface/Dragger.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <os/storage/File.h>
-#include <Looper.h>
+#include <os/app/Looper.h>
 #include <os/app/Message.h>
 #include <os/app/MessageFilter.h>
 #include <os/app/Messenger.h>
@@ -34,7 +34,7 @@
 
 #include <private/interface/ViewPrivate.h>
 
-#include "ZombieReplicantView.h"
+#include "private/interface/ZombieReplicantView.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -1551,4 +1551,3 @@ BShelf::_InstantiateObject(BMessage *archive, image_id *image)
 		return NULL;
 	}
 }
-

@@ -9,11 +9,11 @@
 
 //!	BMenuWindow is a custom BWindow for BMenus.
 
-#include <MenuWindow.h>
+#include <private/interface/MenuWindow.h>
 
 #include <os/interface/ControlLook.h>
 #include <os/support/Debug.h>
-#include <Menu.h>
+#include <os/interface/Menu.h>
 #include <os/interface/MenuItem.h>
 
 #include <private/interface/MenuPrivate.h>
@@ -471,4 +471,3 @@ BMenuWindow::_ScrollBy(const float& step)
 		}
 	}
 }
-

@@ -7,18 +7,18 @@
  */
 
 
-#include "WindowStack.h"
+#include "private/interface/WindowStack.h"
 
 #include <new>
 
 #include <os/interface/Window.h>
 
 #include <private/app/ApplicationPrivate.h>
-#include <MessengerPrivate.h>
+#include <private/app/MessengerPrivate.h>
 #include <private/app/PortLink.h>
 #include <private/app/ServerProtocol.h>
 
-#include "StackAndTilePrivate.h"
+#include "private/interface/StackAndTilePrivate.h"
 
 
 using namespace BPrivate;

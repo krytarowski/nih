@@ -20,13 +20,13 @@
 #include <string.h>
 
 #include <os/interface/AbstractLayoutItem.h>
-#include <Archivable.h>
+#include <os/support/Archivable.h>
 #include <private/interface/BMCPrivate.h>
 #include <os/interface/ControlLook.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/interface/MenuBar.h>
 #include <os/interface/MenuItem.h>
-#include <MenuItemPrivate.h>
+#include <private/interface/MenuItemPrivate.h>
 #include <private/interface/MenuPrivate.h>
 #include <os/app/Message.h>
 #include <os/app/MessageFilter.h>

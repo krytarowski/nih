@@ -4,11 +4,11 @@
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
-#include <SplitView.h>
+#include <os/interface/SplitView.h>
 
 #include <stdio.h>
 
-#include <Archivable.h>
+#include <os/support/Archivable.h>
 #include <os/interface/ControlLook.h>
 #include <os/app/Cursor.h>
 
@@ -398,4 +398,3 @@ void BSplitView::_ReservedSplitView7() {}
 void BSplitView::_ReservedSplitView8() {}
 void BSplitView::_ReservedSplitView9() {}
 void BSplitView::_ReservedSplitView10() {}
-

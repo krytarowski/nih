@@ -18,41 +18,41 @@
 #include <stdlib.h>
 
 #include <os/app/Application.h>
-#include <AppMisc.h>
+#include <private/app/AppMisc.h>
 #include <private/app/AppServerLink.h>
 #include <private/app/ApplicationPrivate.h>
 #include <os/support/Autolock.h>
 #include <os/interface/Bitmap.h>
 #include <os/interface/Button.h>
-#include <DirectMessageTarget.h>
+#include <private/app/DirectMessageTarget.h>
 #include <os/storage/FindDirectory.h>
-#include <InputServerTypes.h>
+#include <private/input/InputServerTypes.h>
 #include <os/interface/Layout.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/interface/MenuBar.h>
 #include <os/interface/MenuItem.h>
 #include <private/interface/MenuPrivate.h>
-#include <MessagePrivate.h>
-#include <MessageQueue.h>
+#include <private/app/MessagePrivate.h>
+#include <os/app/MessageQueue.h>
 #include <os/app/MessageRunner.h>
 #include <os/storage/Path.h>
 #include <private/app/PortLink.h>
 #include <os/app/PropertyInfo.h>
 #include <os/app/Roster.h>
-#include <RosterPrivate.h>
+#include <private/app/RosterPrivate.h>
 #include <os/interface/Screen.h>
 #include <private/app/ServerProtocol.h>
 #include <os/support/String.h>
 #include <os/interface/TextView.h>
-#include <TokenSpace.h>
-#include <ToolTipManager.h>
-#include <ToolTipWindow.h>
-#include <UnicodeChar.h>
+#include <private/app/TokenSpace.h>
+#include <private/interface/ToolTipManager.h>
+#include <private/interface/ToolTipWindow.h>
+#include <os/locale/UnicodeChar.h>
 #include <private/interface/WindowPrivate.h>
 
 #include <private/binary_compatibility/Interface.h>
-#include <input_globals.h>
-#include <tracker_private.h>
+#include <private/interface/input_globals.h>
+#include <private/tracker/tracker_private.h>
 
 
 //#define DEBUG_WIN
@@ -4200,4 +4200,3 @@ void BWindow::_ReservedWindow5() {}
 void BWindow::_ReservedWindow6() {}
 void BWindow::_ReservedWindow7() {}
 void BWindow::_ReservedWindow8() {}
-

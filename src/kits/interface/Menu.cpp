@@ -11,7 +11,7 @@
  */
 
 
-#include <Menu.h>
+#include <os/interface/Menu.h>
 
 #include <algorithm>
 #include <new>
@@ -41,10 +41,10 @@
 #include <private/binary_compatibility/Interface.h>
 #include <private/interface/BMCPrivate.h>
 #include <private/interface/MenuPrivate.h>
-#include <MenuWindow.h>
+#include <private/interface/MenuWindow.h>
 #include <private/app/ServerProtocol.h>
 
-#include "utf8_functions.h"
+#include "private/interface/utf8_functions.h"
 
 
 #define USE_CACHED_MENUWINDOW 1

@@ -9,7 +9,7 @@
 
 
 #include <os/app/Application.h>
-#include <Looper.h>
+#include <os/app/Looper.h>
 #include <os/interface/MenuItem.h>
 #include <os/interface/PopUpMenu.h>
 #include <os/interface/Window.h>

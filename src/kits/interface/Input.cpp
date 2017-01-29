@@ -12,12 +12,12 @@
 #include <string.h>
 #include <new>
 
-#include <Input.h>
-#include <List.h>
+#include <os/interface/Input.h>
+#include <os/support/List.h>
 #include <os/app/Message.h>
 
-#include <input_globals.h>
-#include <InputServerTypes.h>
+#include <private/interface/input_globals.h>
+#include <private/input/InputServerTypes.h>
 
 
 static BMessenger *sInputServer = NULL;

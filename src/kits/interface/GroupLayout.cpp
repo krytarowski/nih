@@ -6,7 +6,7 @@
  */
 
 
-#include <GroupLayout.h>
+#include <os/interface/GroupLayout.h>
 
 #include <os/interface/ControlLook.h>
 #include <os/interface/LayoutItem.h>

@@ -11,7 +11,7 @@
 #ifndef	_TEXT_CONTROLI_H
 #define	_TEXT_CONTROLI_H
 
-#include <TextView.h>
+#include <os/interface/TextView.h>
 
 
 class BTextControl;
@@ -61,4 +61,3 @@ using namespace BPrivate;
 
 
 #endif	// _TEXT_CONTROLI_H
-

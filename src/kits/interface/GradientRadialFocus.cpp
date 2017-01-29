@@ -8,7 +8,7 @@
 
 #include <os/interface/Point.h>
 #include <os/interface/Gradient.h>
-#include <GradientRadialFocus.h>
+#include <os/interface/GradientRadialFocus.h>
 
 
 // constructor

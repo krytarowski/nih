@@ -14,7 +14,7 @@
 //! BOutlineListView represents a "nestable" list view.
 
 
-#include <OutlineListView.h>
+#include <os/interface/OutlineListView.h>
 
 #include <algorithm>
 

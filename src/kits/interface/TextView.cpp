@@ -33,10 +33,10 @@
 #include <os/app/Application.h>
 #include <os/support/Beep.h>
 #include <os/interface/Bitmap.h>
-#include <Clipboard.h>
+#include <os/app/Clipboard.h>
 #include <os/support/Debug.h>
-#include <Entry.h>
-#include <Input.h>
+#include <os/storage/Entry.h>
+#include <os/interface/Input.h>
 #include <os/interface/LayoutBuilder.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/MessageRunner.h>
@@ -50,12 +50,12 @@
 
 #include <private/binary_compatibility/Interface.h>
 
-#include "InlineInput.h"
-#include "LineBuffer.h"
-#include "StyleBuffer.h"
-#include "TextGapBuffer.h"
-#include "UndoBuffer.h"
-#include "WidthBuffer.h"
+#include "textview_support/InlineInput.h"
+#include "textview_support/LineBuffer.h"
+#include "textview_support/StyleBuffer.h"
+#include "textview_support/TextGapBuffer.h"
+#include "textview_support/UndoBuffer.h"
+#include "private/interface/WidthBuffer.h"
 
 
 using namespace std;

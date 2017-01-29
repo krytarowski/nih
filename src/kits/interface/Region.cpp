@@ -15,8 +15,8 @@
 
 #include <os/support/Debug.h>
 
-#include "clipping.h"
-#include "RegionSupport.h"
+#include "private/interface/clipping.h"
+#include "private/interface/RegionSupport.h"
 
 
 const static int32 kDataBlockSize = 8;

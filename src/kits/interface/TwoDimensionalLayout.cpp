@@ -4,21 +4,21 @@
  */
 
 
-#include <TwoDimensionalLayout.h>
+#include <os/interface/TwoDimensionalLayout.h>
 
 #include <stdio.h>
 
 #include <os/interface/ControlLook.h>
-#include <LayoutContext.h>
+#include <os/interface/LayoutContext.h>
 #include <os/interface/LayoutItem.h>
 #include <os/interface/LayoutUtils.h>
-#include <List.h>
+#include <os/support/List.h>
 #include <os/app/Message.h>
 #include <os/interface/View.h>
 
-#include <Referenceable.h>
+#include <os/support/Referenceable.h>
 
-#include "CollapsingLayouter.h"
+#include "layouter/CollapsingLayouter.h"
 
 
 // Some words of explanation:
@@ -1437,4 +1437,3 @@ void BTwoDimensionalLayout::_ReservedTwoDimensionalLayout7() {}
 void BTwoDimensionalLayout::_ReservedTwoDimensionalLayout8() {}
 void BTwoDimensionalLayout::_ReservedTwoDimensionalLayout9() {}
 void BTwoDimensionalLayout::_ReservedTwoDimensionalLayout10() {}
-

@@ -4,7 +4,7 @@
  */
 
 
-#include <ViewPort.h>
+#include <private/interface/ViewPort.h>
 
 #include <algorithm>
 

@@ -9,7 +9,7 @@
  */
 
 
-#include <SeparatorItem.h>
+#include <os/interface/SeparatorItem.h>
 
 #include <os/interface/Font.h>
 

@@ -9,7 +9,7 @@
  * Description:	An abstract base class for option controls.
  */
 
-#include <OptionControl.h>
+#include <os/interface/OptionControl.h>
 
 #include <cstring>
 

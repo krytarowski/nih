@@ -3,11 +3,11 @@
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
-#include <GridLayoutBuilder.h>
+#include <os/interface/GridLayoutBuilder.h>
 
 #include <new>
 
-#include <SpaceLayoutItem.h>
+#include <os/interface/SpaceLayoutItem.h>
 
 
 using std::nothrow;

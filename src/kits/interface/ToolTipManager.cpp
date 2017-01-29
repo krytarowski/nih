@@ -5,8 +5,8 @@
  */
 
 
-#include <ToolTipManager.h>
-#include <ToolTipWindow.h>
+#include <private/interface/ToolTipManager.h>
+#include <private/interface/ToolTipWindow.h>
 
 #include <pthread.h>
 
@@ -16,7 +16,7 @@
 #include <os/interface/Screen.h>
 
 #include <private/interface/WindowPrivate.h>
-#include <ToolTip.h>
+#include <private/interface/ToolTip.h>
 
 
 static pthread_once_t sManagerInitOnce = PTHREAD_ONCE_INIT;

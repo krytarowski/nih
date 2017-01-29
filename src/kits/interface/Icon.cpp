@@ -16,7 +16,7 @@
 
 #include <os/interface/Bitmap.h>
 
-#include <AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 
 
 namespace BPrivate {

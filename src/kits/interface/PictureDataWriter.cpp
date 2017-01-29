@@ -7,17 +7,17 @@
  *		Julian Harnath, <julian.harnath@rwth-achen.de>
  */
 
-#include <PictureDataWriter.h>
+#include <private/interface/PictureDataWriter.h>
 
 #include <stdio.h>
 #include <string.h>
 
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 #include <os/interface/Point.h>
 #include <os/interface/Rect.h>
 #include <os/interface/Region.h>
 
-#include <PictureProtocol.h>
+#include <private/interface/PictureProtocol.h>
 
 #define THROW_ERROR(error) throw (status_t)(error)
 

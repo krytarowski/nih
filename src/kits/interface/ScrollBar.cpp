@@ -21,7 +21,7 @@
 #include <os/interface/ControlLook.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
-#include <OS.h>
+#include <os/kernel/OS.h>
 #include <os/interface/Shape.h>
 #include <os/interface/Window.h>
 

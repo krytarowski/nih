@@ -3,6 +3,6 @@
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
-#include <Size.h>
+#include <os/interface/Size.h>
 
 // completely implemented inline

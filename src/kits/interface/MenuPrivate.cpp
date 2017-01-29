@@ -9,7 +9,7 @@
 #include <private/interface/MenuPrivate.h>
 
 #include <os/interface/Bitmap.h>
-#include <Menu.h>
+#include <os/interface/Menu.h>
 
 
 const unsigned char kShiftBits[] = {

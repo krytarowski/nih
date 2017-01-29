@@ -16,8 +16,8 @@
 #include <os/app/Message.h>
 #include <os/interface/View.h>
 
-#include "OneElementLayouter.h"
-#include "SimpleLayouter.h"
+#include "layouter/OneElementLayouter.h"
+#include "layouter/SimpleLayouter.h"
 
 
 using std::nothrow;
@@ -1448,4 +1448,3 @@ BSplitLayout::_SubtractInsets(BSize size)
 
 	return size;
 }
-

@@ -7,7 +7,7 @@
  */
 
 
-#include <Spinner.h>
+#include <private/interface/Spinner.h>
 
 #include <stdint.h>
 #include <stdlib.h>

@@ -6,9 +6,9 @@
 #define _DEFAULT_CATALOG_H_
 
 
-#include <DataIO.h>
-#include <HashMapCatalog.h>
-#include <String.h>
+#include <os/support/DataIO.h>
+#include <private/locale/HashMapCatalog.h>
+#include <os/support/String.h>
 
 
 class BFile;

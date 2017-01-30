@@ -6,7 +6,7 @@
 #define _FORMATTING_CONVENTIONS_PRIVATE_H
 
 
-#include <FormattingConventions.h>
+#include <os/locale/FormattingConventions.h>
 
 
 class BFormattingConventions::Private {

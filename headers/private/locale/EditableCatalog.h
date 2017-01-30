@@ -6,7 +6,7 @@
 #define _EDITABLE_CATALOG_H_
 
 
-#include <Catalog.h>
+#include <os/locale/Catalog.h>
 
 
 class BMessage;

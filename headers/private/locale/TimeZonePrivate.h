@@ -6,7 +6,7 @@
 #define _TIME_ZONE_PRIVATE_H
 
 
-#include <TimeZone.h>
+#include <os/locale/TimeZone.h>
 
 
 class BTimeZone::Private {

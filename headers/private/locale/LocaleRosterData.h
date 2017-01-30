@@ -6,17 +6,17 @@
 #define _LOCALE_ROSTER_DATA_H_
 
 
-#include <Collator.h>
+#include <os/locale/Collator.h>
 #include <DateFormat.h>
-#include <FormattingConventions.h>
-#include <image.h>
-#include <Language.h>
-#include <List.h>
-#include <Locale.h>
-#include <Locker.h>
-#include <Message.h>
-#include <Resources.h>
-#include <TimeZone.h>
+#include <os/locale/FormattingConventions.h>
+#include <os/kernel/image.h>
+#include <os/locale/Language.h>
+#include <os/support/List.h>
+#include <os/locale/Locale.h>
+#include <os/support/Locker.h>
+#include <os/app/Message.h>
+#include <os/storage/Resources.h>
+#include <os/locale/TimeZone.h>
 
 
 class BCatalogData;

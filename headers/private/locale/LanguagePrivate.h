@@ -6,7 +6,7 @@
 #define _LANGUAGE_PRIVATE_H
 
 
-#include <Language.h>
+#include <os/locale/Language.h>
 
 
 class BLanguage::Private {

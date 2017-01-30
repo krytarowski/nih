@@ -15,9 +15,9 @@
 
 #include <assert.h>
 
-#include <CatalogData.h>
-#include <HashMap.h>
-#include <String.h>
+#include <os/locale/CatalogData.h>
+#include <private/shared/HashMap.h>
+#include <os/support/String.h>
 
 
 namespace BPrivate {

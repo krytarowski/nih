@@ -6,12 +6,12 @@
 #define _B_DATE_FORMAT_H_
 
 
-#include <DateTime.h>
-#include <DateTimeFormat.h>
-#include <Format.h>
-#include <FormattingConventions.h>
-#include <Language.h>
-#include <Locker.h>
+#include <os/support/DateTime.h>
+#include <os/locale/DateTimeFormat.h>
+#include <os/locale/Format.h>
+#include <os/locale/FormattingConventions.h>
+#include <os/locale/Language.h>
+#include <os/support/Locker.h>
 
 
 #ifndef U_ICU_NAMESPACE

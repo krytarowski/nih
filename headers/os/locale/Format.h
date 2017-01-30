@@ -5,11 +5,11 @@
 #ifndef _B_FORMAT_H_
 #define _B_FORMAT_H_
 
-#include <FormatParameters.h>
-#include <FormattingConventions.h>
-#include <Locker.h>
-#include <Language.h>
-#include <SupportDefs.h>
+#include <os/locale/FormatParameters.h>
+#include <os/locale/FormattingConventions.h>
+#include <os/support/Locker.h>
+#include <os/locale/Language.h>
+#include <os/support/SupportDefs.h>
 
 
 // types of fields contained in formatted strings

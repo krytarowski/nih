@@ -6,8 +6,8 @@
 #define _COLLATOR_H_
 
 
-#include <Archivable.h>
-#include <SupportDefs.h>
+#include <os/support/Archivable.h>
+#include <os/support/SupportDefs.h>
 
 
 #ifndef U_ICU_NAMESPACE

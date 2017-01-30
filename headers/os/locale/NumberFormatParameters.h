@@ -1,7 +1,7 @@
 #ifndef _B_NUMBER_FORMAT_PARAMETERS_H_
 #define _B_NUMBER_FORMAT_PARAMETERS_H_
 
-#include <FormatParameters.h>
+#include <os/locale/FormatParameters.h>
 
 enum number_format_sign_policy {
 	B_USE_NEGATIVE_SIGN_ONLY,

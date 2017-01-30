@@ -6,10 +6,10 @@
 #define _B_LOCALE_H_
 
 
-#include <Collator.h>
-#include <FormattingConventions.h>
-#include <Language.h>
-#include <Locker.h>
+#include <os/locale/Collator.h>
+#include <os/locale/FormattingConventions.h>
+#include <os/locale/Language.h>
+#include <os/support/Locker.h>
 
 
 class BCatalog;

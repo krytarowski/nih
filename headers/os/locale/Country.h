@@ -6,10 +6,10 @@
 #define _COUNTRY_H_
 
 
-#include <List.h>
-#include <LocaleStrings.h>
-#include <String.h>
-#include <SupportDefs.h>
+#include <os/support/List.h>
+#include <os/locale/LocaleStrings.h>
+#include <os/support/String.h>
+#include <os/support/SupportDefs.h>
 
 
 class BBitmap;

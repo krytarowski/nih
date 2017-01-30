@@ -6,11 +6,11 @@
 #define _FORMATTING_CONVENTIONS_H_
 
 
-#include <Archivable.h>
-#include <List.h>
-#include <LocaleStrings.h>
-#include <String.h>
-#include <SupportDefs.h>
+#include <os/support/Archivable.h>
+#include <os/support/List.h>
+#include <os/locale/LocaleStrings.h>
+#include <os/support/String.h>
+#include <os/support/SupportDefs.h>
 
 
 class BBitmap;

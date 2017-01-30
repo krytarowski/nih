@@ -6,9 +6,9 @@
 #define _LANGUAGE_H_
 
 
-#include <LocaleStrings.h>
-#include <String.h>
-#include <SupportDefs.h>
+#include <os/locale/LocaleStrings.h>
+#include <os/support/String.h>
+#include <os/support/SupportDefs.h>
 
 
 class BBitmap;

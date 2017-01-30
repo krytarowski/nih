@@ -1,7 +1,7 @@
 #ifndef _B_FLOAT_FORMAT_PARAMETERS_H_
 #define _B_FLOAT_FORMAT_PARAMETERS_H_
 
-#include <NumberFormatParameters.h>
+#include <os/locale/NumberFormatParameters.h>
 
 enum float_format_type {
 	B_FIXED_POINT_FLOAT_FORMAT,

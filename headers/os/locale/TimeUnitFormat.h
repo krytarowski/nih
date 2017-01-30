@@ -6,8 +6,8 @@
 #define _B_TIME_UNIT_FORMAT_H_
 
 
-#include <Format.h>
-#include <SupportDefs.h>
+#include <os/locale/Format.h>
+#include <os/support/SupportDefs.h>
 
 
 class BString;

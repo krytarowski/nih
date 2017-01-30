@@ -8,7 +8,7 @@
 #define TEXTENCODING_H
 
 
-#include <String.h>
+#include <os/support/String.h>
 
 #include <stddef.h>
 

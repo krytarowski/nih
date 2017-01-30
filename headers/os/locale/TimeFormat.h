@@ -6,7 +6,7 @@
 #define _B_TIME_FORMAT_H_
 
 
-#include <DateTimeFormat.h>
+#include <os/locale/DateTimeFormat.h>
 
 
 class BString;

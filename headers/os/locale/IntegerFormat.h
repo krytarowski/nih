@@ -1,7 +1,7 @@
 #ifndef _B_INTEGER_FORMAT_H_
 #define _B_INTEGER_FORMAT_H_
 
-#include <NumberFormat.h>
+#include <os/locale/NumberFormat.h>
 #include <IntegerFormatParameters.h>
 
 class BIntegerFormatImpl;

@@ -1,8 +1,8 @@
 #ifndef _B_FLOAT_FORMAT_H_
 #define _B_FLOAT_FORMAT_H_
 
-#include <NumberFormat.h>
-#include <FloatFormatParameters.h>
+#include <os/locale/NumberFormat.h>
+#include <os/locale/FloatFormatParameters.h>
 
 class BString;
 class BFloatFormatImpl;

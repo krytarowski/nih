@@ -6,7 +6,7 @@
 #define _B_NUMBER_FORMAT_H_
 
 
-#include <Format.h>
+#include <os/locale/Format.h>
 
 
 enum BNumberElement {

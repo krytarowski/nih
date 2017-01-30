@@ -1,9 +1,9 @@
 #ifndef _B_CURRENCY_H_
 #define _B_CURRENCY_H_
 
-#include <Archivable.h>
-#include <Message.h>
-#include <String.h>
+#include <os/support/Archivable.h>
+#include <os/app/Message.h>
+#include <os/support/String.h>
 
 class BLocale;
 

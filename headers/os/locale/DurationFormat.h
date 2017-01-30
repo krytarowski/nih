@@ -6,10 +6,10 @@
 #define _B_DURATION_FORMAT_H_
 
 
-#include <Format.h>
-#include <Locale.h>
-#include <String.h>
-#include <TimeUnitFormat.h>
+#include <os/locale/Format.h>
+#include <os/locale/Locale.h>
+#include <os/support/String.h>
+#include <os/locale/TimeUnitFormat.h>
 
 
 class BTimeZone;

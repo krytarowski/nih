@@ -1,7 +1,7 @@
 #ifndef _B_GENERIC_NUMBER_FORMAT_H_
 #define _B_GENERIC_NUMBER_FORMAT_H_
 
-#include <FloatFormatParameters.h>
+#include <os/locale/FloatFormatParameters.h>
 #include <IntegerFormatParameters.h>
 
 class BString;

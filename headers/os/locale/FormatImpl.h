@@ -1,7 +1,7 @@
 #ifndef _B_FORMAT_IMPL_H_
 #define _B_FORMAT_IMPL_H_
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 class BFormatParameters;
 

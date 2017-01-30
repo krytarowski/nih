@@ -8,20 +8,20 @@
  */
 
 
-#include <MutableLocaleRoster.h>
+#include <private/locale/MutableLocaleRoster.h>
 
 #include <pthread.h>
 
-#include <Application.h>
-#include <Autolock.h>
-#include <Catalog.h>
-#include <CatalogData.h>
+#include <os/app/Application.h>
+#include <os/support/Autolock.h>
+#include <os/locale/Catalog.h>
+#include <os/locale/CatalogData.h>
 #include <Debug.h>
 #include <Entry.h>
-#include <FormattingConventions.h>
-#include <Language.h>
+#include <os/locale/FormattingConventions.h>
+#include <os/locale/Language.h>
 #include <LocaleRosterData.h>
-#include <String.h>
+#include <os/support/String.h>
 
 
 namespace BPrivate {

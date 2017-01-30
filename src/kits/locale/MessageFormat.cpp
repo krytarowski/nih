@@ -10,11 +10,11 @@
 #include <unicode/uversion.h>
 #include <MessageFormat.h>
 
-#include <Autolock.h>
-#include <FormattingConventionsPrivate.h>
-#include <LanguagePrivate.h>
+#include <os/support/Autolock.h>
+#include <private/locale/FormattingConventionsPrivate.h>
+#include <private/locale/LanguagePrivate.h>
 
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
 #include <unicode/msgfmt.h>
 

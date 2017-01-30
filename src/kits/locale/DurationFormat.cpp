@@ -8,18 +8,18 @@
 
 
 #include <unicode/uversion.h>
-#include <DurationFormat.h>
+#include <os/locale/DurationFormat.h>
 
 #include <new>
 
 #include <unicode/gregocal.h>
 #include <unicode/utypes.h>
 
-#include <Locale.h>
-#include <LocaleRoster.h>
-#include <TimeZone.h>
+#include <os/locale/Locale.h>
+#include <os/locale/LocaleRoster.h>
+#include <os/locale/TimeZone.h>
 
-#include <TimeZonePrivate.h>
+#include <private/locale/TimeZonePrivate.h>
 
 
 // maps our unit element to the corresponding ICU unit

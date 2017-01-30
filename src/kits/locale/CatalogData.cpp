@@ -4,7 +4,7 @@
  * Distributed under the terms of the MIT License.
  */
 
-#include <CatalogData.h>
+#include <os/locale/CatalogData.h>
 
 
 BCatalogData::BCatalogData(const char* signature, const char* language,

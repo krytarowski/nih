@@ -9,11 +9,11 @@
 #include <unicode/uversion.h>
 #include <NumberFormat.h>
 
-#include <AutoDeleter.h>
-#include <Autolock.h>
-#include <FormattingConventionsPrivate.h>
+#include <private/shared/AutoDeleter.h>
+#include <os/support/Autolock.h>
+#include <private/locale/FormattingConventionsPrivate.h>
 
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
 #include <unicode/numfmt.h>
 

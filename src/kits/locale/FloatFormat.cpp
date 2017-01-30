@@ -1,5 +1,5 @@
-#include <FloatFormat.h>
-#include <FloatFormatImpl.h>
+#include <os/locale/FloatFormat.h>
+#include <os/locale/FloatFormatImpl.h>
 
 // copy constructor
 BFloatFormat::BFloatFormat(const BFloatFormat &other)
@@ -45,4 +45,3 @@ BFloatFormat::BFloatFormat(BFloatFormatImpl *impl)
 	  							    : NULL)
 {
 }
-

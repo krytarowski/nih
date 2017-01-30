@@ -6,7 +6,7 @@
 
 
 #include <unicode/uversion.h>
-#include <Collator.h>
+#include <os/locale/Collator.h>
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -14,9 +14,9 @@
 #include <new>
 #include <typeinfo>
 
-#include <UnicodeChar.h>
-#include <String.h>
-#include <Message.h>
+#include <os/locale/UnicodeChar.h>
+#include <os/support/String.h>
+#include <os/app/Message.h>
 
 #include <unicode/coll.h>
 #include <unicode/tblcoll.h>

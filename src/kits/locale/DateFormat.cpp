@@ -8,17 +8,17 @@
  */
 
 #include <unicode/uversion.h>
-#include <DateFormat.h>
+#include <os/locale/DateFormat.h>
 
-#include <AutoDeleter.h>
-#include <Autolock.h>
-#include <FormattingConventionsPrivate.h>
-#include <LanguagePrivate.h>
-#include <Locale.h>
-#include <LocaleRoster.h>
-#include <TimeZone.h>
+#include <private/shared/AutoDeleter.h>
+#include <os/support/Autolock.h>
+#include <private/locale/FormattingConventionsPrivate.h>
+#include <private/locale/LanguagePrivate.h>
+#include <os/locale/Locale.h>
+#include <os/locale/LocaleRoster.h>
+#include <os/locale/TimeZone.h>
 
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
 #include <unicode/datefmt.h>
 #include <unicode/dtfmtsym.h>

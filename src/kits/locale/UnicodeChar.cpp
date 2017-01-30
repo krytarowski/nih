@@ -9,7 +9,7 @@
  */
 
 
-#include <UnicodeChar.h>
+#include <os/locale/UnicodeChar.h>
 
 #include <unicode/uchar.h>
 #include <unicode/utf8.h>

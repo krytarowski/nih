@@ -3,13 +3,13 @@
  * The required mimetypes and attribute-indices are created here.
  */
 
-#include <fs_attr.h>
+#include <os/kernel/fs_attr.h>
 #include <fs_index.h>
 #include <Volume.h>
 #include <VolumeRoster.h>
 
-#include <DefaultCatalog.h>
-#include <MutableLocaleRoster.h>
+#include <private/locale/DefaultCatalog.h>
+#include <private/locale/MutableLocaleRoster.h>
 #include <SystemCatalog.h>
 
 

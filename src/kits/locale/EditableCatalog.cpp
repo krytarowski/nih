@@ -4,10 +4,10 @@
  * Distributed under the terms of the MIT License.
  */
 
-#include <EditableCatalog.h>
+#include <private/locale/EditableCatalog.h>
 
-#include <CatalogData.h>
-#include <MutableLocaleRoster.h>
+#include <os/locale/CatalogData.h>
+#include <private/locale/MutableLocaleRoster.h>
 
 
 using BPrivate::MutableLocaleRoster;

@@ -9,15 +9,15 @@
 
 
 #include <unicode/uversion.h>
-#include <TimeZone.h>
+#include <os/locale/TimeZone.h>
 
 #include <new>
 
 #include <unicode/locid.h>
 #include <unicode/timezone.h>
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
-#include <Language.h>
+#include <os/locale/Language.h>
 
 
 const char* BTimeZone::kNameOfGmtZone = "GMT";

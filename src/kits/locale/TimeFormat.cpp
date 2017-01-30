@@ -9,14 +9,14 @@
 #include <unicode/uversion.h>
 #include <TimeFormat.h>
 
-#include <AutoDeleter.h>
-#include <Autolock.h>
-#include <DateTime.h>
-#include <FormattingConventionsPrivate.h>
-#include <LanguagePrivate.h>
-#include <TimeZone.h>
+#include <private/shared/AutoDeleter.h>
+#include <os/support/Autolock.h>
+#include <os/support/DateTime.h>
+#include <private/locale/FormattingConventionsPrivate.h>
+#include <private/locale/LanguagePrivate.h>
+#include <os/locale/TimeZone.h>
 
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
 #include <unicode/datefmt.h>
 #include <unicode/smpdtfmt.h>

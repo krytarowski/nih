@@ -7,15 +7,15 @@
  */
 
 #include <unicode/uversion.h>
-#include <DateTimeFormat.h>
+#include <os/locale/DateTimeFormat.h>
 
-#include <AutoDeleter.h>
-#include <Autolock.h>
-#include <FormattingConventionsPrivate.h>
-#include <LanguagePrivate.h>
-#include <TimeZone.h>
+#include <private/shared/AutoDeleter.h>
+#include <os/support/Autolock.h>
+#include <private/locale/FormattingConventionsPrivate.h>
+#include <private/locale/LanguagePrivate.h>
+#include <os/locale/TimeZone.h>
 
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
 #include <unicode/datefmt.h>
 #include <unicode/dtptngen.h>

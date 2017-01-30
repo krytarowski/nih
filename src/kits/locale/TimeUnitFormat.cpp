@@ -9,7 +9,7 @@
 
 
 #include <unicode/uversion.h>
-#include <TimeUnitFormat.h>
+#include <os/locale/TimeUnitFormat.h>
 
 #include <new>
 
@@ -17,11 +17,11 @@
 #include <unicode/locid.h>
 #include <unicode/tmutfmt.h>
 #include <unicode/utypes.h>
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
-#include <Language.h>
-#include <Locale.h>
-#include <LocaleRoster.h>
+#include <os/locale/Language.h>
+#include <os/locale/Locale.h>
+#include <os/locale/LocaleRoster.h>
 
 // maps our unit element to the corresponding ICU unit
 static const TimeUnit::UTimeUnitFields skUnitMap[] = {

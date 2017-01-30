@@ -6,19 +6,19 @@
 
 
 #include <unicode/uversion.h>
-#include <Country.h>
+#include <os/locale/Country.h>
 
-#include <AutoDeleter.h>
-#include <IconUtils.h>
-#include <List.h>
-#include <Language.h>
-#include <LocaleRoster.h>
-#include <Resources.h>
-#include <String.h>
+#include <private/shared/AutoDeleter.h>
+#include <os/interface/IconUtils.h>
+#include <os/support/List.h>
+#include <os/locale/Language.h>
+#include <os/locale/LocaleRoster.h>
+#include <os/storage/Resources.h>
+#include <os/support/String.h>
 
 #include <unicode/locid.h>
 #include <unicode/ulocdata.h>
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
 #include <iostream>
 #include <map>

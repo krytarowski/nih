@@ -5,7 +5,7 @@
 
 
 #include <unicode/uversion.h>
-#include <Language.h>
+#include <os/locale/Language.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,14 +14,14 @@
 
 #include <iostream>
 
-#include <Catalog.h>
-#include <Locale.h>
-#include <LocaleRoster.h>
-#include <Path.h>
-#include <String.h>
-#include <FindDirectory.h>
+#include <os/locale/Catalog.h>
+#include <os/locale/Locale.h>
+#include <os/locale/LocaleRoster.h>
+#include <os/storage/Path.h>
+#include <os/support/String.h>
+#include <os/storage/FindDirectory.h>
 
-#include <ICUWrapper.h>
+#include <private/locale/ICUWrapper.h>
 
 #include <unicode/locid.h>
 

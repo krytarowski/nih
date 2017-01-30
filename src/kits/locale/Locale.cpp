@@ -6,10 +6,10 @@
  */
 
 
-#include <Autolock.h>
-#include <Catalog.h>
-#include <Locale.h>
-#include <LocaleRoster.h>
+#include <os/support/Autolock.h>
+#include <os/locale/Catalog.h>
+#include <os/locale/Locale.h>
+#include <os/locale/LocaleRoster.h>
 
 
 BLocale::BLocale(const BLanguage* language,

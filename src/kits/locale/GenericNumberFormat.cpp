@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 #include <GenericNumberFormat.h>
-#include <String.h>
-#include <UnicodeChar.h>
+#include <os/support/String.h>
+#include <os/locale/UnicodeChar.h>
 
 #if __GNUC__ > 2
 using std::max;

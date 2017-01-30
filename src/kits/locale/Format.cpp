@@ -2,9 +2,9 @@
 
 #include <new>
 
-#include <Autolock.h>
-#include <Locale.h>
-#include <LocaleRoster.h>
+#include <os/support/Autolock.h>
+#include <os/locale/Locale.h>
+#include <os/locale/LocaleRoster.h>
 
 
 BFormat::BFormat(const BLocale* locale)

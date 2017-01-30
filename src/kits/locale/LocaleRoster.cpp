@@ -9,31 +9,31 @@
 
 
 #include <unicode/uversion.h>
-#include <LocaleRoster.h>
+#include <os/locale/LocaleRoster.h>
 
 #include <assert.h>
 #include <ctype.h>
 
 #include <new>
 
-#include <Autolock.h>
+#include <os/support/Autolock.h>
 #include <Bitmap.h>
-#include <Catalog.h>
+#include <os/locale/Catalog.h>
 #include <Entry.h>
-#include <FormattingConventions.h>
-#include <fs_attr.h>
-#include <IconUtils.h>
-#include <Language.h>
-#include <Locale.h>
+#include <os/locale/FormattingConventions.h>
+#include <os/kernel/fs_attr.h>
+#include <os/interface/IconUtils.h>
+#include <os/locale/Language.h>
+#include <os/locale/Locale.h>
 #include <LocaleRosterData.h>
-#include <MutableLocaleRoster.h>
-#include <Node.h>
-#include <Roster.h>
-#include <String.h>
-#include <TimeZone.h>
+#include <private/locale/MutableLocaleRoster.h>
+#include <os/storage/Node.h>
+#include <os/app/Roster.h>
+#include <os/support/String.h>
+#include <os/locale/TimeZone.h>
 
-#include <ICUWrapper.h>
-#include <locks.h>
+#include <private/locale/ICUWrapper.h>
+#include <private/shared/locks.h>
 
 // ICU includes
 #include <unicode/locdspnm.h>

@@ -4,15 +4,15 @@
  * Distributed under the terms of the MIT License.
  */
 
-#include <Catalog.h>
+#include <os/locale/Catalog.h>
 
-#include <Application.h>
-#include <Autolock.h>
-#include <CatalogData.h>
-#include <Locale.h>
-#include <MutableLocaleRoster.h>
-#include <Node.h>
-#include <Roster.h>
+#include <os/app/Application.h>
+#include <os/support/Autolock.h>
+#include <os/locale/CatalogData.h>
+#include <os/locale/Locale.h>
+#include <private/locale/MutableLocaleRoster.h>
+#include <os/storage/Node.h>
+#include <os/app/Roster.h>
 
 
 using BPrivate::MutableLocaleRoster;

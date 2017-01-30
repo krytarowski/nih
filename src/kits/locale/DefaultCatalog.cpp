@@ -11,21 +11,21 @@
 #include <memory>
 #include <new>
 
-#include <AppFileInfo.h>
-#include <Application.h>
-#include <DataIO.h>
-#include <Directory.h>
-#include <File.h>
-#include <FindDirectory.h>
-#include <fs_attr.h>
-#include <Message.h>
-#include <Mime.h>
-#include <Path.h>
-#include <Resources.h>
-#include <Roster.h>
+#include <os/storage/AppFileInfo.h>
+#include <os/app/Application.h>
+#include <os/support/DataIO.h>
+#include <os/storage/Directory.h>
+#include <os/storage/File.h>
+#include <os/storage/FindDirectory.h>
+#include <os/kernel/fs_attr.h>
+#include <os/app/Message.h>
+#include <os/storage/Mime.h>
+#include <os/storage/Path.h>
+#include <os/storage/Resources.h>
+#include <os/app/Roster.h>
 
-#include <DefaultCatalog.h>
-#include <MutableLocaleRoster.h>
+#include <private/locale/DefaultCatalog.h>
+#include <private/locale/MutableLocaleRoster.h>
 
 #include <cstdio>
 

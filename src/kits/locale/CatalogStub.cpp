@@ -4,10 +4,10 @@
  */
 
 
-#include <Catalog.h>
-#include <LocaleRoster.h>
+#include <os/locale/Catalog.h>
+#include <os/locale/LocaleRoster.h>
 
-#include <locks.h>
+#include <private/shared/locks.h>
 
 
 static int32 sCatalogInitOnce = INIT_ONCE_UNINITIALIZED;

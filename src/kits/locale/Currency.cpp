@@ -1,4 +1,4 @@
-#include <Currency.h>
+#include <os/locale/Currency.h>
 
 // message archive field names
 static const char *kArchivedCurrencyCodeName	= "be:currency code";

@@ -11,25 +11,25 @@
 #include <unicode/uversion.h>
 #include <LocaleRosterData.h>
 
-#include <Autolock.h>
-#include <Catalog.h>
-#include <Collator.h>
+#include <os/support/Autolock.h>
+#include <os/locale/Catalog.h>
+#include <os/locale/Collator.h>
 #include <Debug.h>
-#include <DefaultCatalog.h>
-#include <Directory.h>
+#include <private/locale/DefaultCatalog.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
-#include <File.h>
-#include <FindDirectory.h>
-#include <FormattingConventions.h>
-#include <Language.h>
-#include <Locale.h>
-#include <Node.h>
-#include <Path.h>
+#include <os/storage/File.h>
+#include <os/storage/FindDirectory.h>
+#include <os/locale/FormattingConventions.h>
+#include <os/locale/Language.h>
+#include <os/locale/Locale.h>
+#include <os/storage/Node.h>
+#include <os/storage/Path.h>
 #include <PathFinder.h>
-#include <Roster.h>
-#include <String.h>
+#include <os/app/Roster.h>
+#include <os/support/String.h>
 #include <StringList.h>
-#include <TimeZone.h>
+#include <os/locale/TimeZone.h>
 
 // ICU includes
 #include <unicode/locid.h>

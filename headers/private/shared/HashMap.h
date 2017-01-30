@@ -29,7 +29,7 @@
 #define HASH_MAP_H
 
 
-#include <Locker.h>
+#include <os/support/Locker.h>
 
 #include "AutoLocker.h"
 #include "OpenHashTable.h"

@@ -7,7 +7,7 @@
 
 
 #include <ObjectList.h>
-#include <String.h>
+#include <os/support/String.h>
 
 
 namespace BSupportKit {

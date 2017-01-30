@@ -6,7 +6,7 @@
 #define _DATE_TIME_H
 
 
-#include <String.h>
+#include <os/support/String.h>
 
 
 class BMessage;

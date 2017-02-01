@@ -14,11 +14,11 @@
 #include <string.h>
 
 #include <MimeTypes.h>
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <Entry.h>
 #include <IconUtils.h>
 #include <Node.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <Rect.h>
 
 #include <fs_attr.h>

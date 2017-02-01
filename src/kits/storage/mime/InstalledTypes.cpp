@@ -15,9 +15,9 @@
 
 #include <new>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
-#include <Message.h>
+#include <os/app/Message.h>
 #include <MimeType.h>
 #include <String.h>
 

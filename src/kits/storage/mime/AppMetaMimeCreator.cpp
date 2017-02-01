@@ -13,11 +13,11 @@
 
 #include <stdlib.h>
 
-#include <AppFileInfo.h>
-#include <Bitmap.h>
+#include <os/storage/AppFileInfo.h>
+#include <os/interface/Bitmap.h>
 #include <File.h>
 #include <fs_attr.h>
-#include <Message.h>
+#include <os/app/Message.h>
 #include <MimeType.h>
 #include <String.h>
 

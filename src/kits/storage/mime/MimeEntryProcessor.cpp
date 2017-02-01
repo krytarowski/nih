@@ -9,7 +9,7 @@
 
 #include <mime/AppMetaMimeCreator.h>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 
 

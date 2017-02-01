@@ -11,14 +11,14 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 #include <File.h>
 #include <fs_interface.h>
 #include <NodeMonitor.h>
 #include "storage_support.h"
 
-#include <syscalls.h>
+#include <private/system/syscalls.h>
 #include <umask.h>
 
 

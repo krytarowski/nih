@@ -7,11 +7,11 @@
  */
 
 
-#include "AddOnMonitor.h"
-#include "AddOnMonitorHandler.h"
-#include <Message.h>
-#include <MessageRunner.h>
-#include <Messenger.h>
+#include "private/storage/AddOnMonitor.h"
+#include "private/storage/AddOnMonitorHandler.h"
+#include <os/app/Message.h>
+#include <os/app/MessageRunner.h>
+#include <os/app/Messenger.h>
 #include <stdio.h>
 
 

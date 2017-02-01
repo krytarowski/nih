@@ -6,9 +6,9 @@
 
 #include <EntryOperationEngineBase.h>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 
 
 namespace BPrivate {

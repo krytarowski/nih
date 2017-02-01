@@ -16,10 +16,10 @@
 #include <new>
 #include <iostream>
 
-#include <Directory.h>
-#include <Message.h>
+#include <os/storage/Directory.h>
+#include <os/app/Message.h>
 #include <MimeType.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <String.h>
 
 #include <mime/database_support.h>

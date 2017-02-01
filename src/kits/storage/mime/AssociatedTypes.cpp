@@ -13,15 +13,15 @@
 
 #include <new>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
-#include <Message.h>
+#include <os/app/Message.h>
 #include <mime/database_support.h>
 #include <mime/DatabaseDirectory.h>
 #include <mime/DatabaseLocation.h>
 #include <mime/MimeSniffer.h>
 #include <MimeType.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <String.h>
 #include <storage_support.h>
 

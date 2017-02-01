@@ -7,8 +7,8 @@
 #include <PathFinder.h>
 
 #include <AutoDeleter.h>
-#include <FindDirectory.h>
-#include <Path.h>
+#include <os/storage/FindDirectory.h>
+#include <os/storage/Path.h>
 #include <StringList.h>
 
 

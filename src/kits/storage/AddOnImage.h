@@ -6,7 +6,7 @@
 #ifndef _ADD_ON_IMAGE_H
 #define _ADD_ON_IMAGE_H
 
-#include <image.h>
+#include <os/kernel/image.h>
 
 namespace BPrivate {
 

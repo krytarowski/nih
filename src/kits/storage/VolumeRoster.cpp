@@ -11,8 +11,8 @@
 #include <errno.h>
 #include <new>
 
-#include <Bitmap.h>
-#include <Directory.h>
+#include <os/interface/Bitmap.h>
+#include <os/storage/Directory.h>
 #include <fs_info.h>
 #include <Node.h>
 #include <NodeMonitor.h>

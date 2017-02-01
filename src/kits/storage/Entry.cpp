@@ -19,11 +19,11 @@
 
 #include <compat/sys/stat.h>
 
-#include <Directory.h>
-#include <Path.h>
+#include <os/storage/Directory.h>
+#include <os/storage/Path.h>
 #include <SymLink.h>
 
-#include <syscalls.h>
+#include <private/system/syscalls.h>
 
 #include "storage_support.h"
 

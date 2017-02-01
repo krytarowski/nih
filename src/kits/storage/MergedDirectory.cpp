@@ -15,7 +15,7 @@
 #include <set>
 #include <string>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 
 #include <AutoDeleter.h>

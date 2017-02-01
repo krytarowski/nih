@@ -16,14 +16,14 @@
 
 #include <compat/sys/stat.h>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 #include <File.h>
 #include <fs_info.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <SymLink.h>
 
-#include <syscalls.h>
+#include <private/system/syscalls.h>
 #include <umask.h>
 
 

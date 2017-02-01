@@ -7,8 +7,8 @@
 	find_directory() implementations.	
 */
 
-#include <FindDirectory.h>
-#include <Path.h>
+#include <os/storage/FindDirectory.h>
+#include <os/storage/Path.h>
 #include <Volume.h>
 
 

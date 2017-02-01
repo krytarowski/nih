@@ -21,7 +21,7 @@
 #include <Volume.h>
 
 #include <MessengerPrivate.h>
-#include <syscalls.h>
+#include <private/system/syscalls.h>
 #include <query_private.h>
 
 #include "QueryPredicate.h"

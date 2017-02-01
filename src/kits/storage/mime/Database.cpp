@@ -18,15 +18,15 @@
 #include <new>
 
 #include <Application.h>
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <DataIO.h>
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 #include <fs_attr.h>
-#include <Message.h>
+#include <os/app/Message.h>
 #include <MimeType.h>
 #include <Node.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <String.h>
 #include <TypeConstants.h>
 

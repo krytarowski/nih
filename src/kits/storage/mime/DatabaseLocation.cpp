@@ -16,13 +16,13 @@
 
 #include <new>
 
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <DataIO.h>
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <File.h>
 #include <fs_attr.h>
 #include <IconUtils.h>
-#include <Message.h>
+#include <os/app/Message.h>
 #include <Node.h>
 
 #include <AutoDeleter.h>

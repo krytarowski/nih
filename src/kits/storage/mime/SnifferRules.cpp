@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 #include <File.h>
 #include <MimeType.h>

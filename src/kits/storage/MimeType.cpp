@@ -11,7 +11,7 @@
 
 #include "MimeType.h"
 
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <mime/database_support.h>
 #include <mime/DatabaseLocation.h>
 #include <sniffer/Rule.h>

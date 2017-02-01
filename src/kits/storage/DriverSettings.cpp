@@ -14,8 +14,8 @@
 
 #include <new>
 
-#include <driver_settings.h>
-#include <Path.h>
+#include <os/drivers/driver_settings.h>
+#include <os/storage/Path.h>
 #include <String.h>
 
 #include <Referenceable.h>

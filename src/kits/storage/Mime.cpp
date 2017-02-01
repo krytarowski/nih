@@ -17,18 +17,18 @@
 #include <unistd.h>
 
 #include <AutoDeleter.h>
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <Drivers.h>
 #include <Entry.h>
 #include <File.h>
-#include <FindDirectory.h>
+#include <os/storage/FindDirectory.h>
 #include <fs_attr.h>
 #include <fs_info.h>
 #include <IconUtils.h>
 #include <Mime.h>
 #include <MimeType.h>
 #include <Node.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <RegistrarDefs.h>
 #include <Roster.h>
 #include <RosterPrivate.h>

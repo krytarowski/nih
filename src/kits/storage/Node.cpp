@@ -18,13 +18,13 @@
 
 #include <compat/sys/stat.h>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 #include <fs_attr.h>
 #include <String.h>
 #include <TypeConstants.h>
 
-#include <syscalls.h>
+#include <private/system/syscalls.h>
 
 #include "storage_support.h"
 

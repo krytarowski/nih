@@ -14,14 +14,14 @@
 #include <string.h>
 #include <strings.h>
 
-#include <Autolock.h>
-#include <Directory.h>
-#include <FindDirectory.h>
-#include <Path.h>
+#include <os/support/Autolock.h>
+#include <os/storage/Directory.h>
+#include <os/storage/FindDirectory.h>
+#include <os/storage/Path.h>
 
-#include <driver_settings.h>
-#include <safemode_defs.h>
-#include <syscalls.h>
+#include <os/drivers/driver_settings.h>
+#include <private/system/safemode_defs.h>
+#include <private/system/syscalls.h>
 
 
 #ifndef ADD_ON_STABLE_SECONDS

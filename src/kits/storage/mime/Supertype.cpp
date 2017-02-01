@@ -9,7 +9,7 @@
 
 #include <mime/Supertype.h>
 
-#include <Message.h>
+#include <os/app/Message.h>
 #include <mime/database_support.h>
 
 #include <new>

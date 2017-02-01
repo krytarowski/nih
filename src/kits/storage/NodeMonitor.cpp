@@ -9,12 +9,12 @@
  */
 
 
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 #include <NodeMonitor.h>
 
 #include <MessengerPrivate.h>
 
-#include <syscalls.h>
+#include <private/system/syscalls.h>
 
 #include "node_monitor_private.h"
 

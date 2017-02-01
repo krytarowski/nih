@@ -11,15 +11,15 @@
 #include <errno.h>
 #include <string.h>
 
-#include <Bitmap.h>
-#include <Directory.h>
+#include <os/interface/Bitmap.h>
+#include <os/storage/Directory.h>
 #include <fs_info.h>
 #include <Node.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <Volume.h>
 
 #include <storage_support.h>
-#include <syscalls.h>
+#include <private/system/syscalls.h>
 
 #include <fs_interface.h>
 

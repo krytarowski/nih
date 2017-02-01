@@ -8,7 +8,7 @@
 
 #include <new>
 
-#include <Autolock.h>
+#include <os/support/Autolock.h>
 #include <MimeType.h>
 
 #include <MimeSnifferAddon.h>

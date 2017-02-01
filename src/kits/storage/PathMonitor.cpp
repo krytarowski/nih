@@ -14,13 +14,13 @@
 #include <pthread.h>
 #include <stdio.h>
 
-#include <Autolock.h>
-#include <Directory.h>
+#include <os/support/Autolock.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 #include <Handler.h>
 #include <Locker.h>
 #include <Looper.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <String.h>
 
 #include <AutoDeleter.h>

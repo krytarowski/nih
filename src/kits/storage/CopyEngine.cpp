@@ -15,11 +15,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <Directory.h>
+#include <os/storage/Directory.h>
 #include <Entry.h>
 #include <File.h>
 #include <fs_attr.h>
-#include <Path.h>
+#include <os/storage/Path.h>
 #include <SymLink.h>
 #include <TypeConstants.h>
 

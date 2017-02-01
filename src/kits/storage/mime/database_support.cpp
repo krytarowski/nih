@@ -16,9 +16,9 @@
 
 #include <new>
 
-#include <Bitmap.h>
-#include <FindDirectory.h>
-#include <Path.h>
+#include <os/interface/Bitmap.h>
+#include <os/storage/FindDirectory.h>
+#include <os/storage/Path.h>
 
 #include <mime/DatabaseLocation.h>
 

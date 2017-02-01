@@ -14,7 +14,7 @@
 #include <StorageDefs.h>
 #include <SupportDefs.h>
 
-#include <syscalls.h>
+#include <private/system/syscalls.h>
 
 #include "storage_support.h"
 

@@ -6,8 +6,8 @@
 #define _PATH_FINDER_H
 
 
-#include <FindDirectory.h>
-#include <StringList.h>
+#include <os/storage/FindDirectory.h>
+#include <os/support/StringList.h>
 
 
 class BPath;

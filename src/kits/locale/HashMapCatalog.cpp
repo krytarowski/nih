@@ -4,9 +4,9 @@
  */
 
 
-#include <HashMapCatalog.h>
+#include <private/locale/HashMapCatalog.h>
 
-#include <ByteOrder.h>
+#include <os/support/ByteOrder.h>
 
 #include <stdlib.h>
 

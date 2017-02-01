@@ -8,7 +8,7 @@
  */
 
 #include <unicode/uversion.h>
-#include <MessageFormat.h>
+#include <os/locale/MessageFormat.h>
 
 #include <os/support/Autolock.h>
 #include <private/locale/FormattingConventionsPrivate.h>

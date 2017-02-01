@@ -16,11 +16,11 @@
 #include <os/support/Autolock.h>
 #include <os/locale/Catalog.h>
 #include <os/locale/CatalogData.h>
-#include <Debug.h>
-#include <Entry.h>
+#include <os/support/Debug.h>
+#include <os/storage/Entry.h>
 #include <os/locale/FormattingConventions.h>
 #include <os/locale/Language.h>
-#include <LocaleRosterData.h>
+#include <private/locale/LocaleRosterData.h>
 #include <os/support/String.h>
 
 

@@ -7,7 +7,7 @@
  */
 
 #include <unicode/uversion.h>
-#include <TimeFormat.h>
+#include <os/locale/TimeFormat.h>
 
 #include <private/shared/AutoDeleter.h>
 #include <os/support/Autolock.h>

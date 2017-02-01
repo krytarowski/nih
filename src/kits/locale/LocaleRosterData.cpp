@@ -9,15 +9,15 @@
 
 
 #include <unicode/uversion.h>
-#include <LocaleRosterData.h>
+#include <private/locale/LocaleRosterData.h>
 
 #include <os/support/Autolock.h>
 #include <os/locale/Catalog.h>
 #include <os/locale/Collator.h>
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <private/locale/DefaultCatalog.h>
 #include <os/storage/Directory.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <os/storage/File.h>
 #include <os/storage/FindDirectory.h>
 #include <os/locale/FormattingConventions.h>
@@ -25,10 +25,10 @@
 #include <os/locale/Locale.h>
 #include <os/storage/Node.h>
 #include <os/storage/Path.h>
-#include <PathFinder.h>
+#include <os/storage/PathFinder.h>
 #include <os/app/Roster.h>
 #include <os/support/String.h>
-#include <StringList.h>
+#include <os/support/StringList.h>
 #include <os/locale/TimeZone.h>
 
 // ICU includes

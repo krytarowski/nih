@@ -7,7 +7,7 @@
 
 
 #include <unicode/uversion.h>
-#include <NumberFormat.h>
+#include <os/locale/NumberFormat.h>
 
 #include <private/shared/AutoDeleter.h>
 #include <os/support/Autolock.h>

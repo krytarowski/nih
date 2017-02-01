@@ -4,7 +4,7 @@
  */
 
 
-#include "TextEncoding.h"
+#include "os/locale/TextEncoding.h"
 
 #include <unicode/ucnv.h>
 #include <unicode/ucsdet.h>

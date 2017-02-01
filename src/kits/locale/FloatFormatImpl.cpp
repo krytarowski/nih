@@ -1,5 +1,5 @@
-#include <FloatFormatImpl.h>
-#include <FloatFormatParameters.h>
+#include <os/locale/FloatFormatImpl.h>
+#include <os/locale/FloatFormatParameters.h>
 
 // constructor
 BFloatFormatImpl::BFloatFormatImpl()

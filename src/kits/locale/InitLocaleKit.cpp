@@ -4,13 +4,13 @@
  */
 
 #include <os/kernel/fs_attr.h>
-#include <fs_index.h>
-#include <Volume.h>
-#include <VolumeRoster.h>
+#include <os/kernel/fs_index.h>
+#include <os/storage/Volume.h>
+#include <os/storage/VolumeRoster.h>
 
 #include <private/locale/DefaultCatalog.h>
 #include <private/locale/MutableLocaleRoster.h>
-#include <SystemCatalog.h>
+#include <private/locale/SystemCatalog.h>
 
 
 namespace BPrivate {

@@ -17,15 +17,15 @@
 #include <new>
 
 #include <os/support/Autolock.h>
-#include <Bitmap.h>
+#include <os/interface/Bitmap.h>
 #include <os/locale/Catalog.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <os/locale/FormattingConventions.h>
 #include <os/kernel/fs_attr.h>
 #include <os/interface/IconUtils.h>
 #include <os/locale/Language.h>
 #include <os/locale/Locale.h>
-#include <LocaleRosterData.h>
+#include <private/locale/LocaleRosterData.h>
 #include <private/locale/MutableLocaleRoster.h>
 #include <os/storage/Node.h>
 #include <os/app/Roster.h>

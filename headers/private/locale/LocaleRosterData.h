@@ -7,7 +7,7 @@
 
 
 #include <os/locale/Collator.h>
-#include <DateFormat.h>
+#include <os/locale/DateFormat.h>
 #include <os/locale/FormattingConventions.h>
 #include <os/kernel/image.h>
 #include <os/locale/Language.h>

@@ -6,7 +6,7 @@
 #define _BIOS_MODULE_H_
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 #include <module.h>
 
 

@@ -7,7 +7,7 @@
 
 
 #include <SupportDefs.h>
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 
 /* interrupts and spinlocks */

@@ -6,7 +6,7 @@
 #define _MODULE_H
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 
 /* Every module exports a list of module_info structures.

@@ -149,6 +149,7 @@ NodeMonitorHandler::HandleEntryCreated(BMessage * msg)
 	ino_t directory;
 	dev_t device;
 	ino_t node;
+#if !defined(__NetBSD__)
 	if ((msg->FindString("name", &name) != B_OK) ||
         (msg->FindInt64("directory", &directory) != B_OK) ||
 		(msg->FindInt32("device", &device) != B_OK) ||
@@ -156,6 +157,7 @@ NodeMonitorHandler::HandleEntryCreated(BMessage * msg)
 		return B_MESSAGE_NOT_UNDERSTOOD;
 	}
 	EntryCreated(name, directory, device, node);
+#endif
 	return B_OK;
 }
 
@@ -167,6 +169,7 @@ NodeMonitorHandler::HandleEntryRemoved(BMessage * msg)
 	ino_t directory;
 	dev_t device;
 	ino_t node;
+#if !defined(__NetBSD__)
 	if ((msg->FindString("name", &name) != B_OK) ||
 		(msg->FindInt64("directory", &directory) != B_OK) ||
 		(msg->FindInt32("device", &device) != B_OK) ||
@@ -174,6 +177,7 @@ NodeMonitorHandler::HandleEntryRemoved(BMessage * msg)
 		return B_MESSAGE_NOT_UNDERSTOOD;
 	}
 	EntryRemoved(name, directory, device, node);
+#endif
 	return B_OK;
 }
 
@@ -188,6 +192,7 @@ NodeMonitorHandler::HandleEntryMoved(BMessage * msg)
 	dev_t device;
 	ino_t node;
 	dev_t deviceNode;
+#if !defined(__NetBSD__)
 	if ((msg->FindString("name", &name) != B_OK) ||
 		(msg->FindString("from name", &fromName) != B_OK) ||
 		(msg->FindInt64("from directory", &fromDirectory) != B_OK) ||
@@ -199,6 +204,7 @@ NodeMonitorHandler::HandleEntryMoved(BMessage * msg)
 	}
 	EntryMoved(name, fromName, fromDirectory, toDirectory, device, node,
 		deviceNode);
+#endif
 	return B_OK;
 }
 
@@ -209,12 +215,14 @@ NodeMonitorHandler::HandleStatChanged(BMessage * msg)
 	ino_t node;
 	dev_t device;
 	int32 statFields;
+#if !defined(__NetBSD__)
 	if ((msg->FindInt64("node", &node) != B_OK) ||
 		(msg->FindInt32("device", &device) != B_OK) ||
 		(msg->FindInt32("fields", &statFields) != B_OK)) {
 		return B_MESSAGE_NOT_UNDERSTOOD;
 	}
 	StatChanged(node, device, statFields);
+#endif
 	return B_OK;
 }
 
@@ -224,11 +232,13 @@ NodeMonitorHandler::HandleAttrChanged(BMessage * msg)
 {
 	ino_t node;
 	dev_t device;
+#if !defined(__NetBSD__)
 	if ((msg->FindInt64("node", &node) != B_OK) ||
 		(msg->FindInt32("device", &device) != B_OK)) {
 		return B_MESSAGE_NOT_UNDERSTOOD;
 	}
 	AttrChanged(node, device);
+#endif
 	return B_OK;
 }
 
@@ -239,12 +249,14 @@ NodeMonitorHandler::HandleDeviceMounted(BMessage * msg)
 	dev_t new_device;
 	dev_t device;
 	ino_t directory;
+#if !defined(__NetBSD__)
 	if ((msg->FindInt32("new device", &new_device) != B_OK) ||
 		(msg->FindInt32("device", &device) != B_OK) ||
 		(msg->FindInt64("directory", &directory) != B_OK)) {
 		return B_MESSAGE_NOT_UNDERSTOOD;
 	}
 	DeviceMounted(new_device, device, directory);
+#endif
 	return B_OK;
 }
 
@@ -253,9 +265,11 @@ status_t
 NodeMonitorHandler::HandleDeviceUnmounted(BMessage * msg)
 {
 	dev_t new_device;
+#if !defined(__NetBSD__)
 	if (msg->FindInt32("new device", &new_device) != B_OK) {
 		return B_MESSAGE_NOT_UNDERSTOOD;
 	}
 	DeviceUnmounted(new_device);
+#endif
 	return B_OK;
 }

@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 
-#include "OffsetFile.h"
+#include "private/storage/OffsetFile.h"
 
 namespace BPrivate {
 namespace Storage {

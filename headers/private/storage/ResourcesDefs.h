@@ -3,7 +3,7 @@
 #ifndef _DEF_RESOURCES_H
 #define _DEF_RESOURCES_H
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 // x86 resource file constants
 const char		kX86ResourceFileMagic[4]		= { 'R', 'S', 0, 0 };

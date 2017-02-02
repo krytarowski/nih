@@ -6,7 +6,7 @@
 #ifndef _DISK_DEVICE_VISITOR_H
 #define _DISK_DEVICE_VISITOR_H
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 class BDiskDevice;
 class BPartition;

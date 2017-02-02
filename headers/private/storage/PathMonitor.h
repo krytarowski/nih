@@ -6,7 +6,7 @@
 #define _PATH_MONITOR_H
 
 
-#include <NodeMonitor.h>
+#include <os/storage/NodeMonitor.h>
 
 
 // Monitoring a path always implies B_WATCH_NAME for the path itself. I.e. even

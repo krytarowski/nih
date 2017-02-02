@@ -14,8 +14,8 @@
 	Storage Kit support functions.
 */
 
-#include <StorageDefs.h>
-#include <SupportDefs.h>
+#include <os/storage/StorageDefs.h>
+#include <os/support/SupportDefs.h>
 
 #include <dirent.h>
 #include <string>

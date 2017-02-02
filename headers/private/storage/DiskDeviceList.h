@@ -8,7 +8,7 @@
 
 #include <DiskDeviceDefs.h>
 #include <DiskDeviceVisitor.h>
-#include <Handler.h>
+#include <os/app/Handler.h>
 #include <ObjectList.h>
 
 class BDiskDevice;

@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <String.h>
+#include <os/support/String.h>
 
 namespace BPrivate {
 namespace Storage {

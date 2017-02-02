@@ -7,7 +7,7 @@
 
 
 #include <DiskDeviceDefs.h>
-#include <String.h>
+#include <os/support/String.h>
 
 class BPartition;
 class BString;

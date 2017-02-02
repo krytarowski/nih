@@ -11,7 +11,7 @@
 
 #include <stdarg.h>
 
-#include <EntryOperationEngineBase.h>
+#include <private/storage/EntryOperationEngineBase.h>
 
 
 namespace BPrivate {

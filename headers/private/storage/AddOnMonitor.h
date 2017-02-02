@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include <string>
 
-#include <Looper.h>
-#include <MessageRunner.h>
+#include <os/app/Looper.h>
+#include <os/app/MessageRunner.h>
 
 
 namespace BPrivate {

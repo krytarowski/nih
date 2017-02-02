@@ -11,7 +11,7 @@
 #define _RESOURCE_ITEM_H
 
 #include <DataIO.h>
-#include <String.h>
+#include <os/support/String.h>
 
 namespace BPrivate {
 namespace Storage {

@@ -6,8 +6,8 @@
 #define _DISK_SYSTEM_ADD_ON_H
 
 #include <DiskDeviceDefs.h>
-#include <String.h>
-#include <SupportDefs.h>
+#include <os/support/String.h>
+#include <os/support/SupportDefs.h>
 
 
 class BPartitionParameterEditor;

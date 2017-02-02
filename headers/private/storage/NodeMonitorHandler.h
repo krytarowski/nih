@@ -1,10 +1,10 @@
 #ifndef _NODE_MONITOR_HANDLER_H
 #define _NODE_MONITOR_HANDLER_H
 
-#include <Entry.h>
-#include <Handler.h>
-#include <Message.h>
-#include <NodeMonitor.h>
+#include <os/storage/Entry.h>
+#include <os/app/Handler.h>
+#include <os/app/Message.h>
+#include <os/storage/NodeMonitor.h>
 
 namespace BPrivate {
 namespace Storage {

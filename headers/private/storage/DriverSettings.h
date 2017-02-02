@@ -9,7 +9,7 @@
 #define _B_DRIVER_SETTINGS_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 struct driver_parameter;

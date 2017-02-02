@@ -9,7 +9,7 @@
 #ifndef _SNIFFER_ERR_H
 #define _SNIFFER_ERR_H
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 #include <string>
 
 namespace BPrivate {

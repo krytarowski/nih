@@ -9,7 +9,7 @@
 #ifndef _SNIFFER_R_PATTERN_LIST_H
 #define _SNIFFER_R_PATTERN_LIST_H
 
-#include <sniffer/DisjList.h>
+#include <private/storage/sniffer//DisjList.h>
 #include <vector>
 
 class BPositionIO;

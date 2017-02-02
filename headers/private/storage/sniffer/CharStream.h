@@ -9,7 +9,7 @@
 #ifndef _SNIFFER_CHAR_STREAM_H
 #define _SNIFFER_CHAR_STREAM_H
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 #include <string>
 

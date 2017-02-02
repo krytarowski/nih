@@ -9,12 +9,12 @@
 #ifndef _SNIFFER_PARSER_H
 #define _SNIFFER_PARSER_H
 
-#include <SupportDefs.h>
-#include <sniffer/CharStream.h>
-#include <sniffer/Err.h>
-#include <sniffer/Range.h>
-#include <sniffer/Rule.h>
-#include <List.h>
+#include <os/support/SupportDefs.h>
+#include <private/storage/sniffer//CharStream.h>
+#include <private/storage/sniffer//Err.h>
+#include <private/storage/sniffer//Range.h>
+#include <private/storage/sniffer//Rule.h>
+#include <os/support/List.h>
 #include <string>
 #include <vector>
 

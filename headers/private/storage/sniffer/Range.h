@@ -9,7 +9,7 @@
 #ifndef _SNIFFER_RANGE_H
 #define _SNIFFER_RANGE_H
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 namespace BPrivate {
 namespace Storage {

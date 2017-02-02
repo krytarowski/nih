@@ -9,9 +9,9 @@
 #ifndef _SNIFFER_PATTERN_H
 #define _SNIFFER_PATTERN_H
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 #include <string>
-#include <sniffer/Range.h>
+#include <private/storage/sniffer//Range.h>
 
 class BPositionIO;
 

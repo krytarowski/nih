@@ -9,8 +9,8 @@
 #ifndef _SNIFFER_PATTERN_LIST_H
 #define _SNIFFER_PATTERN_LIST_H
 
-#include <sniffer/DisjList.h>
-#include <sniffer/Range.h>
+#include <private/storage/sniffer//DisjList.h>
+#include <private/storage/sniffer//Range.h>
 #include <vector>
 
 class BPositionIO;

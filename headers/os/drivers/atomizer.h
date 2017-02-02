@@ -5,8 +5,8 @@
 #ifndef _ATOMIZER_H
 #define _ATOMIZER_H
 
-#include <SupportDefs.h>
-#include <module.h>
+#include <os/support/SupportDefs.h>
+#include <os/drivers/module.h>
 
 
 #ifdef __cplusplus

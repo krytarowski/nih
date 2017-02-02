@@ -7,7 +7,7 @@
 #define _DPC_MODULE_H_
 
 #include <os/kernel/OS.h>
-#include <module.h>
+#include <os/drivers/module.h>
 
 #ifdef __cplusplus
 extern "C" {

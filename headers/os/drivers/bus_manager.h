@@ -6,7 +6,7 @@
 #define _BUS_MANAGER_H
 
 
-#include <module.h>
+#include <os/drivers/module.h>
 
 
 typedef struct bus_manager_info bus_manager_info;

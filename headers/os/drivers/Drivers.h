@@ -9,9 +9,9 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 
-#include <BeBuild.h>
-#include <Select.h>
-#include <SupportDefs.h>
+#include <os/BeBuild.h>
+#include <os/drivers/Select.h>
+#include <os/support/SupportDefs.h>
 
 
 #ifdef __cplusplus

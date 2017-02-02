@@ -1,7 +1,7 @@
 #ifndef _CONFIG_MANAGER_H
 #define _CONFIG_MANAGER_H
 
-#include <module.h>
+#include <os/drivers/module.h>
 
 #ifdef __cplusplus
 extern "C" {

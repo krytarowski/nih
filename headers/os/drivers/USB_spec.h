@@ -6,7 +6,7 @@
 #define _USB_SPEC_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 /* Request types (target/direction) for send_request() */

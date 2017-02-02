@@ -7,7 +7,7 @@
 
 
 #include <os/kernel/OS.h>
-#include <module.h>
+#include <os/drivers/module.h>
 
 
 /*!	BIOS call interface.

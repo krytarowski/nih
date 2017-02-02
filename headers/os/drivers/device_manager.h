@@ -7,8 +7,8 @@
 
 
 #include <TypeConstants.h>
-#include <Drivers.h>
-#include <module.h>
+#include <os/drivers/Drivers.h>
+#include <os/drivers/module.h>
 
 
 /* type of I/O resource */

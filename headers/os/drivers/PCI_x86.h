@@ -5,8 +5,8 @@
 #ifndef PCI_X86_H
 #define PCI_X86_H
 
-#include <SupportDefs.h>
-#include <module.h>
+#include <os/support/SupportDefs.h>
+#include <os/drivers/module.h>
 
 typedef struct pci_x86_module_info {
 	module_info		info;

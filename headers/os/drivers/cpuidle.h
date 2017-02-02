@@ -6,7 +6,7 @@
 #define _CPUIDLE_MODULE_H
 
 
-#include <module.h>
+#include <os/drivers/module.h>
 
 #include <scheduler.h>
 

@@ -6,8 +6,8 @@
 #define _DISK_DEVICE_MANAGER_H
 
 
-#include <DiskDeviceDefs.h>
-#include <Drivers.h>
+#include <os/storage/DiskDeviceDefs.h>
+#include <os/drivers/Drivers.h>
 
 
 #ifdef __cplusplus

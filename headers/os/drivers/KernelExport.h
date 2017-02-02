@@ -6,7 +6,7 @@
 #define _KERNEL_EXPORT_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 #include <os/kernel/OS.h>
 
 

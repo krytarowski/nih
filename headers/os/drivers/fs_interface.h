@@ -10,9 +10,9 @@
 
 
 #include <os/kernel/OS.h>
-#include <Select.h>
-#include <module.h>
-#include <disk_device_manager.h>
+#include <os/drivers/Select.h>
+#include <os/drivers/module.h>
+#include <os/drivers/disk_device_manager.h>
 
 #include <sys/uio.h>
 

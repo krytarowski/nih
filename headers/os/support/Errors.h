@@ -127,6 +127,7 @@
 #	define B_FROM_POSIX_ERROR(error)	(error)
 #endif
 
+#if !defined(__NetBSD__)
 #define B_POSIX_ENOMEM	B_TO_POSIX_ERROR(B_POSIX_ERROR_BASE + 0)
 #define E2BIG			B_TO_POSIX_ERROR(B_POSIX_ERROR_BASE + 1)
 #define ECHILD			B_TO_POSIX_ERROR(B_POSIX_ERROR_BASE + 2)
@@ -196,6 +197,7 @@
 #	define ENOMEM		B_NO_MEMORY
 #endif
 
+
 /* POSIX errors that can be mapped to BeOS error codes */
 #define EACCES			B_TO_POSIX_ERROR(B_PERMISSION_DENIED)
 #define EINTR			B_TO_POSIX_ERROR(B_INTERRUPTED)
@@ -221,6 +223,7 @@
 #define ELOOP			B_TO_POSIX_ERROR(B_LINK_LIMIT)
 #define ENOEXEC			B_TO_POSIX_ERROR(B_NOT_AN_EXECUTABLE)
 #define EPIPE			B_TO_POSIX_ERROR(B_BUSTED_PIPE)
+#endif
 
 /* new error codes that can be mapped to POSIX errors */
 #define B_BUFFER_OVERFLOW			B_FROM_POSIX_ERROR(EOVERFLOW)

@@ -22,7 +22,7 @@
 #include <Path.h>
 #include <os/storage/Volume.h>
 
-#include <MessengerPrivate.h>
+#include <private/app/MessengerPrivate.h>
 
 #include <syscalls.h>
 #include <ddm_userland_interface_defs.h>

@@ -8,18 +8,18 @@
  */
 
 
-#include <NodeInfo.h>
+#include <os/storage/NodeInfo.h>
 
 #include <new>
 #include <string.h>
 
-#include <MimeTypes.h>
+#include <private/storage/MimeTypes.h>
 #include <os/interface/Bitmap.h>
 #include <os/storage/Entry.h>
 #include <os/interface/IconUtils.h>
 #include <os/storage/Node.h>
 #include <os/storage/Path.h>
-#include <Rect.h>
+#include <os/interface/Rect.h>
 
 #include <os/kernel/fs_attr.h>
 #include <os/kernel/fs_info.h>

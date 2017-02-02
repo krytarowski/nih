@@ -12,10 +12,10 @@
 #include "os/storage/MimeType.h"
 
 #include <os/interface/Bitmap.h>
-#include <mime/database_support.h>
-#include <mime/DatabaseLocation.h>
-#include <sniffer/Rule.h>
-#include <sniffer/Parser.h>
+#include <private/storage/mime/database_support.h>
+#include <private/storage/mime/DatabaseLocation.h>
+#include <private/storage/sniffer/Rule.h>
+#include <private/storage/sniffer/Parser.h>
 
 #include <private/app/RegistrarDefs.h>
 #include <private/app/RosterPrivate.h>

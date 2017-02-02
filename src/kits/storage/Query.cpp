@@ -20,7 +20,7 @@
 #include <parsedate.h>
 #include <os/storage/Volume.h>
 
-#include <MessengerPrivate.h>
+#include <private/app/MessengerPrivate.h>
 #include <private/system/syscalls.h>
 #include <query_private.h>
 

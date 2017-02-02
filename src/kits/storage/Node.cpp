@@ -16,7 +16,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <compat/sys/stat.h>
+#include <posix/compat/sys/stat.h>
 
 #include <os/storage/Directory.h>
 #include <os/storage/Entry.h>
@@ -26,7 +26,7 @@
 
 #include <private/system/syscalls.h>
 
-#include "storage_support.h"
+#include "private/storage/storage_support.h"
 
 
 //	#pragma mark - node_ref

@@ -12,11 +12,11 @@
 #include <os/app/Messenger.h>
 #include <os/storage/NodeMonitor.h>
 
-#include <MessengerPrivate.h>
+#include <private/app/MessengerPrivate.h>
 
 #include <private/system/syscalls.h>
 
-#include "node_monitor_private.h"
+#include "private/system/node_monitor_private.h"
 
 
 // TODO: Tests!
@@ -120,4 +120,3 @@ stop_watching(const BHandler* handler, const BLooper* looper)
 {
 	return stop_watching(BMessenger(handler, looper));
 }
-

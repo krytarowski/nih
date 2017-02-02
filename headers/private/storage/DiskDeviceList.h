@@ -9,7 +9,7 @@
 #include <DiskDeviceDefs.h>
 #include <DiskDeviceVisitor.h>
 #include <os/app/Handler.h>
-#include <ObjectList.h>
+#include <os/support/ObjectList.h>
 
 class BDiskDevice;
 class BDiskDeviceRoster;

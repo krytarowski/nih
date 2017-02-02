@@ -9,8 +9,8 @@
 
 
 #include <DiskDeviceDefs.h>
-#include <Messenger.h>
-#include <Mime.h>
+#include <os/app/Messenger.h>
+#include <os/storage/Mime.h>
 
 
 class BBitmap;

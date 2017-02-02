@@ -6,7 +6,7 @@
 #define _MIME_TYPES_H
 
 
-#include <Mime.h>
+#include <os/storage/Mime.h>
 
 
 // Additional MIME types that are not defined in Mime.h but are

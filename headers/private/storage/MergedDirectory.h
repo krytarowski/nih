@@ -9,8 +9,8 @@
 #define _MERGED_DIRECTORY_H
 
 
-#include <EntryList.h>
-#include <ObjectList.h>
+#include <os/storage/EntryList.h>
+#include <os/support/ObjectList.h>
 
 
 class BDirectory;

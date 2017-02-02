@@ -8,7 +8,7 @@
 #include <image.h>
 
 #include <DiskDeviceDefs.h>
-#include <Messenger.h>
+#include <os/app/Messenger.h>
 #include <os/support/SupportDefs.h>
 
 class BDirectory;

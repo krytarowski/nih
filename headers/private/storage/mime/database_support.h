@@ -6,8 +6,8 @@
 #define _MIME_DATABASE_SUPPORT_H
 
 
-#include <Mime.h>
-#include <SupportDefs.h>
+#include <os/storage/Mime.h>
+#include <os/support/SupportDefs.h>
 
 
 class BBitmap;

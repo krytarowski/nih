@@ -14,7 +14,7 @@
 
 #include <List.h>
 #include <Locker.h>
-#include <Mime.h>
+#include <os/storage/Mime.h>
 #include <Messenger.h>
 #include <StorageDefs.h>
 

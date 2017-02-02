@@ -9,7 +9,7 @@
 #define _MIME_APP_META_MIME_CREATOR_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 struct entry_ref;

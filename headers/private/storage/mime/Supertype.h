@@ -10,7 +10,7 @@
 #ifndef _MIME_SUPERTYPE_H
 #define _MIME_SUPERTYPE_H
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 #include <string>
 #include <set>

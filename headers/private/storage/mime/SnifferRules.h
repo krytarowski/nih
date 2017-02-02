@@ -6,7 +6,7 @@
 #define _MIME_SNIFFER_RULES_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 #include <list>
 #include <string>

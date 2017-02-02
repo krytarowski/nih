@@ -9,7 +9,7 @@
 #define _MIME_MIME_SNIFFER_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 class BFile;

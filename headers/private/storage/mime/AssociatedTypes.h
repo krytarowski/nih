@@ -6,7 +6,7 @@
 #define _MIME_ASSOCIATED_TYPES_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 #include <map>
 #include <set>

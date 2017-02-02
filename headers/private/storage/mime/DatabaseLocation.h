@@ -9,8 +9,8 @@
 #define _MIME_DATABASE_LOCATION_H
 
 
-#include <Mime.h>
-#include <StringList.h>
+#include <os/storage/Mime.h>
+#include <os/support/StringList.h>
 
 
 namespace BPrivate {

@@ -360,8 +360,10 @@ BDirectory::GetNextRef(entry_ref* ref)
 			}
 		}
 		if (error == B_OK) {
+#if !defined(__NetBSD__)
 			ref->device = entry.d_pdev;
 			ref->directory = entry.d_pino;
+#endif
 			error = ref->set_name(entry.d_name);
 		}
 	}

@@ -24,7 +24,7 @@
 #include <os/support/String.h>
 #include <os/storage/Volume.h>
 
-#include <os/shared/AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 
 #include <ddm_userland_interface_defs.h>
 #include <syscalls.h>

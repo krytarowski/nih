@@ -23,7 +23,7 @@
 #include <os/storage/Path.h>
 #include <os/support/String.h>
 
-#include <os/shared/AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 #include <NotOwningEntryRef.h>
 #include <ObjectList.h>
 #include <util/OpenHashTable.h>

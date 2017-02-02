@@ -19,7 +19,7 @@
 #include "private/storage/storage_support.h"
 
 #include <private/system/syscalls.h>
-#include <umask.h>
+#include <private/libroot/umask.h>
 
 
 // Creates an uninitialized BFile.

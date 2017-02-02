@@ -17,7 +17,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <compat/sys/stat.h>
+#include <posix/compat/sys/stat.h>
 
 #include <os/storage/Directory.h>
 #include <os/storage/Path.h>

@@ -25,7 +25,7 @@
 #include <os/app/Message.h>
 #include <os/storage/Node.h>
 
-#include <os/shared/AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 #include <mime/database_support.h>
 
 

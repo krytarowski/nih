@@ -13,7 +13,7 @@
 #include <stdio.h>	// for SEEK_* defines
 #include <new>
 
-#include <os/shared/AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 
 using namespace BPrivate::Storage::Sniffer;
 

@@ -17,7 +17,7 @@
 #include <image.h>
 #include <Path.h>
 
-#include <os/shared/AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 #include <AutoLocker.h>
 
 #include <DiskSystemAddOn.h>

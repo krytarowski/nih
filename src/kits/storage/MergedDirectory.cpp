@@ -18,7 +18,7 @@
 #include <os/storage/Directory.h>
 #include <os/storage/Entry.h>
 
-#include <os/shared/AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 
 #include "private/storage/storage_support.h"
 

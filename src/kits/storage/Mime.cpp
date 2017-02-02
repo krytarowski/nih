@@ -16,7 +16,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#include <os/shared/AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 #include <os/interface/Bitmap.h>
 #include <os/drivers/Drivers.h>
 #include <os/storage/Entry.h>

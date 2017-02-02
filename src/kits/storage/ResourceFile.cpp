@@ -16,7 +16,7 @@
 #include <new>
 #include <stdio.h>
 
-#include <os/shared/AutoDeleter.h>
+#include <private/shared/AutoDeleter.h>
 
 #include <Elf.h>
 #include <Exception.h>

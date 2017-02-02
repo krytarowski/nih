@@ -68,4 +68,16 @@ typedef	unsigned long	addr_t;
 #define INT32_MIN (-0x7fffffff-1)
 #endif
 
+#ifndef SYMLOOP_MAX
+#define	SYMLOOP_MAX				(16)
+#endif
+
+#ifndef O_RWMASK
+#define O_RWMASK          O_ACCMODE
+#endif
+
+#ifndef O_NOTRAVERSE
+#define   O_NOTRAVERSE    0x2000          /* do not traverse leaf link */
+#endif
+
 #endif /* !_NETBSD_COMPAT_H */

@@ -6,8 +6,8 @@
 #define _SYM_LINK_H
 
 
-#include <Node.h>
-#include <StorageDefs.h>
+#include <os/storage/Node.h>
+#include <os/storage/StorageDefs.h>
 
 
 class BDirectory;

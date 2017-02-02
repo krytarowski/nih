@@ -8,7 +8,7 @@
 
 #include <Directory.h>
 #include <Entry.h>
-#include <Node.h>
+#include <os/storage/Node.h>
 
 class BMessage;
 class BMessenger;

@@ -6,7 +6,7 @@
 #define _NODE_MONITOR_H
 
 
-#include <StorageDefs.h>
+#include <os/storage/StorageDefs.h>
 
 
 // Flags for the watch_node() call.
@@ -76,8 +76,8 @@ enum {
 #if defined(__cplusplus) && !defined(_KERNEL_MODE)
 
 // these are only needed for the function exports
-#include <Node.h>
-#include <Messenger.h>
+#include <os/storage/Node.h>
+#include <os/app/Messenger.h>
 
 class BLooper;
 class BHandler;

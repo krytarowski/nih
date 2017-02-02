@@ -8,7 +8,7 @@
  */
 
 
-#include <Node.h>
+#include <os/storage/Node.h>
 
 #include <errno.h>
 #include <fcntl.h>
@@ -19,10 +19,10 @@
 #include <compat/sys/stat.h>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
-#include <fs_attr.h>
-#include <String.h>
-#include <TypeConstants.h>
+#include <os/storage/Entry.h>
+#include <os/kernel/fs_attr.h>
+#include <os/support/String.h>
+#include <os/support/TypeConstants.h>
 
 #include <private/system/syscalls.h>
 

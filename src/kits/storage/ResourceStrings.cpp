@@ -13,10 +13,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Entry.h>
-#include <File.h>
-#include <Resources.h>
-#include <String.h>
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
+#include <os/storage/Resources.h>
+#include <os/support/String.h>
 
 #include <AppMisc.h>
 

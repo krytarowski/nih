@@ -21,19 +21,19 @@
 #include <os/interface/Bitmap.h>
 #include <DataIO.h>
 #include <os/storage/Directory.h>
-#include <Entry.h>
-#include <fs_attr.h>
+#include <os/storage/Entry.h>
+#include <os/kernel/fs_attr.h>
 #include <os/app/Message.h>
-#include <MimeType.h>
-#include <Node.h>
+#include <os/storage/MimeType.h>
+#include <os/storage/Node.h>
 #include <os/storage/Path.h>
-#include <String.h>
-#include <TypeConstants.h>
+#include <os/support/String.h>
+#include <os/support/TypeConstants.h>
 
 #include <AutoLocker.h>
 #include <mime/database_support.h>
 #include <mime/DatabaseLocation.h>
-#include <storage_support.h>
+#include <private/storage/storage_support.h>
 
 
 //#define DBG(x) x

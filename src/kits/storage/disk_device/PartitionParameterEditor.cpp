@@ -6,7 +6,7 @@
 
 #include <PartitionParameterEditor.h>
 
-#include <String.h>
+#include <os/support/String.h>
 #include <View.h>
 
 

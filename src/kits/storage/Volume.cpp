@@ -13,15 +13,15 @@
 
 #include <os/interface/Bitmap.h>
 #include <os/storage/Directory.h>
-#include <fs_info.h>
-#include <Node.h>
+#include <os/kernel/fs_info.h>
+#include <os/storage/Node.h>
 #include <os/storage/Path.h>
-#include <Volume.h>
+#include <os/storage/Volume.h>
 
-#include <storage_support.h>
+#include <private/storage/storage_support.h>
 #include <private/system/syscalls.h>
 
-#include <fs_interface.h>
+#include <os/drivers/fs_interface.h>
 
 
 // Creates an uninitialized BVolume object.

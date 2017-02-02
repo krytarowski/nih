@@ -14,9 +14,9 @@
 
 #include <compat/sys/stat.h>
 
-#include <Node.h>
-#include <NodeMonitor.h>
-#include <Volume.h>
+#include <os/storage/Node.h>
+#include <os/storage/NodeMonitor.h>
+#include <os/storage/Volume.h>
 
 
 class BStatable::Private {

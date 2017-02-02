@@ -21,10 +21,10 @@
 #include <Partition.h>
 #include <PartitioningInfo.h>
 #include <Path.h>
-#include <String.h>
-#include <Volume.h>
+#include <os/support/String.h>
+#include <os/storage/Volume.h>
 
-#include <AutoDeleter.h>
+#include <os/shared/AutoDeleter.h>
 
 #include <ddm_userland_interface_defs.h>
 #include <syscalls.h>

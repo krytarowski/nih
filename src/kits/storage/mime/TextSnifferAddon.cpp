@@ -6,7 +6,7 @@
 
 #include <mime/TextSnifferAddon.h>
 
-#include <MimeType.h>
+#include <os/storage/MimeType.h>
 
 #include <mime/DatabaseLocation.h>
 

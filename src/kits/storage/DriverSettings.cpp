@@ -7,7 +7,7 @@
  */
 
 
-#include <DriverSettings.h>
+#include <private/storage/DriverSettings.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,9 +16,9 @@
 
 #include <os/drivers/driver_settings.h>
 #include <os/storage/Path.h>
-#include <String.h>
+#include <os/support/String.h>
 
-#include <Referenceable.h>
+#include <os/support/Referenceable.h>
 
 
 // The parameter values that shall be evaluated to true.

@@ -9,7 +9,7 @@
 
 #include <os/storage/FindDirectory.h>
 #include <os/storage/Path.h>
-#include <Volume.h>
+#include <os/storage/Volume.h>
 
 
 // find_directory

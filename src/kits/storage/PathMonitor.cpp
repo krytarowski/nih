@@ -16,14 +16,14 @@
 
 #include <os/support/Autolock.h>
 #include <os/storage/Directory.h>
-#include <Entry.h>
-#include <Handler.h>
-#include <Locker.h>
-#include <Looper.h>
+#include <os/storage/Entry.h>
+#include <os/app/Handler.h>
+#include <os/support/Locker.h>
+#include <os/app/Looper.h>
 #include <os/storage/Path.h>
-#include <String.h>
+#include <os/support/String.h>
 
-#include <AutoDeleter.h>
+#include <os/shared/AutoDeleter.h>
 #include <NotOwningEntryRef.h>
 #include <ObjectList.h>
 #include <util/OpenHashTable.h>

@@ -12,11 +12,11 @@
 #include <unistd.h>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
-#include <File.h>
-#include <fs_interface.h>
-#include <NodeMonitor.h>
-#include "storage_support.h"
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
+#include <os/drivers/fs_interface.h>
+#include <os/storage/NodeMonitor.h>
+#include "private/storage/storage_support.h"
 
 #include <private/system/syscalls.h>
 #include <umask.h>

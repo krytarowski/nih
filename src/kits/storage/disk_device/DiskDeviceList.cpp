@@ -12,8 +12,8 @@
 #include <DiskDevice.h>
 #include <DiskDevicePrivate.h>
 #include <DiskDeviceRoster.h>
-#include <Locker.h>
-#include <Looper.h>
+#include <os/support/Locker.h>
+#include <os/app/Looper.h>
 #include <Partition.h>
 
 #include <new>

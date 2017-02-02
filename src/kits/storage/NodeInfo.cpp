@@ -15,14 +15,14 @@
 
 #include <MimeTypes.h>
 #include <os/interface/Bitmap.h>
-#include <Entry.h>
-#include <IconUtils.h>
-#include <Node.h>
+#include <os/storage/Entry.h>
+#include <os/interface/IconUtils.h>
+#include <os/storage/Node.h>
 #include <os/storage/Path.h>
 #include <Rect.h>
 
-#include <fs_attr.h>
-#include <fs_info.h>
+#include <os/kernel/fs_attr.h>
+#include <os/kernel/fs_info.h>
 
 
 using namespace std;

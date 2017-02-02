@@ -9,8 +9,8 @@
 
 #include <mime/DatabaseDirectory.h>
 
-#include <fs_attr.h>
-#include <Node.h>
+#include <os/kernel/fs_attr.h>
+#include <os/storage/Node.h>
 #include <StringList.h>
 
 #include <mime/database_support.h>

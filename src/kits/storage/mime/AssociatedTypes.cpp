@@ -14,16 +14,16 @@
 #include <new>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <os/app/Message.h>
 #include <mime/database_support.h>
 #include <mime/DatabaseDirectory.h>
 #include <mime/DatabaseLocation.h>
 #include <mime/MimeSniffer.h>
-#include <MimeType.h>
+#include <os/storage/MimeType.h>
 #include <os/storage/Path.h>
-#include <String.h>
-#include <storage_support.h>
+#include <os/support/String.h>
+#include <private/storage/storage_support.h>
 
 
 #define DBG(x) x

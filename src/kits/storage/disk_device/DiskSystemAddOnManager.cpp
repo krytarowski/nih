@@ -13,11 +13,11 @@
 #include <stdio.h>
 
 #include <Directory.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <image.h>
 #include <Path.h>
 
-#include <AutoDeleter.h>
+#include <os/shared/AutoDeleter.h>
 #include <AutoLocker.h>
 
 #include <DiskSystemAddOn.h>

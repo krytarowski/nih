@@ -18,9 +18,9 @@
 #include <sys/stat.h>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
-#include <File.h>
-#include <MimeType.h>
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
+#include <os/storage/MimeType.h>
 #include <mime/database_support.h>
 #include <mime/DatabaseDirectory.h>
 #include <mime/DatabaseLocation.h>
@@ -28,8 +28,8 @@
 #include <sniffer/Parser.h>
 #include <sniffer/Rule.h>
 #include <StorageDefs.h>
-#include <storage_support.h>
-#include <String.h>
+#include <private/storage/storage_support.h>
+#include <os/support/String.h>
 
 
 #define DBG(x) x

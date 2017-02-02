@@ -10,7 +10,7 @@
 #include <mime/AppMetaMimeCreator.h>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 
 
 namespace BPrivate {

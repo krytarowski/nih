@@ -9,7 +9,7 @@
  */
 
 
-#include "MimeType.h"
+#include "os/storage/MimeType.h"
 
 #include <os/interface/Bitmap.h>
 #include <mime/database_support.h>
@@ -17,8 +17,8 @@
 #include <sniffer/Rule.h>
 #include <sniffer/Parser.h>
 
-#include <RegistrarDefs.h>
-#include <RosterPrivate.h>
+#include <private/app/RegistrarDefs.h>
+#include <private/app/RosterPrivate.h>
 
 #include <ctype.h>
 #include <new>

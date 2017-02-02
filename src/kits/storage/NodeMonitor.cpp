@@ -10,7 +10,7 @@
 
 
 #include <os/app/Messenger.h>
-#include <NodeMonitor.h>
+#include <os/storage/NodeMonitor.h>
 
 #include <MessengerPrivate.h>
 

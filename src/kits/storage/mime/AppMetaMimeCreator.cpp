@@ -15,11 +15,11 @@
 
 #include <os/storage/AppFileInfo.h>
 #include <os/interface/Bitmap.h>
-#include <File.h>
-#include <fs_attr.h>
+#include <os/storage/File.h>
+#include <os/kernel/fs_attr.h>
 #include <os/app/Message.h>
-#include <MimeType.h>
-#include <String.h>
+#include <os/storage/MimeType.h>
+#include <os/support/String.h>
 
 #include <AutoLocker.h>
 #include <mime/Database.h>

@@ -15,12 +15,12 @@
 #include <DiskDevice.h>
 #include <DiskDevicePrivate.h>
 #include <DiskSystem.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <FindDirectory.h>
 #include <Message.h>
 #include <Partition.h>
 #include <Path.h>
-#include <Volume.h>
+#include <os/storage/Volume.h>
 
 #include <MessengerPrivate.h>
 

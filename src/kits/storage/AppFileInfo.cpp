@@ -14,14 +14,14 @@
 
 #include <os/storage/AppFileInfo.h>
 #include <os/interface/Bitmap.h>
-#include <File.h>
-#include <fs_attr.h>
-#include <IconUtils.h>
-#include <MimeType.h>
-#include <RegistrarDefs.h>
-#include <Resources.h>
-#include <Roster.h>
-#include <String.h>
+#include <os/storage/File.h>
+#include <os/kernel/fs_attr.h>
+#include <os/interface/IconUtils.h>
+#include <os/storage/MimeType.h>
+#include <private/app/RegistrarDefs.h>
+#include <os/storage/Resources.h>
+#include <os/app/Roster.h>
+#include <os/support/String.h>
 
 
 // debugging

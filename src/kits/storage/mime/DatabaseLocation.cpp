@@ -19,13 +19,13 @@
 #include <os/interface/Bitmap.h>
 #include <DataIO.h>
 #include <os/storage/Directory.h>
-#include <File.h>
-#include <fs_attr.h>
-#include <IconUtils.h>
+#include <os/storage/File.h>
+#include <os/kernel/fs_attr.h>
+#include <os/interface/IconUtils.h>
 #include <os/app/Message.h>
-#include <Node.h>
+#include <os/storage/Node.h>
 
-#include <AutoDeleter.h>
+#include <os/shared/AutoDeleter.h>
 #include <mime/database_support.h>
 
 

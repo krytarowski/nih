@@ -16,22 +16,22 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#include <AutoDeleter.h>
+#include <os/shared/AutoDeleter.h>
 #include <os/interface/Bitmap.h>
-#include <Drivers.h>
-#include <Entry.h>
-#include <File.h>
+#include <os/drivers/Drivers.h>
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
 #include <os/storage/FindDirectory.h>
-#include <fs_attr.h>
-#include <fs_info.h>
-#include <IconUtils.h>
-#include <Mime.h>
-#include <MimeType.h>
-#include <Node.h>
+#include <os/kernel/fs_attr.h>
+#include <os/kernel/fs_info.h>
+#include <os/interface/IconUtils.h>
+#include <os/storage/Mime.h>
+#include <os/storage/MimeType.h>
+#include <os/storage/Node.h>
 #include <os/storage/Path.h>
-#include <RegistrarDefs.h>
-#include <Roster.h>
-#include <RosterPrivate.h>
+#include <private/app/RegistrarDefs.h>
+#include <os/app/Roster.h>
+#include <private/app/RosterPrivate.h>
 
 
 using namespace BPrivate;

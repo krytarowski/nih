@@ -3,7 +3,7 @@
 //  by the OpenBeOS license.
 //---------------------------------------------------------------------
 
-#include <EntryList.h>
+#include <os/storage/EntryList.h>
 
 
 BEntryList::BEntryList()

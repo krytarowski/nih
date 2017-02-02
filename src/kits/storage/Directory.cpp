@@ -9,22 +9,22 @@
  */
 
 
-#include "storage_support.h"
+#include "private/storage/storage_support.h"
 
 #include <fcntl.h>
 #include <string.h>
 
-#include <compat/sys/stat.h>
+#include <posix/compat/sys/stat.h>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
-#include <File.h>
-#include <fs_info.h>
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
+#include <os/kernel/fs_info.h>
 #include <os/storage/Path.h>
-#include <SymLink.h>
+#include <os/storage/SymLink.h>
 
 #include <private/system/syscalls.h>
-#include <umask.h>
+#include <private/libroot/umask.h>
 
 
 BDirectory::BDirectory()

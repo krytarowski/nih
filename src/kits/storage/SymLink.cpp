@@ -11,9 +11,9 @@
 #include <new>
 #include <string.h>
 
-#include <SymLink.h>
+#include <os/storage/SymLink.h>
 #include <os/storage/Directory.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <os/storage/Path.h>
 
 #include <private/system/syscalls.h>

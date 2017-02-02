@@ -14,9 +14,9 @@
 #include <new>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <StorageDefs.h>
-#include <String.h>
+#include <os/support/String.h>
 
 #include <private/system/syscalls.h>
 

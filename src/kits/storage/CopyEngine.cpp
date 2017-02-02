@@ -7,7 +7,7 @@
  */
 
 
-#include <CopyEngine.h>
+#include <private/storage/CopyEngine.h>
 
 #include <errno.h>
 #include <stdio.h>
@@ -16,12 +16,12 @@
 #include <unistd.h>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
-#include <File.h>
-#include <fs_attr.h>
+#include <os/storage/Entry.h>
+#include <os/storage/File.h>
+#include <os/kernel/fs_attr.h>
 #include <os/storage/Path.h>
-#include <SymLink.h>
-#include <TypeConstants.h>
+#include <os/storage/SymLink.h>
+#include <os/support/TypeConstants.h>
 
 
 namespace BPrivate {

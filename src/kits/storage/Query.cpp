@@ -15,10 +15,10 @@
 #include <new>
 #include <time.h>
 
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <fs_query.h>
 #include <parsedate.h>
-#include <Volume.h>
+#include <os/storage/Volume.h>
 
 #include <MessengerPrivate.h>
 #include <private/system/syscalls.h>

@@ -8,7 +8,7 @@
  */
 
 
-#include <Entry.h>
+#include <os/storage/Entry.h>
 
 #include <fcntl.h>
 #include <new>
@@ -21,11 +21,11 @@
 
 #include <os/storage/Directory.h>
 #include <os/storage/Path.h>
-#include <SymLink.h>
+#include <os/storage/SymLink.h>
 
 #include <private/system/syscalls.h>
 
-#include "storage_support.h"
+#include "private/storage/storage_support.h"
 
 
 using namespace std;

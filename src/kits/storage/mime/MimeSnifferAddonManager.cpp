@@ -9,7 +9,7 @@
 #include <new>
 
 #include <os/support/Autolock.h>
-#include <MimeType.h>
+#include <os/storage/MimeType.h>
 
 #include <MimeSnifferAddon.h>
 

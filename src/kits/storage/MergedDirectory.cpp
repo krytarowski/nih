@@ -7,7 +7,7 @@
  */
 
 
-#include <MergedDirectory.h>
+#include <private/storage/MergedDirectory.h>
 
 #include <string.h>
 
@@ -16,11 +16,11 @@
 #include <string>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 
-#include <AutoDeleter.h>
+#include <os/shared/AutoDeleter.h>
 
-#include "storage_support.h"
+#include "private/storage/storage_support.h"
 
 
 struct BMergedDirectory::EntryNameSet : std::set<std::string> {

@@ -11,7 +11,7 @@
 #include <unistd.h>
 
 #include <os/storage/Directory.h>
-#include <Entry.h>
+#include <os/storage/Entry.h>
 #include <os/storage/Path.h>
 
 

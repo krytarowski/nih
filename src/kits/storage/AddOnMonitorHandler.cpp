@@ -9,7 +9,7 @@
  */
 
 
-#include "AddOnMonitorHandler.h"
+#include "private/storage/AddOnMonitorHandler.h"
 
 #include <string.h>
 #include <strings.h>

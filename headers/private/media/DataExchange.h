@@ -8,7 +8,7 @@
 #define _DATA_EXCHANGE_H
 
 
-#include <ServerInterface.h>
+#include <private/media/ServerInterface.h>
 
 
 namespace BPrivate {

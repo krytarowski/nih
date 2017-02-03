@@ -192,6 +192,7 @@ SRCS+=	locale/TimeUnitFormat.cpp
 SRCS+=	locale/TimeZone.cpp
 SRCS+=	locale/UnicodeChar.cpp
 SRCS+=	locale/cat.cpp
+
 SRCS+=	storage/AddOnImage.cpp
 SRCS+=	storage/AddOnMonitor.cpp
 SRCS+=	storage/AddOnMonitorHandler.cpp
@@ -259,6 +260,33 @@ SRCS+=	storage/sniffer/RPattern.cpp
 SRCS+=	storage/sniffer/RPatternList.cpp
 SRCS+=	storage/sniffer/Range.cpp
 SRCS+=	storage/sniffer/Rule.cpp
+
+SRCS+=	support/Architecture.cpp
+SRCS+=	support/Archivable.cpp
+SRCS+=	support/ArchivingManagers.cpp
+SRCS+=	support/Base64.cpp
+SRCS+=	support/Beep.cpp
+SRCS+=	support/BlockCache.cpp
+SRCS+=	support/BufferIO.cpp
+SRCS+=	support/BufferedDataIO.cpp
+SRCS+=	support/ByteOrder.cpp
+SRCS+=	support/CompressionAlgorithm.cpp
+SRCS+=	support/DataIO.cpp
+SRCS+=	support/DataPositionIOWrapper.cpp
+SRCS+=	support/DateTime.cpp
+SRCS+=	support/Flattenable.cpp
+SRCS+=	support/Job.cpp
+SRCS+=	support/JobQueue.cpp
+SRCS+=	support/List.cpp
+SRCS+=	support/Locker.cpp
+SRCS+=	support/PointerList.cpp
+SRCS+=	support/Referenceable.cpp
+SRCS+=	support/StopWatch.cpp
+SRCS+=	support/String.cpp
+SRCS+=	support/StringList.cpp
+SRCS+=	support/Url.cpp
+SRCS+=	support/Uuid.cpp
+SRCS+=	support/ZlibCompressionAlgorithm.cpp
 
 LIB=	be
 

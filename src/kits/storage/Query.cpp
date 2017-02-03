@@ -9,23 +9,23 @@
  */
 
 
-#include <Query.h>
+#include <os/storage/Query.h>
 
 #include <fcntl.h>
 #include <new>
 #include <time.h>
 
 #include <os/storage/Entry.h>
-#include <fs_query.h>
-#include <parsedate.h>
+#include <os/kernel/fs_query.h>
+#include <os/support/parsedate.h>
 #include <os/storage/Volume.h>
 
 #include <private/app/MessengerPrivate.h>
 #include <private/system/syscalls.h>
-#include <query_private.h>
+#include <private/storage/query_private.h>
 
-#include "QueryPredicate.h"
-#include "storage_support.h"
+#include "private/storage/QueryPredicate.h"
+#include "private/storage/storage_support.h"
 
 
 using namespace std;
@@ -561,4 +561,3 @@ void BQuery::_QwertyQuery3() {}
 void BQuery::_QwertyQuery4() {}
 void BQuery::_QwertyQuery5() {}
 void BQuery::_QwertyQuery6() {}
-

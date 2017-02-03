@@ -7,14 +7,14 @@
  */
 
 
-#include <mime/DatabaseDirectory.h>
+#include <private/storage/mime/DatabaseDirectory.h>
 
 #include <os/kernel/fs_attr.h>
 #include <os/storage/Node.h>
 #include <os/support/StringList.h>
 
-#include <mime/database_support.h>
-#include <mime/DatabaseLocation.h>
+#include <private/storage/mime/database_support.h>
+#include <private/storage/mime/DatabaseLocation.h>
 
 
 namespace BPrivate {

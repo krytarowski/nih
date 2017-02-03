@@ -7,10 +7,10 @@
 	Supertype class implementation
 */
 
-#include <mime/Supertype.h>
+#include <private/storage/mime/Supertype.h>
 
 #include <os/app/Message.h>
-#include <mime/database_support.h>
+#include <private/storage/mime/database_support.h>
 
 #include <new>
 #include <stdio.h>

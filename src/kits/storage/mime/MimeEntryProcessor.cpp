@@ -7,7 +7,7 @@
  */
 
 
-#include <mime/AppMetaMimeCreator.h>
+#include <private/storage/mime/AppMetaMimeCreator.h>
 
 #include <os/storage/Directory.h>
 #include <os/storage/Entry.h>

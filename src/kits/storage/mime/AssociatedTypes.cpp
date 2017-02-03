@@ -7,7 +7,7 @@
 	AssociatedTypes class implementation
 */
 
-#include <mime/AssociatedTypes.h>
+#include <private/storage/mime/AssociatedTypes.h>
 
 #include <stdio.h>
 
@@ -16,10 +16,10 @@
 #include <os/storage/Directory.h>
 #include <os/storage/Entry.h>
 #include <os/app/Message.h>
-#include <mime/database_support.h>
-#include <mime/DatabaseDirectory.h>
-#include <mime/DatabaseLocation.h>
-#include <mime/MimeSniffer.h>
+#include <private/storage/mime/database_support.h>
+#include <private/storage/mime/DatabaseDirectory.h>
+#include <private/storage/mime/DatabaseLocation.h>
+#include <private/storage/mime/MimeSniffer.h>
 #include <os/storage/MimeType.h>
 #include <os/storage/Path.h>
 #include <os/support/String.h>

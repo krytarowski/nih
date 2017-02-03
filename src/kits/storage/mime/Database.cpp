@@ -9,7 +9,7 @@
  */
 
 
-#include <mime/Database.h>
+#include <private/storage/mime/Database.h>
 
 #include <stdio.h>
 #include <string>
@@ -17,7 +17,7 @@
 #include <iostream>
 #include <new>
 
-#include <Application.h>
+#include <os/app/Application.h>
 #include <os/interface/Bitmap.h>
 #include <os/support/DataIO.h>
 #include <os/storage/Directory.h>
@@ -30,9 +30,9 @@
 #include <os/support/String.h>
 #include <os/support/TypeConstants.h>
 
-#include <AutoLocker.h>
-#include <mime/database_support.h>
-#include <mime/DatabaseLocation.h>
+#include <private/shared/AutoLocker.h>
+#include <private/storage/mime/database_support.h>
+#include <private/storage/mime/DatabaseLocation.h>
 #include <private/storage/storage_support.h>
 
 

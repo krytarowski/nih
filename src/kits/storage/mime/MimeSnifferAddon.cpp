@@ -4,7 +4,7 @@
  */
 
 
-#include <MimeSnifferAddon.h>
+#include <os/add-ons/registrar/MimeSnifferAddon.h>
 
 
 // constructor

@@ -7,7 +7,7 @@
  */
 
 
-#include <mime/MimeSniffer.h>
+#include <private/storage/mime/MimeSniffer.h>
 
 
 namespace BPrivate {

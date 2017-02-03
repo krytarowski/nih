@@ -9,7 +9,7 @@
  */
 
 
-#include <mime/InstalledTypes.h>
+#include <private/storage/mime/InstalledTypes.h>
 
 #include <stdio.h>
 
@@ -21,8 +21,8 @@
 #include <os/storage/MimeType.h>
 #include <os/support/String.h>
 
-#include <mime/database_support.h>
-#include <mime/DatabaseDirectory.h>
+#include <private/storage/mime/database_support.h>
+#include <private/storage/mime/DatabaseDirectory.h>
 #include <private/storage/storage_support.h>
 
 

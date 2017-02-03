@@ -4,14 +4,14 @@
  */
 
 
-#include <mime/MimeSnifferAddonManager.h>
+#include <private/storage/mime/MimeSnifferAddonManager.h>
 
 #include <new>
 
 #include <os/support/Autolock.h>
 #include <os/storage/MimeType.h>
 
-#include <MimeSnifferAddon.h>
+#include <os/add-ons/registrar/MimeSnifferAddon.h>
 
 
 namespace BPrivate {

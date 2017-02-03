@@ -9,7 +9,7 @@
  */
 
 
-#include <mime/AppMetaMimeCreator.h>
+#include <private/storage/mime/AppMetaMimeCreator.h>
 
 #include <stdlib.h>
 
@@ -21,10 +21,10 @@
 #include <os/storage/MimeType.h>
 #include <os/support/String.h>
 
-#include <AutoLocker.h>
-#include <mime/Database.h>
-#include <mime/database_support.h>
-#include <mime/DatabaseLocation.h>
+#include <private/shared/AutoLocker.h>
+#include <private/storage/mime/Database.h>
+#include <private/storage/mime/database_support.h>
+#include <private/storage/mime/DatabaseLocation.h>
 
 
 namespace BPrivate {

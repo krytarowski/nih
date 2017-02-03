@@ -8,7 +8,7 @@
  */
 
 
-#include <mime/database_support.h>
+#include <private/storage/mime/database_support.h>
 
 #if defined(__HAIKU__) && !defined(HAIKU_HOST_PLATFORM_HAIKU)
 #	include <pthread.h>
@@ -20,7 +20,7 @@
 #include <os/storage/FindDirectory.h>
 #include <os/storage/Path.h>
 
-#include <mime/DatabaseLocation.h>
+#include <private/storage/mime/DatabaseLocation.h>
 
 
 namespace BPrivate {

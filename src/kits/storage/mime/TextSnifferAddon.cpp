@@ -4,11 +4,11 @@
  */
 
 
-#include <mime/TextSnifferAddon.h>
+#include <private/storage/mime/TextSnifferAddon.h>
 
 #include <os/storage/MimeType.h>
 
-#include <mime/DatabaseLocation.h>
+#include <private/storage/mime/DatabaseLocation.h>
 
 
 using BPrivate::Storage::Mime::DatabaseLocation;

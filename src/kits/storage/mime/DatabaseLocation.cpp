@@ -9,7 +9,7 @@
  */
 
 
-#include <mime/DatabaseLocation.h>
+#include <private/storage/mime/DatabaseLocation.h>
 
 #include <stdlib.h>
 #include <syslog.h>
@@ -26,7 +26,7 @@
 #include <os/storage/Node.h>
 
 #include <private/shared/AutoDeleter.h>
-#include <mime/database_support.h>
+#include <private/storage/mime/database_support.h>
 
 
 namespace BPrivate {

@@ -12,7 +12,7 @@
 	SnifferRules class implementation
 */
 
-#include <mime/SnifferRules.h>
+#include <private/storage/mime/SnifferRules.h>
 
 #include <stdio.h>
 #include <sys/stat.h>
@@ -21,13 +21,13 @@
 #include <os/storage/Entry.h>
 #include <os/storage/File.h>
 #include <os/storage/MimeType.h>
-#include <mime/database_support.h>
-#include <mime/DatabaseDirectory.h>
-#include <mime/DatabaseLocation.h>
-#include <mime/MimeSniffer.h>
-#include <sniffer/Parser.h>
-#include <sniffer/Rule.h>
-#include <StorageDefs.h>
+#include <private/storage/mime/database_support.h>
+#include <private/storage/mime/DatabaseDirectory.h>
+#include <private/storage/mime/DatabaseLocation.h>
+#include <private/storage/mime/MimeSniffer.h>
+#include <private/storage/sniffer/Parser.h>
+#include <private/storage/sniffer/Rule.h>
+#include <os/storage/StorageDefs.h>
 #include <private/storage/storage_support.h>
 #include <os/support/String.h>
 
@@ -590,4 +590,3 @@ SnifferRules::ProcessType(const char *type, ssize_t *bytesNeeded)
 } // namespace Mime
 } // namespace Storage
 } // namespace BPrivate
-

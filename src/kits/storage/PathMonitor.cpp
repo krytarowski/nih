@@ -9,7 +9,7 @@
  */
 
 
-#include <PathMonitor.h>
+#include <private/storage/PathMonitor.h>
 
 #include <pthread.h>
 #include <stdio.h>
@@ -24,10 +24,10 @@
 #include <os/support/String.h>
 
 #include <private/shared/AutoDeleter.h>
-#include <NotOwningEntryRef.h>
-#include <ObjectList.h>
-#include <util/OpenHashTable.h>
-#include <util/SinglyLinkedList.h>
+#include <private/storage/NotOwningEntryRef.h>
+#include <os/support/ObjectList.h>
+#include <private/kernel/util/OpenHashTable.h>
+#include <private/kernel/util/SinglyLinkedList.h>
 
 
 #undef TRACE

@@ -4,12 +4,12 @@
  */
 
 
-#include <PathFinder.h>
+#include <os/storage/PathFinder.h>
 
 #include <private/shared/AutoDeleter.h>
 #include <os/storage/FindDirectory.h>
 #include <os/storage/Path.h>
-#include <StringList.h>
+#include <os/support/StringList.h>
 
 
 // NOTE: The package kit specific part of BPathFinder (BResolvableExpression

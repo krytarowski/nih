@@ -7,10 +7,10 @@
 
 
 #include <os/support/List.h>
-#include <Locker.h>
+#include <os/support/Locker.h>
 
 
-#include <mime/MimeSniffer.h>
+#include <private/storage/mime/MimeSniffer.h>
 
 
 class BFile;

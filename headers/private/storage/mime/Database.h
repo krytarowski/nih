@@ -13,15 +13,15 @@
 #include <string>
 
 #include <os/support/List.h>
-#include <Locker.h>
+#include <os/support/Locker.h>
 #include <os/storage/Mime.h>
-#include <Messenger.h>
-#include <StorageDefs.h>
+#include <os/app/Messenger.h>
+#include <os/storage/StorageDefs.h>
 
-#include <mime/AssociatedTypes.h>
-#include <mime/InstalledTypes.h>
-#include <mime/SnifferRules.h>
-#include <mime/SupportingApps.h>
+#include <private/storage/mime/AssociatedTypes.h>
+#include <private/storage/mime/InstalledTypes.h>
+#include <private/storage/mime/SnifferRules.h>
+#include <private/storage/mime/SupportingApps.h>
 
 
 class BNode;

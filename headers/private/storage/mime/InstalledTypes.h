@@ -16,7 +16,7 @@
 
 #include <os/support/SupportDefs.h>
 
-#include <mime/Supertype.h>
+#include <private/storage/mime/Supertype.h>
 
 
 class BMessage;

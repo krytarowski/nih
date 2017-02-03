@@ -9,7 +9,7 @@
 #define _MIME_MIME_ENTRY_PROCESSOR_H
 
 
-#include <mime/MimeEntryProcessor.h>
+#include <private/storage/mime/MimeEntryProcessor.h>
 
 
 namespace BPrivate {

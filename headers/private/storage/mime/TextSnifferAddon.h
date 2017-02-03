@@ -6,7 +6,7 @@
 #define _MIME_TEXT_SNIFFER_ADDON_H
 
 
-#include <MimeSnifferAddon.h>
+#include <os/add-ons/registrar/MimeSnifferAddon.h>
 
 
 namespace BPrivate {

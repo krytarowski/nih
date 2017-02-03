@@ -9,7 +9,7 @@
 #define DATABASE_DIRECTORY_H
 
 
-#include <MergedDirectory.h>
+#include <private/storage/MergedDirectory.h>
 
 
 namespace BPrivate {

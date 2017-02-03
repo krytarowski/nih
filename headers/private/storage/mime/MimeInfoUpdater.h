@@ -9,7 +9,7 @@
 #define _MIME_MIME_INFO_UPDATER_H
 
 
-#include <mime/MimeEntryProcessor.h>
+#include <private/storage/mime/MimeEntryProcessor.h>
 
 
 namespace BPrivate {

@@ -11,7 +11,7 @@
 #define _OFFSET_FILE_H
 
 #include <os/support/DataIO.h>
-#include <File.h>
+#include <os/storage/File.h>
 
 namespace BPrivate {
 namespace Storage {
@@ -63,5 +63,3 @@ private:
 };	// namespace BPrivate
 
 #endif	// _OFFSET_FILE_H
-
-

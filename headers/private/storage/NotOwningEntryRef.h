@@ -10,7 +10,7 @@
 
 
 #include <os/storage/Entry.h>
-#include <Node.h>
+#include <os/storage/Node.h>
 
 
 namespace BPrivate {

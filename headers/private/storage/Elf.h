@@ -81,12 +81,12 @@ typedef int64		Elf64_Sxword;
 // 32 bit definitions
 #undef _ELFX_BITS
 #define _ELFX_BITS	32
-#include <ElfX.h>
+#include <private/storage/ElfX.h>
 
 // 64 bit definitions
 #undef _ELFX_BITS
 #define _ELFX_BITS	64
-#include <ElfX.h>
+#include <private/storage/ElfX.h>
 
 #undef _ELFX_BITS
 

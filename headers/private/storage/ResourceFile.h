@@ -12,9 +12,9 @@
 */
 
 
-#include <ByteOrder.h>
+#include <os/support/ByteOrder.h>
 
-#include "OffsetFile.h"
+#include "private/storage/OffsetFile.h"
 
 
 struct resource_info;

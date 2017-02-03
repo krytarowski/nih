@@ -11,8 +11,8 @@
 
 #include <stdio.h>
 
-#include <List.h>
-#include <Query.h>
+#include <os/support/List.h>
+#include <os/storage/Query.h>
 #include <os/support/String.h>
 
 namespace BPrivate {

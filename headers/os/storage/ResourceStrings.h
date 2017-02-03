@@ -6,8 +6,8 @@
 #define _RESOURCE_STRINGS_H
 
 
-#include <Entry.h>
-#include <Locker.h>
+#include <os/storage/Entry.h>
+#include <os/support/Locker.h>
 
 
 class BResources;
@@ -82,5 +82,3 @@ private:
 
 
 #endif	// _RESOURCE_STRINGS_H
-
-

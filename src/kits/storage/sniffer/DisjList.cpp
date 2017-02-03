@@ -7,7 +7,7 @@
 	MIME sniffer Disjunction List class implementation
 */
 
-#include <sniffer/DisjList.h>
+#include <private/storage/sniffer/DisjList.h>
 
 using namespace BPrivate::Storage::Sniffer;
 

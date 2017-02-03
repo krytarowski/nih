@@ -7,9 +7,9 @@
 	MIME sniffer rule implementation
 */
 
-#include <sniffer/Err.h>
-#include <sniffer/DisjList.h>
-#include <sniffer/Rule.h>
+#include <private/storage/sniffer/Err.h>
+#include <private/storage/sniffer/DisjList.h>
+#include <private/storage/sniffer/Rule.h>
 #include <os/support/DataIO.h>
 #include <stdio.h>
 

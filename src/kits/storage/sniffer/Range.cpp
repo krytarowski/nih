@@ -7,9 +7,9 @@
 	MIME sniffer range implementation
 */
 
-#include <sniffer/Err.h>
-#include <sniffer/Range.h>
-#include <sniffer/Parser.h>
+#include <private/storage/sniffer/Err.h>
+#include <private/storage/sniffer/Range.h>
+#include <private/storage/sniffer/Parser.h>
 #include <stdio.h>
 
 using namespace BPrivate::Storage::Sniffer;

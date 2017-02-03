@@ -7,9 +7,9 @@
 	MIME sniffer pattern list implementation
 */
 
-#include <sniffer/Err.h>
-#include <sniffer/Pattern.h>
-#include <sniffer/PatternList.h>
+#include <private/storage/sniffer/Err.h>
+#include <private/storage/sniffer/Pattern.h>
+#include <private/storage/sniffer/PatternList.h>
 #include <os/support/DataIO.h>
 #include <stdio.h>
 

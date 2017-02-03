@@ -7,7 +7,7 @@
 	MIME sniffer Error class implementation
 */
 
-#include <sniffer/Err.h>
+#include <private/storage/sniffer/Err.h>
 #include <new>
 #include <string.h>
 

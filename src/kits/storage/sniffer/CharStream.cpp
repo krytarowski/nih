@@ -1,6 +1,6 @@
-#include "sniffer/CharStream.h"
+#include "private/storage/sniffer/CharStream.h"
 
-#include <sniffer/Err.h>
+#include <private/storage/sniffer/Err.h>
 
 using namespace BPrivate::Storage::Sniffer;
 

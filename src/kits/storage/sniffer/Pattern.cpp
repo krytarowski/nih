@@ -9,7 +9,7 @@
 
 #include <sniffer/Err.h>
 #include <sniffer/Pattern.h>
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 #include <stdio.h>	// for SEEK_* defines
 #include <new>
 

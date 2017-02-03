@@ -17,7 +17,7 @@
 #include <new>
 
 #include <os/interface/Bitmap.h>
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 #include <os/storage/Directory.h>
 #include <os/storage/File.h>
 #include <os/kernel/fs_attr.h>

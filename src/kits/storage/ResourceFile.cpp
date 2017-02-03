@@ -10,7 +10,7 @@
 */
 
 
-#include <ResourceFile.h>
+#include <private/storage/ResourceFile.h>
 
 #include <algorithm>
 #include <new>
@@ -18,12 +18,12 @@
 
 #include <private/shared/AutoDeleter.h>
 
-#include <Elf.h>
-#include <Exception.h>
-#include <Pef.h>
-#include <ResourceItem.h>
-#include <ResourcesContainer.h>
-#include <ResourcesDefs.h>
+#include <private/storage/Elf.h>
+#include <private/storage/Exception.h>
+#include <private/storage/Pef.h>
+#include <private/storage/ResourceItem.h>
+#include <private/storage/ResourcesContainer.h>
+#include <private/storage/ResourcesDefs.h>
 //#include <Warnings.h>
 
 

@@ -19,7 +19,7 @@
 
 #include <Application.h>
 #include <os/interface/Bitmap.h>
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 #include <os/storage/Directory.h>
 #include <os/storage/Entry.h>
 #include <os/kernel/fs_attr.h>

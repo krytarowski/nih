@@ -11,11 +11,11 @@
 	BQuery predicate helper classes implementation.
 */
 
-#include "QueryPredicate.h"
+#include "private/storage/QueryPredicate.h"
 
 #include <ctype.h>
 
-#include <UnicodeChar.h>
+#include <os/locale/UnicodeChar.h>
 
 
 namespace BPrivate {

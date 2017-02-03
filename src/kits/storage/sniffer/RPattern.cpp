@@ -11,7 +11,7 @@
 #include <sniffer/Pattern.h>
 #include <sniffer/Range.h>
 #include <sniffer/RPattern.h>
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 
 using namespace BPrivate::Storage::Sniffer;
 

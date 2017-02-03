@@ -10,7 +10,7 @@
 #include <sniffer/Err.h>
 #include <sniffer/RPattern.h>
 #include <sniffer/RPatternList.h>
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 #include <stdio.h>
 
 using namespace BPrivate::Storage::Sniffer;

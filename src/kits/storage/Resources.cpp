@@ -15,9 +15,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ResourceFile.h"
-#include "ResourceItem.h"
-#include "ResourcesContainer.h"
+#include "private/storage/ResourceFile.h"
+#include "private/storage/ResourceItem.h"
+#include "private/storage/ResourcesContainer.h"
 
 
 using namespace BPrivate::Storage;

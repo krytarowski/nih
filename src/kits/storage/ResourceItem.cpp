@@ -7,12 +7,12 @@
 	ResourceItem implementation.
 */
 
-#include "ResourceItem.h"
+#include "private/storage/ResourceItem.h"
 
 #include <stdio.h>
 #include <string.h>
 
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 
 namespace BPrivate {
 namespace Storage {

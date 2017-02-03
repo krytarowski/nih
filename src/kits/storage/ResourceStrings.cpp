@@ -7,7 +7,7 @@
 	BResourceStrings implementation.
 */
 
-#include <ResourceStrings.h>
+#include <os/storage/ResourceStrings.h>
 
 #include <new>
 #include <stdlib.h>
@@ -18,7 +18,7 @@
 #include <os/storage/Resources.h>
 #include <os/support/String.h>
 
-#include <AppMisc.h>
+#include <private/app/AppMisc.h>
 
 using namespace std;
 
@@ -399,7 +399,3 @@ BResourceStrings::_string_id_hash::assign_string(const char *str,
 			data = const_cast<char*>(str);
 	}
 }
-
-
-
-

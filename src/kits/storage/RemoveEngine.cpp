@@ -4,7 +4,7 @@
  */
 
 
-#include <RemoveEngine.h>
+#include <private/storage/RemoveEngine.h>
 
 #include <errno.h>
 #include <string.h>

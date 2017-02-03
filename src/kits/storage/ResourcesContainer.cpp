@@ -11,7 +11,7 @@
 
 #include "ResourcesContainer.h"
 
-#include "ResourceItem.h"
+#include "private/storage/ResourceItem.h"
 
 namespace BPrivate {
 namespace Storage {

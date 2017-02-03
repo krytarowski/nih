@@ -16,7 +16,7 @@
 #include <new>
 
 #include <MimeType.h>
-#include <Roster.h>
+#include <os/app/Roster.h>
 
 #ifdef HAIKU_TARGET_PLATFORM_HAIKU
 	#include <ICUWrapper.h>

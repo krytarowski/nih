@@ -10,9 +10,9 @@
 /*!	Semaphore-type class for thread safety */
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 #include <Locker.h>
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 #include <stdio.h>
 

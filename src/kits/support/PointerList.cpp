@@ -16,14 +16,14 @@
 
 // Note: Method Owning() is inlined in header file ObjectList.h
 
-#include <ObjectList.h>
+#include <os/support/ObjectList.h>
 
 #include <algorithm>
 #include <assert.h>
 #include <functional>
 #include <string.h>
 
-#include <List.h>
+#include <os/support/List.h>
 
 
 using namespace std;

@@ -8,11 +8,11 @@
 
 #include <map>
 
-#include <String.h>
-#include <ObjectList.h>
-#include <MessagePrivate.h>
+#include <os/support/String.h>
+#include <os/support/ObjectList.h>
+#include <private/app/MessagePrivate.h>
 
-#include <Archivable.h>
+#include <os/support/Archivable.h>
 
 
 #define NULL_TOKEN -42

@@ -28,7 +28,7 @@
 //
 //------------------------------------------------------------------------------
 
-#include <OS.h>		// for system_time()
+#include <os/kernel/OS.h>		// for system_time()
 #include <StopWatch.h>
 
 #include <stdio.h>

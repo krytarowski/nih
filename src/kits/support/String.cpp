@@ -14,7 +14,7 @@
 
 /*! String class supporting common string operations. */
 
-#include <String.h>
+#include <os/support/String.h>
 
 #include <ctype.h>
 #include <stdint.h>
@@ -23,7 +23,7 @@
 #include <strings.h>
 
 #include <Debug.h>
-#include <StringList.h>
+#include <os/support/StringList.h>
 
 #include <StringPrivate.h>
 #include <utf8_functions.h>

@@ -22,16 +22,16 @@
 #include <typeinfo>
 #include <vector>
 
-#include <AppFileInfo.h>
-#include <Archivable.h>
-#include <Entry.h>
-#include <List.h>
-#include <OS.h>
-#include <Path.h>
-#include <Roster.h>
-#include <String.h>
+#include <os/storage/AppFileInfo.h>
+#include <os/support/Archivable.h>
+#include <os/storage/Entry.h>
+#include <os/support/List.h>
+#include <os/kernel/OS.h>
+#include <os/storage/Path.h>
+#include <os/app/Roster.h>
+#include <os/support/String.h>
 
-#include <binary_compatibility/Support.h>
+#include <private/binary_compatibility/Support.h>
 
 #include "ArchivingManagers.h"
 

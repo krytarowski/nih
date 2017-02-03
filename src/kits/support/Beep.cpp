@@ -5,11 +5,11 @@
  */
 
 
-#include <Beep.h>
+#include <os/support/Beep.h>
 
 #include <stdio.h>
 
-#include <DataExchange.h>
+#include <private/media/DataExchange.h>
 #include <MediaSounds.h>
 
 

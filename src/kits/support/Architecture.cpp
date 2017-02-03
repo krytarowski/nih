@@ -4,11 +4,11 @@
  */
 
 
-#include <Architecture.h>
+#include <os/support/Architecture.h>
 
 #include <algorithm>
 
-#include <StringList.h>
+#include <os/support/StringList.h>
 
 
 static const size_t kMaxArchitectureCount = 16;

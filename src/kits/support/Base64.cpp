@@ -4,11 +4,11 @@
  */
 
 
-#include <mail_encoding.h>
+#include <os/mail/mail_encoding.h>
 
 #include <ctype.h>
 #include <string.h>
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 static const char kBase64Alphabet[64] = {

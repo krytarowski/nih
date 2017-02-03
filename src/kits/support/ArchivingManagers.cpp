@@ -12,7 +12,7 @@
 #include <syslog.h>
 #include <typeinfo>
 
-#include <StackOrHeapArray.h>
+#include <os/support/StackOrHeapArray.h>
 
 
 namespace BPrivate {

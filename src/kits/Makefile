@@ -232,6 +232,34 @@ SRCS+=	storage/Volume.cpp
 SRCS+=	storage/VolumeRoster.cpp
 SRCS+=	storage/storage_support.cpp
 
+SRCS+=	storage/mime/AppMetaMimeCreator.cpp
+SRCS+=	storage/mime/AssociatedTypes.cpp
+SRCS+=	storage/mime/Database.cpp
+SRCS+=	storage/mime/DatabaseDirectory.cpp
+SRCS+=	storage/mime/DatabaseLocation.cpp
+SRCS+=	storage/mime/InstalledTypes.cpp
+SRCS+=	storage/mime/MimeEntryProcessor.cpp
+SRCS+=	storage/mime/MimeInfoUpdater.cpp
+SRCS+=	storage/mime/MimeSniffer.cpp
+SRCS+=	storage/mime/MimeSnifferAddon.cpp
+SRCS+=	storage/mime/MimeSnifferAddonManager.cpp
+SRCS+=	storage/mime/SnifferRules.cpp
+SRCS+=	storage/mime/Supertype.cpp
+SRCS+=	storage/mime/SupportingApps.cpp
+SRCS+=	storage/mime/TextSnifferAddon.cpp
+SRCS+=	storage/mime/database_support.cpp
+
+SRCS+=	storage/sniffer/CharStream.cpp
+SRCS+=	storage/sniffer/DisjList.cpp
+SRCS+=	storage/sniffer/Err.cpp
+SRCS+=	storage/sniffer/Parser.cpp
+SRCS+=	storage/sniffer/Pattern.cpp
+SRCS+=	storage/sniffer/PatternList.cpp
+SRCS+=	storage/sniffer/RPattern.cpp
+SRCS+=	storage/sniffer/RPatternList.cpp
+SRCS+=	storage/sniffer/Range.cpp
+SRCS+=	storage/sniffer/Rule.cpp
+
 LIB=	be
 
 NOMAN=	yes

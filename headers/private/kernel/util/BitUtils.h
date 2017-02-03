@@ -9,7 +9,7 @@
 #define KERNEL_UTIL_BITUTIL_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 
 // http://graphics.stanford.edu/~seander/bithacks.html

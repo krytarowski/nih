@@ -6,7 +6,7 @@
 #define _KERNEL_UTIL_OPEN_HASH_TABLE_H
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,7 +15,7 @@
 #	include <util/kernel_cpp.h>
 #	include <util/TypeOperation.h>
 #else
-#	include <TypeOperation.h>
+#	include <private/kernel/util/TypeOperation.h>
 #endif
 
 

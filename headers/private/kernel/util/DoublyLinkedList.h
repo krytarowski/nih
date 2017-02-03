@@ -8,7 +8,7 @@
 #define KERNEL_UTIL_DOUBLY_LINKED_LIST_H
 
 
-#include <SupportDefs.h>
+#include <os/support/SupportDefs.h>
 
 #ifdef _KERNEL_MODE
 #	include <debug.h>

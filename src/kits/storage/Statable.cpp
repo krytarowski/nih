@@ -163,8 +163,10 @@ BStatable::GetPermissions(mode_t* permissions) const
 	if (result == B_OK)
 		result = GetStat(&stat);
 
+#if !defined(__NetBSD__)
 	if (result == B_OK)
 		*permissions = (stat.st_mode & S_IUMSK);
+#endif
 
 	return result;
 }
@@ -238,8 +240,10 @@ BStatable::GetCreationTime(time_t* ctime) const
 	if (result == B_OK)
 		result = GetStat(&stat);
 
+#if !defined(__NetBSD__)
 	if (result == B_OK)
 		*ctime = stat.st_crtime;
+#endif
 
 	return result;
 }
@@ -250,7 +254,9 @@ status_t
 BStatable::SetCreationTime(time_t ctime)
 {
 	struct stat stat;
+#if !defined(__NetBSD__)
 	stat.st_crtime = ctime;
+#endif
 
 	return set_stat(stat, B_STAT_CREATION_TIME);
 }
@@ -308,6 +314,7 @@ _OhSoStatable1__9BStatable(const BStatable* self, struct stat* stat)
 _ZN9BStatable14_OhSoStatable1Ev(const BStatable* self, struct stat* stat)
 #endif
 {
+#if !defined(__NetBSD__)
 	// No Perform() method -- we have to use the old GetStat() method instead.
 	struct stat_beos oldStat;
 	status_t result = BStatable::Private(self).GetStatBeOS(&oldStat);
@@ -315,7 +322,7 @@ _ZN9BStatable14_OhSoStatable1Ev(const BStatable* self, struct stat* stat)
 		return result;
 
 	convert_from_stat_beos(&oldStat, stat);
-
+#endif
 	return B_OK;
 }
 

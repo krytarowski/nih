@@ -609,7 +609,7 @@ create_directory(const char* path, mode_t mode)
 
 // #pragma mark - symbol versions
 
-
+#if 0
 #ifdef HAIKU_TARGET_PLATFORM_LIBBE_TEST
 #	if __GNUC__ == 2	// gcc 2
 
@@ -645,3 +645,4 @@ create_directory(const char* path, mode_t mode)
 
 #	endif	// gcc 4
 #endif	// !HAIKU_TARGET_PLATFORM_LIBBE_TEST
+#endif

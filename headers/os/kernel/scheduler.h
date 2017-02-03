@@ -6,7 +6,7 @@
 #define SCHEDULER_H
 
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 
 /*!

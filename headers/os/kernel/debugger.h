@@ -9,7 +9,7 @@
 #include <signal.h>
 
 #include <image.h>
-#include <OS.h>
+#include <os/kernel/OS.h>
 
 // include architecture specific definitions
 #include <arch/x86/arch_debugger.h>

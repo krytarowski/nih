@@ -80,4 +80,6 @@ typedef	unsigned long	addr_t;
 #define   O_NOTRAVERSE    0x2000          /* do not traverse leaf link */
 #endif
 
+#define HAIKU_TARGET_PLATFORM_HAIKU
+
 #endif /* !_NETBSD_COMPAT_H */

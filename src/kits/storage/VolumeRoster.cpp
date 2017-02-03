@@ -16,7 +16,7 @@
 #include <os/kernel/fs_info.h>
 #include <os/storage/Node.h>
 #include <os/storage/NodeMonitor.h>
-#include <VolumeRoster.h>
+#include <os/storage/VolumeRoster.h>
 
 
 static const char kBootVolumePath[] = "/boot";

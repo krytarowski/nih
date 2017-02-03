@@ -11,12 +11,12 @@
 #include <ctype.h>
 #include <string.h>
 
-#include <StorageDefs.h>
-#include <SupportDefs.h>
+#include <os/storage/StorageDefs.h>
+#include <os/support/SupportDefs.h>
 
 #include <private/system/syscalls.h>
 
-#include "storage_support.h"
+#include "private/storage/storage_support.h"
 
 using std::nothrow;
 
@@ -504,4 +504,3 @@ FDCloser::Close()
 
 };	// namespace Storage
 };	// namespace BPrivate
-

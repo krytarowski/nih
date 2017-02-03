@@ -1037,6 +1037,7 @@ PathHandler::_StopWatchingAncestors(Ancestor* ancestor, bool notify)
 void
 PathHandler::_EntryCreated(BMessage* message)
 {
+#if !defined(__NetBSD__)
 	// TODO: Unless we're watching files only, we might want to forward (some
 	// of) the messages that don't agree with our model, since our client
 	// maintains its model at a different time and the notification might be
@@ -1066,6 +1067,7 @@ PathHandler::_EntryCreated(BMessage* message)
 		|| message->FindString("name", (const char**)&entryRef.name) != B_OK) {
 		return;
 	}
+
 	entryRef.device = nodeRef.device;
 
 	if (_CheckDuplicateEntryNotification(B_ENTRY_CREATED, entryRef, nodeRef))
@@ -1083,12 +1085,14 @@ PathHandler::_EntryCreated(BMessage* message)
 	}
 
 	_EntryCreated(entryRef, nodeRef, S_ISDIR(st.st_mode), false, true, NULL);
+#endif
 }
 
 
 void
 PathHandler::_EntryRemoved(BMessage* message)
 {
+#if !defined(__NetBSD__)
 	NotOwningEntryRef entryRef;
 	node_ref nodeRef;
 
@@ -1108,12 +1112,14 @@ PathHandler::_EntryRemoved(BMessage* message)
 		entryRef.directory, entryRef.name, nodeRef.device, nodeRef.node);
 
 	_EntryRemoved(entryRef, nodeRef, false, true, NULL);
+#endif
 }
 
 
 void
 PathHandler::_EntryMoved(BMessage* message)
 {
+#if !defined(__NetBSD__)
 	NotOwningEntryRef fromEntryRef;
 	NotOwningEntryRef toEntryRef;
 	node_ref nodeRef;
@@ -1331,12 +1337,14 @@ PathHandler::_EntryMoved(BMessage* message)
 
 	_EntryRemoved(fromEntryRef, nodeRef, false, true, NULL);
 	_EntryCreated(toEntryRef, nodeRef, isDirectory, false, true, NULL);
+#endif
 }
 
 
 void
 PathHandler::_NodeChanged(BMessage* message)
 {
+#if !defined(__NetBSD__)
 	node_ref nodeRef;
 
 	if (message->FindInt32("device", &nodeRef.device) != B_OK
@@ -1368,6 +1376,7 @@ PathHandler::_NodeChanged(BMessage* message)
 		return;
 
 	_NotifyTarget(*message, path);
+#endif
 }
 
 
@@ -1376,6 +1385,7 @@ PathHandler::_EntryCreated(const NotOwningEntryRef& entryRef,
 	const node_ref& nodeRef, bool isDirectory, bool dryRun, bool notify,
 	Entry** _entry)
 {
+#if !defined(__NetBSD__)
 	if (_entry != NULL)
 		*_entry = NULL;
 
@@ -1497,6 +1507,7 @@ PathHandler::_EntryCreated(const NotOwningEntryRef& entryRef,
 
 	_AddEntryIfNeeded(directory, entryRef.name, nodeRef, isDirectory, notify,
 		_entry);
+#endif
 	return true;
 }
 

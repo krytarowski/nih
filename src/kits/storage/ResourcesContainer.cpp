@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 
-#include "ResourcesContainer.h"
+#include "private/storage/ResourcesContainer.h"
 
 #include "private/storage/ResourceItem.h"
 
@@ -210,7 +210,3 @@ ResourcesContainer::IsModified() const
 
 };	// namespace Storage
 };	// namespace BPrivate
-
-
-
-

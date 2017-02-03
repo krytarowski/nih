@@ -8,11 +8,9 @@
  */
 
 
-#include <Statable.h>
+#include <os/storage/Statable.h>
 
 #include <sys/stat.h>
-
-#include <compat/sys/stat.h>
 
 #include <os/storage/Node.h>
 #include <os/storage/NodeMonitor.h>

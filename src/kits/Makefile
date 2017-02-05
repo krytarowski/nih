@@ -8,7 +8,7 @@ CFLAGS+=	-Wno-error=multichar -Wno-multichar
 
 # Temporarily link with icu from pkgsrc
 CFLAGS+=	-I/usr/pkg/include
-LDFLAGS+=	-L/usr/pkg/lib -licudata -licui18n -licuio -licutest -licutu -licuuc
+LDFLAGS+=	-L/usr/pkg/lib -rpath=/usr/pkg/lib -licudata -licui18n -licuio -licutest -licutu -licuuc
 
 SRCS+=	app/AppDefs.cpp
 SRCS+=	app/AppMisc.cpp

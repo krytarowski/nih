@@ -21,3 +21,5 @@ conf.sh
 *.po
 *.pico
 *.so
+*.a
+*.so.*

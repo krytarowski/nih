@@ -82,4 +82,12 @@ typedef	unsigned long	addr_t;
 
 #define HAIKU_TARGET_PLATFORM_HAIKU
 
+#ifndef EOPNOTSUPP
+#define EOPNOTSUPP 0
+#endif
+
+#ifndef BLOCKER_ALWAYS_SEMAPHORE_STYLE
+#define BLOCKER_ALWAYS_SEMAPHORE_STYLE  0
+#endif
+
 #endif /* !_NETBSD_COMPAT_H */

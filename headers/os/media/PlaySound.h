@@ -5,7 +5,7 @@
 #ifndef _PLAY_SOUND_H
 #define _PLAY_SOUND_H
 
-#include <OS.h>
+#include <os/kernel/OS.h>
 #include <Entry.h>
 
 

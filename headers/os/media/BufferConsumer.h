@@ -6,7 +6,7 @@
 #define _BUFFER_CONSUMER_H
 
 
-#include <MediaDefs.h>
+#include <os/media/MediaDefs.h>
 #include <MediaNode.h>
 
 

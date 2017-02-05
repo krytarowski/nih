@@ -6,8 +6,8 @@
 #define _MEDIA_NODE_H
 
 
-#include <MediaDefs.h>
-#include <Point.h>
+#include <os/media/MediaDefs.h>
+#include <os/interface/Point.h>
 
 #include <new>
 

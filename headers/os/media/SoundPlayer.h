@@ -9,8 +9,8 @@
 #include <exception>
 
 #include <BufferProducer.h>
-#include <Locker.h>
-#include <MediaDefs.h>
+#include <os/support/Locker.h>
+#include <os/media/MediaDefs.h>
 
 
 class BContinuousParameter;

@@ -6,9 +6,9 @@
 #define	_MEDIA_FILE_H
 
 
-#include <image.h>
-#include <List.h>
-#include <MediaDefs.h>
+#include <os/kernel/image.h>
+#include <os/support/List.h>
+#include <os/media/MediaDefs.h>
 #include <MediaFormats.h>
 #include <StorageDefs.h>
 

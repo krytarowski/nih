@@ -9,7 +9,7 @@
 #ifndef _MEDIA_ROSTER_H
 #define _MEDIA_ROSTER_H
 
-#include <MediaDefs.h>
+#include <os/media/MediaDefs.h>
 #include <MediaNode.h>
 #include <config_manager.h>
 

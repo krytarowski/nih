@@ -5,7 +5,7 @@
 #ifndef _TIMED_EVENT_QUEUE_H
 #define _TIMED_EVENT_QUEUE_H
 
-#include <MediaDefs.h>
+#include <os/media/MediaDefs.h>
 
 struct _event_queue_imp;
 

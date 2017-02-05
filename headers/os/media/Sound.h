@@ -6,7 +6,7 @@
 #define _SOUND_H
 
 
-#include <MediaDefs.h>
+#include <os/media/MediaDefs.h>
 
 class BFile;
 class BSoundPlayer;

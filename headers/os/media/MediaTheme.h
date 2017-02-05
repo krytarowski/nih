@@ -7,7 +7,7 @@
 
 
 #include <Entry.h>
-#include <MediaDefs.h>
+#include <os/media/MediaDefs.h>
 
 class BBitmap;
 class BControl;

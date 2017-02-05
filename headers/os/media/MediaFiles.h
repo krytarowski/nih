@@ -6,8 +6,8 @@
 #define _MEDIA_FILES_H
 
 
-#include <MediaDefs.h>
-#include <List.h>
+#include <os/media/MediaDefs.h>
+#include <os/support/List.h>
 #include <String.h>
 
 struct entry_ref;

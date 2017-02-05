@@ -9,12 +9,12 @@
 /*! Basic data types and defines for the Media Kit. */
 
 
-#include <OS.h>
-#include <ByteOrder.h>
+#include <os/kernel/OS.h>
+#include <os/support/ByteOrder.h>
 
 #if defined(__cplusplus)
-#	include <GraphicsDefs.h>
-#	include <Looper.h>
+#	include <os/interface/GraphicsDefs.h>
+#	include <os/app/Looper.h>
 #endif
 
 

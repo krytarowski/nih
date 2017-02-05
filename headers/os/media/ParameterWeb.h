@@ -6,8 +6,8 @@
 #define _CONTROL_WEB_H
 
 
-#include <Flattenable.h>
-#include <MediaDefs.h>
+#include <os/support/Flattenable.h>
+#include <os/media/MediaDefs.h>
 #include <MediaNode.h>
 #include <TypeConstants.h>
 

@@ -8,7 +8,7 @@
 
 #include <Entry.h>
 #include <File.h>
-#include <MediaDefs.h>
+#include <os/media/MediaDefs.h>
 
 
 // file formats

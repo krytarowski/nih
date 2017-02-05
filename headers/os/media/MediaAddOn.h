@@ -6,10 +6,10 @@
 #define _MEDIA_ADD_ON_H
 
 
-#include <image.h>
+#include <os/kernel/image.h>
 
-#include <MediaDefs.h>
-#include <Flattenable.h>
+#include <os/media/MediaDefs.h>
+#include <os/support/Flattenable.h>
 
 
 class BMediaNode;

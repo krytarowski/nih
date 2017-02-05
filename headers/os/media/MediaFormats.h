@@ -6,11 +6,11 @@
 #define _MEDIA_TYPES_H
 
 
-#include <MediaDefs.h>
+#include <os/media/MediaDefs.h>
 
-#include <Messenger.h>
-#include <List.h>
-#include <Locker.h>
+#include <os/app/Messenger.h>
+#include <os/support/List.h>
+#include <os/support/Locker.h>
 
 
 struct media_codec_info {

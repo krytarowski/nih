@@ -7,7 +7,7 @@
 #define _SHARED_BUFFER_LIST_H_
 
 
-#include <Buffer.h>
+#include <os/media/Buffer.h>
 
 
 namespace BPrivate {

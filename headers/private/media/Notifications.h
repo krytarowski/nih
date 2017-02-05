@@ -6,7 +6,7 @@
 #define _NOTIFICATIONS_H
 
 
-#include <MediaNode.h>
+#include <os/media/MediaNode.h>
 
 
 #define NOTIFICATION_PARAM_WHAT "be:media:internal:what"

@@ -7,7 +7,7 @@
 #define _MEDIA_CLIENT_H
 
 #include <ObjectList.h>
-#include <Buffer.h>
+#include <os/media/Buffer.h>
 
 #include <MediaAddOn.h>
 #include <MediaClientDefs.h>

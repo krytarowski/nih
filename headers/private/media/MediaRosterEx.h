@@ -15,10 +15,10 @@
 	#include "DataExchange.h"
 #endif
 #ifndef _MEDIA_NODE_H
-	#include <MediaNode.h>
+	#include <os/media/MediaNode.h>
 #endif
 #ifndef _MEDIA_ADD_ON_H
-	#include <MediaAddOn.h>
+	#include <os/media/MediaAddOn.h>
 #endif
 
 

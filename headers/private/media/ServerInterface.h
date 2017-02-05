@@ -9,13 +9,13 @@
 
 #include <string.h>
 
-#include <Buffer.h>
-#include <Entry.h>
-#include <MediaAddOn.h>
-#include <MediaDefs.h>
-#include <MediaFormats.h>
-#include <MediaNode.h>
-#include <Messenger.h>
+#include <os/media/Buffer.h>
+#include <os/storage/Entry.h>
+#include <os/media/MediaAddOn.h>
+#include <os/media/MediaDefs.h>
+#include <os/media/MediaFormats.h>
+#include <os/media/MediaNode.h>
+#include <os/app/Messenger.h>
 
 
 // BMessage based server communication

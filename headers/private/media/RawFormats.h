@@ -1,7 +1,7 @@
 #ifndef _RAW_FORMATS_H
 #define _RAW_FORMATS_H
 
-#include <MediaDefs.h>
+#include <os/media/MediaDefs.h>
 
 // The raw audio format types defined here are only to be used by
 // the media kit codec API, they are not supported for application

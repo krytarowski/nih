@@ -9,7 +9,7 @@
 #include <map>
 
 #include <Locker.h>
-#include <MediaAddOn.h>
+#include <os/media/MediaAddOn.h>
 
 
 class BPath;

@@ -2,7 +2,7 @@
 #define _DECODER_PLUGIN_H
 
 #include <MediaTrack.h>
-#include <MediaFormats.h>
+#include <os/media/MediaFormats.h>
 #include "MediaPlugin.h"
 
 

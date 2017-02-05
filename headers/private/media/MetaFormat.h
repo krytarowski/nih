@@ -6,7 +6,7 @@
 #define META_FORMAT_H
 
 
-#include <MediaFormats.h>
+#include <os/media/MediaFormats.h>
 
 
 namespace BPrivate {

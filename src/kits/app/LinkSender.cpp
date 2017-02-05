@@ -233,8 +233,10 @@ LinkSender::AdjustBuffer(size_t newSize, char **_oldBuffer)
 	// make sure the new size is within bounds
 	if (newSize <= kInitialBufferSize)
 		newSize = kInitialBufferSize;
+#if !defined(__NetBSD__)
 	else if (newSize > kMaxBufferSize)
 		return B_BUFFER_OVERFLOW;
+#endif
 	else if (newSize > kInitialBufferSize)
 		newSize = (newSize + B_PAGE_SIZE - 1) & ~(B_PAGE_SIZE - 1);
 

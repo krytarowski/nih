@@ -1034,8 +1034,10 @@ BMessage::Flatten(char* buffer, ssize_t size) const
 	if (fHeader == NULL)
 		return B_NO_INIT;
 
+#if !defined(__NetBSD__)
 	if (size < FlattenedSize())
 		return B_BUFFER_OVERFLOW;
+#endif
 
 	/* we have to sync the what code as it is a public member */
 	fHeader->what = what;

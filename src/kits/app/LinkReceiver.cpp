@@ -414,10 +414,12 @@ LinkReceiver::ReadString(char *buffer, size_t bufferLength)
 	if (status < B_OK)
 		return status;
 
+#if !defined(__NetBSD__)
 	if (length >= (int32)bufferLength) {
 		status = B_BUFFER_OVERFLOW;
 		goto err;
 	}
+#endif
 
 	if (length < 0) {
 		status = B_ERROR;

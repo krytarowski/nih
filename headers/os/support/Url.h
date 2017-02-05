@@ -6,9 +6,9 @@
 #define _B_URL_H_
 
 
-#include <Archivable.h>
-#include <Message.h>
-#include <Path.h>
+#include <os/support/Archivable.h>
+#include <os/app/Message.h>
+#include <os/storage/Path.h>
 #include <os/support/String.h>
 
 

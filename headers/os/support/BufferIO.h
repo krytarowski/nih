@@ -6,7 +6,7 @@
 #define _BUFFER_IO_H
 
 
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 
 
 class BBufferIO : public BPositionIO {

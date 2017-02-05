@@ -6,7 +6,7 @@
 #define _BUFFERED_DATA_IO_H
 
 
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 
 
 class BBufferedDataIO : public BDataIO {

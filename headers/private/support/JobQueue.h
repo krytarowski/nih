@@ -6,10 +6,10 @@
 #define _SUPPORT_PRIVATE_JOB_QUEUE_H_
 
 
-#include <Locker.h>
-#include <SupportDefs.h>
+#include <os/support/Locker.h>
+#include <os/support/SupportDefs.h>
 
-#include <Job.h>
+#include <os/support/Job.h>
 
 
 namespace BSupportKit {

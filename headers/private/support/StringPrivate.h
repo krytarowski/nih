@@ -8,7 +8,7 @@
 
 #include <stdlib.h>
 
-#include <String.h>
+#include <os/support/String.h>
 
 
 class BString::Private {

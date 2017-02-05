@@ -6,7 +6,7 @@
 #define _ZLIB_COMPRESSION_ALGORITHM_H_
 
 
-#include <CompressionAlgorithm.h>
+#include <private/support/CompressionAlgorithm.h>
 
 
 // compression level

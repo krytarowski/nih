@@ -6,7 +6,7 @@
 #define _UUID_H_
 
 
-#include <String.h>
+#include <os/support/String.h>
 
 
 namespace BPrivate {

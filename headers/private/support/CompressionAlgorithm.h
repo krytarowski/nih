@@ -6,7 +6,7 @@
 #define _COMPRESSION_ALGORITHM_H_
 
 
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 
 
 class BCompressionParameters {

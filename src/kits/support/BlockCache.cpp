@@ -20,8 +20,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <BlockCache.h>
-#include <Debug.h>
+#include <os/support/BlockCache.h>
+#include <os/support/Debug.h>
 #include <string.h>
 #include <stdlib.h>
 #include <new>

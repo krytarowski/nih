@@ -8,18 +8,18 @@
  */
 
 
-#include <Url.h>
+#include <os/support/Url.h>
 
 #include <ctype.h>
 #include <cstdio>
 #include <cstdlib>
 #include <new>
 
-#include <MimeType.h>
+#include <os/storage/MimeType.h>
 #include <os/app/Roster.h>
 
 #ifdef HAIKU_TARGET_PLATFORM_HAIKU
-	#include <ICUWrapper.h>
+	#include <private/locale/ICUWrapper.h>
 #endif
 
 #ifdef HAIKU_TARGET_PLATFORM_HAIKU

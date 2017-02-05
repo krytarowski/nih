@@ -11,13 +11,14 @@
 
 
 #include <os/kernel/OS.h>
-#include <Locker.h>
+#include <os/support/Locker.h>
 #include <os/support/SupportDefs.h>
 
 #include <stdio.h>
 
+#if !defined(__NetBSD__)
 #include "support_kit_config.h"
-
+#endif
 
 // Data Member Documentation:
 //

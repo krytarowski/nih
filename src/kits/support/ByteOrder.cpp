@@ -4,9 +4,9 @@
  */
 
 
-#include <ByteOrder.h>
-#include <Messenger.h>
-#include <MessengerPrivate.h>
+#include <os/support/ByteOrder.h>
+#include <os/app/Messenger.h>
+#include <private/app/MessengerPrivate.h>
 
 
 status_t

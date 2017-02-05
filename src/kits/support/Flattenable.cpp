@@ -26,7 +26,7 @@
 //------------------------------------------------------------------------------
 #include <stdio.h>
 
-#include <Flattenable.h>
+#include <os/support/Flattenable.h>
 
 // AllowsTypeCode
 bool

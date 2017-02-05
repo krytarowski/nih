@@ -29,7 +29,7 @@
 //------------------------------------------------------------------------------
 
 #include <os/kernel/OS.h>		// for system_time()
-#include <StopWatch.h>
+#include <os/support/StopWatch.h>
 
 #include <stdio.h>
 
@@ -123,4 +123,3 @@ BStopWatch::Name() const
 // just for future binary compatibility
 void BStopWatch::_ReservedStopWatch1()	{}
 void BStopWatch::_ReservedStopWatch2()	{}
-

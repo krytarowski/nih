@@ -4,7 +4,7 @@
  */
 
 
-#include <Uuid.h>
+#include <private/support/Uuid.h>
 
 #include <fcntl.h>
 #include <stdlib.h>

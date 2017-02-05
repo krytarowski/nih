@@ -4,7 +4,7 @@
  */
 
 
-#include <ZlibCompressionAlgorithm.h>
+#include <private/support/ZlibCompressionAlgorithm.h>
 
 #include <errno.h>
 #include <string.h>
@@ -14,7 +14,7 @@
 
 #include <zlib.h>
 
-#include <DataIO.h>
+#include <os/support/DataIO.h>
 
 
 // build compression support only for userland

@@ -8,14 +8,14 @@
  */
 
 
-#include <JobQueue.h>
+#include <private/support/JobQueue.h>
 
 #include <set>
 
-#include <Autolock.h>
-#include <Job.h>
+#include <os/support/Autolock.h>
+#include <os/support/Job.h>
 
-#include <JobPrivate.h>
+#include <private/support/JobPrivate.h>
 
 
 namespace BSupportKit {

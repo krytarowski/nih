@@ -22,11 +22,11 @@
 #include <stdlib.h>
 #include <strings.h>
 
-#include <Debug.h>
+#include <os/support/Debug.h>
 #include <os/support/StringList.h>
 
-#include <StringPrivate.h>
-#include <utf8_functions.h>
+#include <private/support/StringPrivate.h>
+#include <private/interface/utf8_functions.h>
 
 
 // define proper names for case-option of _DoReplace()

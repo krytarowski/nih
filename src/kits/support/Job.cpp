@@ -8,9 +8,9 @@
  */
 
 
-#include <Job.h>
+#include <os/support/Job.h>
 
-#include <Errors.h>
+#include <os/support/Errors.h>
 
 
 namespace BSupportKit {

@@ -4,12 +4,12 @@
  */
 
 
-#include <CompressionAlgorithm.h>
+#include <private/support/CompressionAlgorithm.h>
 
 #include <stdlib.h>
 #include <string.h>
 
-#include <Errors.h>
+#include <os/support/Errors.h>
 
 
 // #pragma mark - BCompressionParameters

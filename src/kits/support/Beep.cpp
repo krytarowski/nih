@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #include <private/media/DataExchange.h>
-#include <MediaSounds.h>
+#include <private/media/MediaSounds.h>
 
 
 status_t

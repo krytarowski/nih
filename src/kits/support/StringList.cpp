@@ -10,8 +10,8 @@
 
 #include <algorithm>
 
-#include <StringPrivate.h>
-#include <TypeConstants.h>
+#include <private/support/StringPrivate.h>
+#include <os/support/TypeConstants.h>
 
 
 static int

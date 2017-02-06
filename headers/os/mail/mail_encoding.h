@@ -6,8 +6,8 @@
 */
 
 
-#include <posix/size_t.h>
 #include <sys/types.h>
+#include <stddef.h>
 
 
 #define B_MAIL_NULL_CONVERSION ((uint32) -1)

@@ -18,11 +18,7 @@ BLocaleRoster::GetCatalog()
 {
 	static BCatalog sCatalog;
 
-	#if (__GNUC__ < 3)
-		asm volatile(".hidden GetCatalog__13BLocaleRoster");
-	#else
-		asm volatile(".hidden _ZN13BLocaleRoster10GetCatalogEv");
-	#endif
+	asm volatile(".hidden _ZN13BLocaleRoster10GetCatalogEv");
 
 	return _GetCatalog(&sCatalog, &sCatalogInitOnce);
 }
@@ -34,4 +30,3 @@ namespace BPrivate{
 		sCatalogInitOnce = INIT_ONCE_UNINITIALIZED;
 	}
 }
-

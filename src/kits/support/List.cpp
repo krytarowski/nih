@@ -441,30 +441,6 @@ BList::DoForEach(bool (*func)(void*, void*), void* arg)
 }
 
 
-#if (__GNUC__ == 2)
-
-// This is somewhat of a hack for backwards compatibility -
-// the reason these functions are defined this way rather than simply
-// being made private members is that if they are included, then whenever
-// gcc encounters someone calling AddList() with a non-const BList pointer,
-// it will try to use the private version and fail with a compiler error.
-
-// obsolete AddList(BList* list, int32 index) and AddList(BList* list)
-// AddList
-extern "C" bool
-AddList__5BListP5BListl(BList* self, BList* list, int32 index)
-{
-	return self->AddList((const BList*)list, index);
-}
-
-// AddList
-extern "C" bool
-AddList__5BListP5BList(BList* self, BList* list)
-{
-	return self->AddList((const BList*)list);
-}
-#endif
-
 // FBC
 void BList::_ReservedList1() {}
 void BList::_ReservedList2() {}

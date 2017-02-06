@@ -123,19 +123,6 @@ BDataIO::operator=(const BDataIO &)
 }
 
 
-#if __GNUC__ == 2
-
-
-extern "C" status_t
-_ReservedDataIO1__7BDataIO(BDataIO* self)
-{
-	return self->BDataIO::Flush();
-}
-
-
-#else
-
-
 // TODO: RELEASE: Remove!
 
 extern "C" status_t
@@ -143,9 +130,6 @@ _ZN7BDataIO16_ReservedDataIO1Ev(BDataIO* self)
 {
 	return self->BDataIO::Flush();
 }
-
-
-#endif
 
 
 // FBC

@@ -17,7 +17,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <posix/compat/sys/stat.h>
+#include <sys/stat.h>
 
 #include <os/storage/Directory.h>
 #include <os/storage/Path.h>
@@ -782,19 +782,6 @@ BEntry::_GetStat(struct stat* st) const
 }
 
 
-status_t
-BEntry::_GetStat(struct stat_beos* st) const
-{
-	struct stat newStat;
-	status_t error = _GetStat(&newStat);
-	if (error != B_OK)
-		return error;
-
-	convert_to_stat_beos(&newStat, st);
-	return B_OK;
-}
-
-
 // #pragma mark -
 
 
@@ -823,45 +810,3 @@ operator<(const entry_ref& a, const entry_ref& b)
 				|| (a.name != NULL && b.name != NULL
 					&& strcmp(a.name, b.name) < 0))))));
 }
-
-
-// #pragma mark - symbol versions
-
-#if 0
-#ifdef HAIKU_TARGET_PLATFORM_LIBBE_TEST
-#	if __GNUC__ == 2	// gcc 2
-
-	B_DEFINE_SYMBOL_VERSION("_GetStat__C6BEntryP4stat",
-		"GetStat__C6BEntryP4stat@@LIBBE_TEST");
-
-#	else	// gcc 4
-
-	// Haiku GetStat()
-	B_DEFINE_SYMBOL_VERSION("_ZNK6BEntry8_GetStatEP4stat",
-		"_ZNK6BEntry7GetStatEP4stat@@LIBBE_TEST");
-
-#	endif	// gcc 4
-#else	// !HAIKU_TARGET_PLATFORM_LIBBE_TEST
-#	if __GNUC__ == 2	// gcc 2
-
-	// BeOS compatible GetStat()
-	B_DEFINE_SYMBOL_VERSION("_GetStat__C6BEntryP9stat_beos",
-		"GetStat__C6BEntryP4stat@LIBBE_BASE");
-
-	// Haiku GetStat()
-	B_DEFINE_SYMBOL_VERSION("_GetStat__C6BEntryP4stat",
-		"GetStat__C6BEntryP4stat@@LIBBE_1_ALPHA1");
-
-#	else	// gcc 4
-
-	// BeOS compatible GetStat()
-	B_DEFINE_SYMBOL_VERSION("_ZNK6BEntry8_GetStatEP9stat_beos",
-		"_ZNK6BEntry7GetStatEP4stat@LIBBE_BASE");
-
-	// Haiku GetStat()
-	B_DEFINE_SYMBOL_VERSION("_ZNK6BEntry8_GetStatEP4stat",
-		"_ZNK6BEntry7GetStatEP4stat@@LIBBE_1_ALPHA1");
-
-#	endif	// gcc 4
-#endif	// !HAIKU_TARGET_PLATFORM_LIBBE_TEST
-#endif

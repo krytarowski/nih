@@ -671,18 +671,6 @@ BHandler::SetLooper(BLooper* looper)
 }
 
 
-#if __GNUC__ < 3
-// binary compatibility with R4.5
-
-extern "C" void
-_ReservedHandler1__8BHandler(BHandler* handler, uint32 what,
-	const BMessage* notice)
-{
-	handler->BHandler::SendNotices(what, notice);
-}
-
-#endif
-
 void BHandler::_ReservedHandler2() {}
 void BHandler::_ReservedHandler3() {}
 void BHandler::_ReservedHandler4() {}

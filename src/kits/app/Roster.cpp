@@ -992,35 +992,6 @@ BRoster::Launch(const entry_ref* ref, int argc, const char* const* args,
 }
 
 
-#if __GNUC__ == 2
-// #pragma mark - Binary compatibility
-
-
-extern "C" status_t
-Launch__C7BRosterP9entry_refP8BMessagePl(BRoster* roster, entry_ref* ref,
-	BMessage* initialMessage)
-{
-	return roster->BRoster::Launch(ref, initialMessage, NULL);
-}
-
-
-extern "C" status_t
-Launch__C7BRosterPCciPPcPl(BRoster* roster, const char* mimeType,
-	int argc, char** args, team_id* _appTeam)
-{
-	return roster->BRoster::Launch(mimeType, argc, args, _appTeam);
-}
-
-
-extern "C" status_t
-Launch__C7BRosterP9entry_refiPPcPl(BRoster* roster, entry_ref* ref,
-	int argc, char* const* args, team_id* _appTeam)
-{
-	return roster->BRoster::Launch(ref, argc, args, _appTeam);
-}
-#endif	// __GNUC__ == 2
-
-
 //	#pragma mark - Recent document and app support
 
 

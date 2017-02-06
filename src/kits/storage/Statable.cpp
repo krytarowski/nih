@@ -25,9 +25,9 @@ public:
 	{
 	}
 
-	status_t GetStatBeOS(struct stat_beos* stat)
+	status_t GetStatBeOS(struct stat* stat)
 	{
-		return fObject->_GetStat(stat);
+		return fObject->GetStat(stat);
 	}
 
 private:
@@ -35,11 +35,9 @@ private:
 };
 
 
-#if __GNUC__ > 3
 BStatable::~BStatable()
 {
 }
-#endif
 
 
 // Returns whether or not the current node is a file.
@@ -304,28 +302,3 @@ BStatable::GetVolume(BVolume* volume) const
 
 	return result;
 }
-
-
-// _OhSoStatable1() -> GetStat()
-extern "C" status_t
-#if __GNUC__ == 2
-_OhSoStatable1__9BStatable(const BStatable* self, struct stat* stat)
-#else
-_ZN9BStatable14_OhSoStatable1Ev(const BStatable* self, struct stat* stat)
-#endif
-{
-#if !defined(__NetBSD__)
-	// No Perform() method -- we have to use the old GetStat() method instead.
-	struct stat_beos oldStat;
-	status_t result = BStatable::Private(self).GetStatBeOS(&oldStat);
-	if (result != B_OK)
-		return result;
-
-	convert_from_stat_beos(&oldStat, stat);
-#endif
-	return B_OK;
-}
-
-
-void BStatable::_OhSoStatable2() {}
-void BStatable::_OhSoStatable3() {}

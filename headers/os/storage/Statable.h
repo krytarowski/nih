@@ -13,19 +13,12 @@
 
 
 struct node_ref;
-struct stat_beos;
 class BVolume;
 
 
 class BStatable {
 public:
-#if __GNUC__ > 3
 	virtual ~BStatable();
-#endif
-
-private:
-	virtual status_t _GetStat(struct stat_beos* stat) const = 0;
-		// provided for BeOS compatibility
 
 public:
 	virtual status_t GetStat(struct stat* stat) const = 0;
@@ -65,8 +58,6 @@ private:
 	friend class BNode;
 	friend class Private;
 
-	virtual	void _OhSoStatable2();
-	virtual	void _OhSoStatable3();
 	uint32 _reserved[4];
 
 	virtual	status_t set_stat(struct stat &st, uint32 what) = 0;

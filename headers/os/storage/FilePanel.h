@@ -14,7 +14,6 @@ class BMessage;
 class BMessenger;
 class BWindow;
 struct stat;
-struct stat_beos;
 
 
 class BRefFilter {

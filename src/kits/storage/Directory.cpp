@@ -14,7 +14,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-#include <posix/compat/sys/stat.h>
+#include <sys/stat.h>
 
 #include <os/storage/Directory.h>
 #include <os/storage/Entry.h>
@@ -508,19 +508,6 @@ BDirectory::_GetStatFor(const char* path, struct stat* st) const
 }
 
 
-status_t
-BDirectory::_GetStatFor(const char* path, struct stat_beos* st) const
-{
-	struct stat newStat;
-	status_t error = _GetStatFor(path, &newStat);
-	if (error != B_OK)
-		return error;
-
-	convert_to_stat_beos(&newStat, st);
-	return B_OK;
-}
-
-
 // FBC
 void BDirectory::_ErectorDirectory1() {}
 void BDirectory::_ErectorDirectory2() {}
@@ -605,44 +592,3 @@ create_directory(const char* path, mode_t mode)
 	} while (nextComponent != 0);
 	return B_OK;
 }
-
-
-// #pragma mark - symbol versions
-
-#if 0
-#ifdef HAIKU_TARGET_PLATFORM_LIBBE_TEST
-#	if __GNUC__ == 2	// gcc 2
-
-	B_DEFINE_SYMBOL_VERSION("_GetStatFor__C10BDirectoryPCcP4stat",
-		"GetStatFor__C10BDirectoryPCcP4stat@@LIBBE_TEST");
-
-#	else	// gcc 4
-
-	B_DEFINE_SYMBOL_VERSION("_ZNK10BDirectory11_GetStatForEPKcP4stat",
-		"_ZNK10BDirectory10GetStatForEPKcP4stat@@LIBBE_TEST");
-
-#	endif	// gcc 4
-#else	// !HAIKU_TARGET_PLATFORM_LIBBE_TEST
-#	if __GNUC__ == 2	// gcc 2
-
-	// BeOS compatible GetStatFor()
-	B_DEFINE_SYMBOL_VERSION("_GetStatFor__C10BDirectoryPCcP9stat_beos",
-		"GetStatFor__C10BDirectoryPCcP4stat@LIBBE_BASE");
-
-	// Haiku GetStatFor()
-	B_DEFINE_SYMBOL_VERSION("_GetStatFor__C10BDirectoryPCcP4stat",
-		"GetStatFor__C10BDirectoryPCcP4stat@@LIBBE_1_ALPHA1");
-
-#	else	// gcc 4
-
-	// BeOS compatible GetStatFor()
-	B_DEFINE_SYMBOL_VERSION("_ZNK10BDirectory11_GetStatForEPKcP9stat_beos",
-		"_ZNK10BDirectory10GetStatForEPKcP4stat@LIBBE_BASE");
-
-	// Haiku GetStatFor()
-	B_DEFINE_SYMBOL_VERSION("_ZNK10BDirectory11_GetStatForEPKcP4stat",
-		"_ZNK10BDirectory10GetStatForEPKcP4stat@@LIBBE_1_ALPHA1");
-
-#	endif	// gcc 4
-#endif	// !HAIKU_TARGET_PLATFORM_LIBBE_TEST
-#endif

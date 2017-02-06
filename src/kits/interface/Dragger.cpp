@@ -789,15 +789,3 @@ BDragger::_ShowPopUp(BView* target, BPoint where)
 
 	fPopUp->Go(point, true, false, rect, true);
 }
-
-
-#if __GNUC__ < 3
-
-extern "C" BBitmap*
-_ReservedDragger1__8BDragger(BDragger* dragger, BPoint* offset,
-	drawing_mode* mode)
-{
-	return dragger->BDragger::DragBitmap(offset, mode);
-}
-
-#endif

@@ -274,65 +274,6 @@ BRect::Contains(BRect rect) const
 }
 
 
-// #pragma mark - BeOS compatibility only
-#if __GNUC__ == 2
-
-
-extern "C" BRect
-InsetByCopy__5BRectG6BPoint(BRect* self, BPoint point)
-{
-	BRect copy(*self);
-	copy.InsetBy(point);
-	return copy;
-}
-
-
-extern "C" BRect
-InsetByCopy__5BRectff(BRect* self, float dx, float dy)
-{
-	BRect copy(*self);
-	copy.InsetBy(dx, dy);
-	return copy;
-}
-
-
-extern "C" BRect
-OffsetByCopy__5BRectG6BPoint(BRect* self, BPoint point)
-{
-	BRect copy(*self);
-	copy.OffsetBy(point);
-	return copy;
-}
-
-
-extern "C" BRect
-OffsetByCopy__5BRectff(BRect* self, float dx, float dy)
-{
-	BRect copy(*self);
-	copy.OffsetBy(dx, dy);
-	return copy;
-}
-
-
-extern "C" BRect
-OffsetToCopy__5BRectG6BPoint(BRect* self, BPoint point)
-{
-	BRect copy(*self);
-	copy.OffsetTo(point);
-	return copy;
-}
-
-
-extern "C" BRect
-OffsetToCopy__5BRectff(BRect* self, float dx, float dy)
-{
-	BRect copy(*self);
-	copy.OffsetTo(dx, dy);
-	return copy;
-}
-
-
-#elif __GNUC__ >= 4
 // TODO: remove this when new GCC 4 packages have to be built anyway
 
 
@@ -388,6 +329,3 @@ _ZN5BRect12OffsetToCopyEff(BRect* self, float dx, float dy)
 	copy.OffsetTo(dx, dy);
 	return copy;
 }
-
-
-#endif	// __GNUC__ >= 4

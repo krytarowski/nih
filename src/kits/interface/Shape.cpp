@@ -633,37 +633,7 @@ BShape::AllocatePts(int32 count)
 //	#pragma mark - BShape binary compatibility methods
 
 
-#if __GNUC__ < 3
-
-
-extern "C" BShape*
-__6BShapeR6BShape(void* self, BShape& copyFrom)
-{
-	return new (self) BShape(copyFrom);
-		// we need to instantiate the object in the provided memory
-}
-
-
-extern "C" BRect
-Bounds__6BShape(BShape* self)
-{
-	return self->Bounds();
-}
-
-
-extern "C" void
-_ReservedShapeIterator1__14BShapeIterator(BShapeIterator* self)
-{
-}
-
-
-#else // __GNUC__ < 3
-
-
 extern "C" void
 _ZN14BShapeIterator23_ReservedShapeIterator1Ev(BShapeIterator* self)
 {
 }
-
-
-#endif // __GNUC__ >= 3

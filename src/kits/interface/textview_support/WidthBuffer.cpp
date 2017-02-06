@@ -368,28 +368,3 @@ WidthBuffer::HashEscapements(const char* inText, int32 numChars, int32 textLen,
 }
 
 } // namespace BPrivate
-
-
-#if __GNUC__ < 3
-//! NetPositive binary compatibility support
-
-_BWidthBuffer_::_BWidthBuffer_()
-{
-}
-
-_BWidthBuffer_::~_BWidthBuffer_()
-{
-}
-
-_BWidthBuffer_* gCompatibilityWidthBuffer = NULL;
-
-extern "C"
-float
-StringWidth__14_BWidthBuffer_PCcllPC5BFont(_BWidthBuffer_* widthBuffer,
-	const char* inText, int32 fromOffset, int32 length, const BFont* inStyle)
-{
-	return BPrivate::gWidthBuffer->StringWidth(inText, fromOffset, length,
-		inStyle);
-}
-
-#endif // __GNUC__ < 3

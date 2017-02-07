@@ -90,4 +90,40 @@ typedef	unsigned long	addr_t;
 #define BLOCKER_ALWAYS_SEMAPHORE_STYLE  0
 #endif
 
+#define _kern_transfer_area(a,b,c,d) 0
+#define _kern_reserve_address_range(a,b,c) 0
+#define _kern_get_safemode_option(a,b,c) 0
+#define _kern_create_dir(a,b,c) 0
+#define _kern_create_symlink(a,b,c,d) 0
+#define _kern_read_stat(a,b,c,d,e) 0
+#define _kern_close(a) 0
+#define _kern_read_dir(a,b,c,d) 0
+#define _kern_rewind_dir(a) 0
+#define _kern_open_dir(a,b) 0
+#define _kern_open_dir_entry_ref(a,b,c) 0
+#define _kern_read_link(a,b,c,d) 0
+#define _kern_rename(a,b,c,d) 0
+#define _kern_open_parent_dir(a,b,c) 0
+#define _kern_dup(a) 0
+#define _kern_unlink(a,b) 0
+#define _kern_remove_dir(a,b) 0
+#define _kern_write_stat(a,b,c,d,e,f) 0
+#define _kern_seek(a,b,c) 0
+#define _kern_write(a,b,c,d) 0
+#define _kern_read(a,b,c,d) 0
+#define _kern_open(a,b,c,d) 0
+#define _kern_open_entry_ref(a,b,c,d,e) 0
+#define _kern_open_attr_dir(a,b,c) 0
+#define _kern_rename_attr(a,b,c,d) 0
+#define _kern_unlock_node(a) 0
+#define _kern_fsync(a) 0
+#define _kern_remove_attr(a,b) 0
+#define _kern_lock_node(a) 0
+#define _kern_start_watching(a,b,c,d,e) 0
+#define _kern_stop_notifying(a,b) 0
+#define _kern_stop_watching(a,b,c,d) 0
+#define _kern_entry_ref_to_path(a,b,c,d,e) 0
+#define _kern_open_query(a,b,c,d,e,f) 0
+#define _kern_write_fs_info(a,b,c) 0
+
 #endif /* !_NETBSD_COMPAT_H */

@@ -18,14 +18,10 @@
 #include <os/storage/MimeType.h>
 #include <os/app/Roster.h>
 
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
-	#include <private/locale/ICUWrapper.h>
-#endif
+#include <private/locale/ICUWrapper.h>
 
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
-	#include <unicode/idna.h>
-	#include <unicode/stringpiece.h>
-#endif
+#include <unicode/idna.h>
+#include <unicode/stringpiece.h>
 
 
 static const char* kArchivedUrl = "be:url string";
@@ -615,7 +611,6 @@ BUrl::UrlDecode(bool strict)
 }
 
 
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
 status_t
 BUrl::IDNAToAscii()
 {
@@ -636,10 +631,8 @@ BUrl::IDNAToAscii()
 	fHost = result;
 	return B_OK;
 }
-#endif
 
 
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
 status_t
 BUrl::IDNAToUnicode()
 {
@@ -660,13 +653,11 @@ BUrl::IDNAToUnicode()
 	fHost = result;
 	return B_OK;
 }
-#endif
 
 
 // #pragma mark - utility functionality
 
 
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
 bool
 BUrl::HasPreferredApplication() const
 {
@@ -679,10 +670,8 @@ BUrl::HasPreferredApplication() const
 
 	return false;
 }
-#endif
 
 
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
 BString
 BUrl::PreferredApplication() const
 {
@@ -693,10 +682,8 @@ BUrl::PreferredApplication() const
 
 	return BString(appSignature);
 }
-#endif
 
 
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
 status_t
 BUrl::OpenWithPreferredApplication(bool onProblemAskUser) const
 {
@@ -736,7 +723,6 @@ BUrl::OpenWithPreferredApplication(bool onProblemAskUser) const
 
 	return status;
 }
-#endif
 
 
 // #pragma mark Url encoding/decoding of string

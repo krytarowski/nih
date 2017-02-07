@@ -72,13 +72,6 @@ static status_t handle_reply(port_id replyPort, int32* pCode,
 	bigtime_t timeout, BMessage* reply);
 
 
-extern "C" {
-	// private os function to set the owning team of an area
-	status_t _kern_transfer_area(area_id area, void** _address,
-		uint32 addressSpec, team_id target);
-}
-
-
 BBlockCache* BMessage::sMsgCache = NULL;
 port_id BMessage::sReplyPorts[sNumReplyPorts];
 int32 BMessage::sReplyPortInUse[sNumReplyPorts];

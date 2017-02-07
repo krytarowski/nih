@@ -181,7 +181,6 @@ BResources::SetTo(const entry_ref* ref, bool clobber)
 status_t
 BResources::SetToImage(image_id image, bool clobber)
 {
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
 	// get an image info
 	image_info info;
 	status_t error = get_image_info(image, &info);
@@ -192,9 +191,6 @@ BResources::SetToImage(image_id image, bool clobber)
 
 	// delegate the actual work
 	return SetTo(info.name, clobber);
-#else	// HAIKU_TARGET_PLATFORM_HAIKU
-	return B_NOT_SUPPORTED;
-#endif
 }
 
 
@@ -203,7 +199,6 @@ BResources::SetToImage(image_id image, bool clobber)
 status_t
 BResources::SetToImage(const void* codeOrDataPointer, bool clobber)
 {
-#ifdef HAIKU_TARGET_PLATFORM_HAIKU
 	// iterate through the images and find the one in question
 	addr_t address = (addr_t)codeOrDataPointer;
 	image_info info;
@@ -221,9 +216,6 @@ BResources::SetToImage(const void* codeOrDataPointer, bool clobber)
 	}
 
 	return B_ENTRY_NOT_FOUND;
-#else	// HAIKU_TARGET_PLATFORM_HAIKU
-	return B_NOT_SUPPORTED;
-#endif
 }
 
 

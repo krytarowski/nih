@@ -281,9 +281,7 @@ BCopyEngine::_CopyEntry(const char* sourcePath, const char* destPath)
 		destNode->SetGroup(sourceStat.st_gid);
 		destNode->SetPermissions(sourceStat.st_mode);
 #if !defined(__NetBSD__)
-		#ifdef HAIKU_TARGET_PLATFORM_HAIKU
-			destNode->SetCreationTime(sourceStat.st_crtime);
-		#endif
+		destNode->SetCreationTime(sourceStat.st_crtime);
 #endif
 		destNode->SetModificationTime(sourceStat.st_mtime);
 	}

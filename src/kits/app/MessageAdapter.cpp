@@ -13,7 +13,7 @@
 #include <private/app/MessageUtils.h>
 
 #include <stdlib.h>
-
+#include <string.h>
 
 namespace BPrivate {
 
@@ -168,6 +168,7 @@ MessageAdapter::Flatten(uint32 format, const BMessage *from, BDataIO *stream,
 /*static*/ status_t
 MessageAdapter::Unflatten(uint32 format, BMessage *into, const char *buffer)
 {
+#if !defined(__NetBSD__)
 	if (format == KMessage::kMessageHeaderMagic) {
 		KMessage message;
 		status_t result = message.SetTo(buffer,
@@ -212,7 +213,7 @@ MessageAdapter::Unflatten(uint32 format, BMessage *into, const char *buffer)
 		into->MakeEmpty();
 		return error;
 	}
-
+#endif
 	return B_NOT_A_MESSAGE;
 }
 
@@ -238,7 +239,7 @@ MessageAdapter::Unflatten(uint32 format, BMessage *into, BDataIO *stream)
 	return B_NOT_A_MESSAGE;
 }
 
-
+#if !defined(__NetBSD__)
 /*static*/ status_t
 MessageAdapter::ConvertToKMessage(const BMessage* from, KMessage& to)
 {
@@ -336,7 +337,7 @@ MessageAdapter::_ConvertFromKMessage(const KMessage *fromMessage,
 
 	return B_OK;
 }
-
+#endif
 
 /*static*/ ssize_t
 MessageAdapter::_R5FlattenedSize(const BMessage *from)

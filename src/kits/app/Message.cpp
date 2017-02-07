@@ -15,7 +15,6 @@
 #include <private/app/DirectMessageTarget.h>
 #include <private/app/MessengerPrivate.h>
 #include <private/app/TokenSpace.h>
-#include <private/kernel/util/KMessage.h>
 
 #include <os/interface/Alignment.h>
 #include <os/app/Application.h>
@@ -2135,6 +2134,7 @@ BMessage::_SendMessage(port_id port, team_id portOwner, int32 token,
 			direct->Release();
 			return B_NO_MEMORY;
 		}
+#if !defined(__NetBSD__)
 #ifndef HAIKU_TARGET_PLATFORM_LIBBE_TEST
 	} else if ((fHeader->flags & MESSAGE_FLAG_REPLY_AS_KMESSAGE) != 0) {
 		KMessage toMessage;
@@ -2176,6 +2176,7 @@ BMessage::_SendMessage(port_id port, team_id portOwner, int32 token,
 
 			header->message_area = transfered;
 		}
+#endif
 #endif
 	} else {
 		size = FlattenedSize();
@@ -2392,10 +2393,12 @@ BMessage::_SendFlattenedMessage(void* data, int32 size, port_id port,
 			+ sizeof(ssize_t) /* flattenedSize */ + sizeof(int32) /* what */
 			+ sizeof(uint8) /* flags */;
 		*(int32*)header = token;
+#if !defined(__NetBSD__)
 	} else if (((KMessage::Header*)data)->magic
 			== KMessage::kMessageHeaderMagic) {
 		KMessage::Header* header = (KMessage::Header*)data;
 		header->targetToken = token;
+#endif
 	} else {
 		return B_NOT_A_MESSAGE;
 	}

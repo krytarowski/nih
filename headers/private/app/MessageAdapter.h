@@ -10,7 +10,6 @@
 
 
 #include <os/app/Message.h>
-#include <private/kernel/util/KMessage.h>
 
 
 // message formats
@@ -40,12 +39,16 @@ public:
 	static	status_t			Unflatten(uint32 format, BMessage* into,
 									BDataIO* stream);
 
+#if !defined(__NetBSD__)
 	static	status_t			ConvertToKMessage(const BMessage* from,
 									KMessage& to);
+#endif
 
 private:
+#if !defined(__NetBSD__)
 	static	status_t			_ConvertFromKMessage(const KMessage* from,
 									BMessage* to);
+#endif
 
 	static	ssize_t				_R5FlattenedSize(const BMessage* from);
 

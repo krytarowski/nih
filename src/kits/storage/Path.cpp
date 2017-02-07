@@ -18,8 +18,6 @@
 #include <os/storage/StorageDefs.h>
 #include <os/support/String.h>
 
-#include <private/system/syscalls.h>
-
 #include "private/storage/storage_support.h"
 
 

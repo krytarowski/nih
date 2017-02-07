@@ -21,7 +21,6 @@
 #include <os/storage/Volume.h>
 
 #include <private/app/MessengerPrivate.h>
-#include <private/system/syscalls.h>
 #include <private/storage/query_private.h>
 
 #include "private/storage/QueryPredicate.h"

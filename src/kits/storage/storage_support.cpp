@@ -14,8 +14,6 @@
 #include <os/storage/StorageDefs.h>
 #include <os/support/SupportDefs.h>
 
-#include <private/system/syscalls.h>
-
 #include "private/storage/storage_support.h"
 
 using std::nothrow;

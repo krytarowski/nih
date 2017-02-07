@@ -19,7 +19,6 @@
 #include <os/storage/Volume.h>
 
 #include <private/storage/storage_support.h>
-#include <private/system/syscalls.h>
 
 #include <os/drivers/fs_interface.h>
 

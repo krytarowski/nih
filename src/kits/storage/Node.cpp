@@ -24,8 +24,6 @@
 #include <os/support/String.h>
 #include <os/support/TypeConstants.h>
 
-#include <private/system/syscalls.h>
-
 #include "private/storage/storage_support.h"
 
 

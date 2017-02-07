@@ -21,7 +21,6 @@
 
 #include <os/drivers/driver_settings.h>
 #include <private/system/safemode_defs.h>
-#include <private/system/syscalls.h>
 
 
 #ifndef ADD_ON_STABLE_SECONDS

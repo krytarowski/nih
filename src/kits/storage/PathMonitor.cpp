@@ -26,8 +26,6 @@
 #include <private/shared/AutoDeleter.h>
 #include <private/storage/NotOwningEntryRef.h>
 #include <os/support/ObjectList.h>
-#include <private/kernel/util/OpenHashTable.h>
-#include <private/kernel/util/SinglyLinkedList.h>
 
 
 #undef TRACE
@@ -53,11 +51,15 @@ namespace {
 struct Directory;
 struct Node;
 struct WatcherHashDefinition;
+#if !defined(__NetBSD__)
 typedef BOpenHashTable<WatcherHashDefinition> WatcherMap;
+#endif
 
 
 static pthread_once_t sInitOnce = PTHREAD_ONCE_INIT;
+#if !defined(__NetBSD__)
 static WatcherMap* sWatchers = NULL;
+#endif
 static BLooper* sLooper = NULL;
 static BPathMonitor::BWatchingInterface* sDefaultWatchingInterface = NULL;
 static BPathMonitor::BWatchingInterface* sWatchingInterface = NULL;
@@ -257,12 +259,15 @@ struct AncestorHashDefinition {
 };
 
 
+#if !defined(__NetBSD__)
 typedef BOpenHashTable<AncestorHashDefinition> AncestorMap;
+#endif
 
 
 //	#pragma mark - Entry
 
 
+#if !defined(__NetBSD__)
 class Entry : public SinglyLinkedListLinkImpl<Entry> {
 public:
 	Entry(Directory* parent, const BString& name, ::Node* node)
@@ -308,11 +313,11 @@ private:
 };
 
 typedef SinglyLinkedList<Entry> EntryList;
-
+#endif
 
 // EntryMap
 
-
+#if !defined(__NetBSD__)
 struct EntryHashDefinition {
 	typedef	const char*	KeyType;
 	typedef	Entry		ValueType;
@@ -340,11 +345,11 @@ struct EntryHashDefinition {
 
 
 typedef BOpenHashTable<EntryHashDefinition> EntryMap;
-
+#endif
 
 //	#pragma mark - Node
 
-
+#if !defined(__NetBSD__)
 class Node {
 public:
 	Node(const node_ref& nodeRef)
@@ -2194,5 +2199,5 @@ BPathMonitor::BWatchingInterface::StopWatching(const BHandler* handler,
 	return stop_watching(handler, looper);
 }
 
-
+#endif
 }	// namespace BPrivate

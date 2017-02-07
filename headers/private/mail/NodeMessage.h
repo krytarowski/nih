@@ -23,9 +23,7 @@
 #include <Node.h>
 #include <Message.h>
 
-#if defined(HAIKU_TARGET_PLATFORM_DANO) || defined(HAIKU_TARGET_PLATFORM_HAIKU) || defined(HAIKU_TARGET_PLATFORM_LIBBE_TEST)
 #define _IMPEXP_MAIL
-#endif
 
 _IMPEXP_MAIL BNode& operator<<(BNode& n, const BMessage& m);
 _IMPEXP_MAIL BNode& operator>>(BNode& n, BMessage& m);

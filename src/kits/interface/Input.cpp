@@ -8,270 +8,215 @@
 
 //!	Functions and class to manage input devices.
 
+#include <new>
 #include <stdlib.h>
 #include <string.h>
-#include <new>
 
+#include <os/app/Message.h>
 #include <os/interface/Input.h>
 #include <os/support/List.h>
-#include <os/app/Message.h>
 
-#include <private/interface/input_globals.h>
 #include <private/input/InputServerTypes.h>
-
+#include <private/interface/input_globals.h>
 
 static BMessenger *sInputServer = NULL;
 
+BInputDevice *find_input_device(const char *name) {
+  BMessage command(IS_FIND_DEVICES);
+  BMessage reply;
 
-BInputDevice *
-find_input_device(const char *name)
-{
-	BMessage command(IS_FIND_DEVICES);
-	BMessage reply;
+  command.AddString("device", name);
 
-	command.AddString("device", name);
+  status_t err = _control_input_server_(&command, &reply);
 
-	status_t err = _control_input_server_(&command, &reply);
+  if (err != B_OK)
+    return NULL;
 
-	if (err != B_OK)
-		return NULL;
+  BInputDevice *dev = new (std::nothrow) BInputDevice;
+  if (dev == NULL)
+    return NULL;
 
-	BInputDevice *dev = new (std::nothrow) BInputDevice;
-	if (dev == NULL)
-		return NULL;
+  const char *device;
+  int32 type;
 
-	const char *device;
-	int32 type;
+  reply.FindString("device", &device);
+  reply.FindInt32("type", &type);
 
-	reply.FindString("device", &device);
-	reply.FindInt32("type", &type);
+  dev->_SetNameAndType(device, (input_device_type)type);
 
-	dev->_SetNameAndType(device, (input_device_type)type);
-
-	return dev;
+  return dev;
 }
 
+status_t get_input_devices(BList *list) {
+  list->MakeEmpty();
 
-status_t
-get_input_devices(BList *list)
-{
-	list->MakeEmpty();
+  BMessage command(IS_FIND_DEVICES);
+  BMessage reply;
 
-	BMessage command(IS_FIND_DEVICES);
-	BMessage reply;
+  status_t err = _control_input_server_(&command, &reply);
 
-	status_t err = _control_input_server_(&command, &reply);
+  if (err != B_OK)
+    return err;
 
-	if (err != B_OK)
-		return err;
+  const char *name;
+  int32 type;
+  int32 i = 0;
 
-	const char *name;
-	int32 type;
-	int32 i = 0;
+  while (reply.FindString("device", i, &name) == B_OK) {
+    reply.FindInt32("type", i++, &type);
 
-	while (reply.FindString("device", i, &name) == B_OK) {
-		reply.FindInt32("type", i++, &type);
+    BInputDevice *dev = new (std::nothrow) BInputDevice;
+    if (dev != NULL) {
+      dev->_SetNameAndType(name, (input_device_type)type);
+      list->AddItem(dev);
+    }
+  }
 
-		BInputDevice *dev = new (std::nothrow) BInputDevice;
-		if (dev != NULL) {
-			dev->_SetNameAndType(name, (input_device_type)type);
-			list->AddItem(dev);
-		}
-	}
-
-	return err;
+  return err;
 }
 
+status_t watch_input_devices(BMessenger target, bool start) {
+  BMessage command(IS_WATCH_DEVICES);
+  BMessage reply;
 
-status_t
-watch_input_devices(BMessenger target, bool start)
-{
-	BMessage command(IS_WATCH_DEVICES);
-	BMessage reply;
+  command.AddMessenger("target", target);
+  command.AddBool("start", start);
 
-	command.AddMessenger("target", target);
-	command.AddBool("start", start);
-
-	return _control_input_server_(&command, &reply);
+  return _control_input_server_(&command, &reply);
 }
 
+BInputDevice::~BInputDevice() { free(fName); }
 
-BInputDevice::~BInputDevice()
-{
-	free(fName);
+const char *BInputDevice::Name() const { return fName; }
+
+input_device_type BInputDevice::Type() const { return fType; }
+
+bool BInputDevice::IsRunning() const {
+  if (!fName)
+    return false;
+
+  BMessage command(IS_IS_DEVICE_RUNNING);
+  BMessage reply;
+
+  command.AddString("device", fName);
+
+  return _control_input_server_(&command, &reply) == B_OK;
 }
 
+status_t BInputDevice::Start() {
+  if (!fName)
+    return B_ERROR;
 
-const char *
-BInputDevice::Name() const
-{
-	return fName;
+  BMessage command(IS_START_DEVICE);
+  BMessage reply;
+
+  command.AddString("device", fName);
+
+  return _control_input_server_(&command, &reply);
 }
 
+status_t BInputDevice::Stop() {
+  if (!fName)
+    return B_ERROR;
 
-input_device_type
-BInputDevice::Type() const
-{
-	return fType;
+  BMessage command(IS_STOP_DEVICE);
+  BMessage reply;
+
+  command.AddString("device", fName);
+
+  return _control_input_server_(&command, &reply);
 }
 
+status_t BInputDevice::Control(uint32 code, BMessage *message) {
+  if (!fName)
+    return B_ERROR;
 
-bool
-BInputDevice::IsRunning() const
-{
-	if (!fName)
-		return false;
+  BMessage command(IS_CONTROL_DEVICES);
+  BMessage reply;
 
-	BMessage command(IS_IS_DEVICE_RUNNING);
-	BMessage reply;
+  command.AddString("device", fName);
+  command.AddInt32("code", code);
+  command.AddMessage("message", message);
 
-	command.AddString("device", fName);
+  message->MakeEmpty();
 
-	return _control_input_server_(&command, &reply) == B_OK;
+  status_t err = _control_input_server_(&command, &reply);
+
+  if (err == B_OK)
+    reply.FindMessage("message", message);
+
+  return err;
 }
 
+status_t BInputDevice::Start(input_device_type type) {
+  BMessage command(IS_START_DEVICE);
+  BMessage reply;
 
-status_t
-BInputDevice::Start()
-{
-	if (!fName)
-		return B_ERROR;
+  command.AddInt32("type", type);
 
-	BMessage command(IS_START_DEVICE);
-	BMessage reply;
-
-	command.AddString("device", fName);
-
-	return _control_input_server_(&command, &reply);
+  return _control_input_server_(&command, &reply);
 }
 
+status_t BInputDevice::Stop(input_device_type type) {
+  BMessage command(IS_STOP_DEVICE);
+  BMessage reply;
 
-status_t
-BInputDevice::Stop()
-{
-	if (!fName)
-		return B_ERROR;
+  command.AddInt32("type", type);
 
-	BMessage command(IS_STOP_DEVICE);
-	BMessage reply;
-
-	command.AddString("device", fName);
-
-	return _control_input_server_(&command, &reply);
+  return _control_input_server_(&command, &reply);
 }
 
+status_t BInputDevice::Control(input_device_type type, uint32 code,
+                               BMessage *message) {
+  BMessage command(IS_CONTROL_DEVICES);
+  BMessage reply;
 
-status_t
-BInputDevice::Control(uint32 code, BMessage *message)
-{
-	if (!fName)
-		return B_ERROR;
+  command.AddInt32("type", type);
+  command.AddInt32("code", code);
+  command.AddMessage("message", message);
 
-	BMessage command(IS_CONTROL_DEVICES);
-	BMessage reply;
+  message->MakeEmpty();
 
-	command.AddString("device", fName);
-	command.AddInt32("code", code);
-	command.AddMessage("message", message);
+  status_t err = _control_input_server_(&command, &reply);
 
-	message->MakeEmpty();
+  if (err == B_OK)
+    reply.FindMessage("message", message);
 
-	status_t err = _control_input_server_(&command, &reply);
-
-	if (err == B_OK)
-		reply.FindMessage("message", message);
-
-	return err;
+  return err;
 }
 
+BInputDevice::BInputDevice() : fName(NULL), fType(B_UNDEFINED_DEVICE) {}
 
-status_t
-BInputDevice::Start(input_device_type type)
-{
-	BMessage command(IS_START_DEVICE);
-	BMessage reply;
+void BInputDevice::_SetNameAndType(const char *name, input_device_type type) {
+  if (fName) {
+    free(fName);
+    fName = NULL;
+  }
 
-	command.AddInt32("type", type);
+  if (name)
+    fName = strdup(name);
 
-	return _control_input_server_(&command, &reply);
+  fType = type;
 }
 
+status_t _control_input_server_(BMessage *command, BMessage *reply) {
+  if (!sInputServer) {
+    sInputServer = new (std::nothrow) BMessenger;
+    if (!sInputServer)
+      return B_NO_MEMORY;
+  }
 
-status_t
-BInputDevice::Stop(input_device_type type)
-{
-	BMessage command(IS_STOP_DEVICE);
-	BMessage reply;
+  if (!sInputServer->IsValid())
+    *sInputServer = BMessenger("application/x-vnd.Be-input_server", -1, NULL);
 
-	command.AddInt32("type", type);
+  status_t err =
+      sInputServer->SendMessage(command, reply, 5000000LL, 5000000LL);
 
-	return _control_input_server_(&command, &reply);
-}
+  if (err != B_OK)
+    return err;
 
+  if (reply->FindInt32("status", &err) != B_OK)
+    return B_ERROR;
 
-status_t
-BInputDevice::Control(input_device_type type, uint32 code, BMessage *message)
-{
-	BMessage command(IS_CONTROL_DEVICES);
-	BMessage reply;
-
-	command.AddInt32("type", type);
-	command.AddInt32("code", code);
-	command.AddMessage("message", message);
-
-	message->MakeEmpty();
-
-	status_t err = _control_input_server_(&command, &reply);
-
-	if (err == B_OK)
-		reply.FindMessage("message", message);
-
-	return err;
-}
-
-
-BInputDevice::BInputDevice()
-	:
-	fName(NULL),
-	fType(B_UNDEFINED_DEVICE)
-{
-}
-
-
-void
-BInputDevice::_SetNameAndType(const char *name, input_device_type type)
-{
-	if (fName) {
-		free(fName);
-		fName = NULL;
-	}
-
-	if (name)
-		fName = strdup(name);
-
-	fType = type;
-}
-
-
-status_t
-_control_input_server_(BMessage *command, BMessage *reply)
-{
-	if (!sInputServer) {
-		sInputServer = new (std::nothrow) BMessenger;
-		if (!sInputServer)
-			return B_NO_MEMORY;
-	}
-
-	if (!sInputServer->IsValid())
-		*sInputServer = BMessenger("application/x-vnd.Be-input_server", -1, NULL);
-
-	status_t err = sInputServer->SendMessage(command, reply, 5000000LL, 5000000LL);
-
-	if (err != B_OK)
-		return err;
-
-	if (reply->FindInt32("status", &err) != B_OK)
-		return B_ERROR;
-
-	return err;
+  return err;
 }

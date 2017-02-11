@@ -3,72 +3,41 @@
  * Distributed under the terms of the MIT license.
  */
 
-
 #include <os/interface/CardLayout.h>
 #include <os/interface/CardView.h>
 
-
-BCardView::BCardView()
-	:
-	BView(NULL, 0, new BCardLayout())
-{
-	AdoptSystemColors();
+BCardView::BCardView() : BView(NULL, 0, new BCardLayout()) {
+  AdoptSystemColors();
 }
 
-
-BCardView::BCardView(const char* name)
-	:
-	BView(name, 0, new BCardLayout())
-{
-	AdoptSystemColors();
+BCardView::BCardView(const char *name) : BView(name, 0, new BCardLayout()) {
+  AdoptSystemColors();
 }
 
+BCardView::BCardView(BMessage *from) : BView(from) { AdoptSystemColors(); }
 
-BCardView::BCardView(BMessage* from)
-	:
-	BView(from)
-{
-	AdoptSystemColors();
+BCardView::~BCardView() {}
+
+void BCardView::SetLayout(BLayout *layout) {
+  if (dynamic_cast<BCardLayout *>(layout) == NULL)
+    return;
+
+  BView::SetLayout(layout);
 }
 
-
-BCardView::~BCardView()
-{
+BCardLayout *BCardView::CardLayout() const {
+  return static_cast<BCardLayout *>(GetLayout());
 }
 
-
-void
-BCardView::SetLayout(BLayout* layout)
-{
-	if (dynamic_cast<BCardLayout*>(layout) == NULL)
-		return;
-
-	BView::SetLayout(layout);
+BArchivable *BCardView::Instantiate(BMessage *from) {
+  if (validate_instantiation(from, "BCardView"))
+    return new BCardView(from);
+  return NULL;
 }
 
-
-BCardLayout*
-BCardView::CardLayout() const
-{
-	return static_cast<BCardLayout*>(GetLayout());
+status_t BCardView::Perform(perform_code d, void *arg) {
+  return BView::Perform(d, arg);
 }
-
-
-BArchivable*
-BCardView::Instantiate(BMessage* from)
-{
-	if (validate_instantiation(from, "BCardView"))
-		return new BCardView(from);
-	return NULL;
-}
-
-
-status_t
-BCardView::Perform(perform_code d, void* arg)
-{
-	return BView::Perform(d, arg);
-}
-
 
 void BCardView::_ReservedCardView1() {}
 void BCardView::_ReservedCardView2() {}

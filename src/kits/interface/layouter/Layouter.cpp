@@ -5,39 +5,26 @@
 
 #include "Layouter.h"
 
-
 // constructor
-LayoutInfo::LayoutInfo()
-{
-}
+LayoutInfo::LayoutInfo() {}
 
 // destructor
-LayoutInfo::~LayoutInfo()
-{
-}
+LayoutInfo::~LayoutInfo() {}
 
 // ElementRangeSize
-float
-LayoutInfo::ElementRangeSize(int32 position, int32 length)
-{
-	if (length == 1)
-		return ElementSize(position);
+float LayoutInfo::ElementRangeSize(int32 position, int32 length) {
+  if (length == 1)
+    return ElementSize(position);
 
-	int lastIndex = position + length - 1;
-	return ElementLocation(lastIndex) + ElementSize(lastIndex)
-		- ElementLocation(position);
+  int lastIndex = position + length - 1;
+  return ElementLocation(lastIndex) + ElementSize(lastIndex) -
+         ElementLocation(position);
 }
-
 
 // #pragma mark -
 
-
 // constructor
-Layouter::Layouter()
-{
-}
+Layouter::Layouter() {}
 
 // destructor
-Layouter::~Layouter()
-{
-}
+Layouter::~Layouter() {}

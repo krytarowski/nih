@@ -8,13 +8,12 @@
  *		Axel Dörfler
  */
 
-
-#include <os/interface/Deskbar.h>
-#include <os/app/Messenger.h>
 #include <os/app/Message.h>
-#include <os/interface/View.h>
-#include <os/interface/Rect.h>
+#include <os/app/Messenger.h>
+#include <os/interface/Deskbar.h>
 #include <os/interface/InterfaceDefs.h>
+#include <os/interface/Rect.h>
+#include <os/interface/View.h>
 #include <os/storage/Node.h>
 
 #include <string.h>
@@ -41,280 +40,218 @@ static const uint32 kMsgIsExpanded = 'gexp';
 static const uint32 kMsgSetLocation = 'sloc';
 static const uint32 kMsgExpand = 'sexp';
 
+status_t get_deskbar_frame(BRect *frame) {
+  BMessenger deskbar(kDeskbarSignature);
 
-status_t
-get_deskbar_frame(BRect *frame)
-{
-	BMessenger deskbar(kDeskbarSignature);
+  status_t result;
 
-	status_t result;
+  BMessage request(B_GET_PROPERTY);
+  request.AddSpecifier("Frame");
+  request.AddSpecifier("Window", "Deskbar");
 
-	BMessage request(B_GET_PROPERTY);
-	request.AddSpecifier("Frame");
-	request.AddSpecifier("Window", "Deskbar");
+  BMessage reply;
+  result = deskbar.SendMessage(&request, &reply);
+  if (result == B_OK)
+    result = reply.FindRect("result", frame);
 
-	BMessage reply;
-	result = deskbar.SendMessage(&request, &reply);
-	if (result == B_OK)
-   		result = reply.FindRect("result", frame);
-
-	return result;
+  return result;
 }
-
 
 //	#pragma mark -
 
+BDeskbar::BDeskbar() : fMessenger(new BMessenger(kDeskbarSignature)) {}
 
-BDeskbar::BDeskbar()
-	: fMessenger(new BMessenger(kDeskbarSignature))
-{
+BDeskbar::~BDeskbar() { delete fMessenger; }
+
+bool BDeskbar::IsRunning() const { return fMessenger->IsValid(); }
+
+BRect BDeskbar::Frame() const {
+  BRect frame(0.0, 0.0, 0.0, 0.0);
+  get_deskbar_frame(&frame);
+
+  return frame;
 }
 
+deskbar_location BDeskbar::Location(bool *_isExpanded) const {
+  deskbar_location location = B_DESKBAR_RIGHT_TOP;
+  BMessage request(kMsgLocation);
+  BMessage reply;
 
-BDeskbar::~BDeskbar()
-{
-	delete fMessenger;
+  if (_isExpanded)
+    *_isExpanded = true;
+
+  if (fMessenger->IsTargetLocal()) {
+    // ToDo: do something about this!
+    // (if we just ask the Deskbar in this case, we would deadlock)
+    return location;
+  }
+
+  if (fMessenger->SendMessage(&request, &reply) == B_OK) {
+    int32 value;
+    if (reply.FindInt32("location", &value) == B_OK)
+      location = static_cast<deskbar_location>(value);
+
+    if (_isExpanded && reply.FindBool("expanded", _isExpanded) != B_OK)
+      *_isExpanded = true;
+  }
+
+  return location;
 }
 
+status_t BDeskbar::SetLocation(deskbar_location location, bool expanded) {
+  BMessage request(kMsgSetLocation);
+  request.AddInt32("location", static_cast<int32>(location));
+  request.AddBool("expand", expanded);
 
-bool
-BDeskbar::IsRunning() const
-{
-	return fMessenger->IsValid();
+  return fMessenger->SendMessage(&request);
 }
 
+bool BDeskbar::IsExpanded(void) const {
+  BMessage request(kMsgIsExpanded);
+  BMessage reply;
+  bool isExpanded;
 
-BRect
-BDeskbar::Frame() const
-{
-	BRect frame(0.0, 0.0, 0.0, 0.0);
-	get_deskbar_frame(&frame);
+  if (fMessenger->SendMessage(&request, &reply) != B_OK ||
+      reply.FindBool("expanded", &isExpanded) != B_OK)
+    isExpanded = true;
 
-	return frame;
+  return isExpanded;
 }
 
+status_t BDeskbar::Expand(bool expand) {
+  BMessage request(kMsgExpand);
+  request.AddBool("expand", expand);
 
-deskbar_location
-BDeskbar::Location(bool *_isExpanded) const
-{
-	deskbar_location location = B_DESKBAR_RIGHT_TOP;
-	BMessage request(kMsgLocation);
-	BMessage reply;
-
-	if (_isExpanded)
-		*_isExpanded = true;
-
-	if (fMessenger->IsTargetLocal()) {
-		// ToDo: do something about this!
-		// (if we just ask the Deskbar in this case, we would deadlock)
-		return location;
-	}
-
-	if (fMessenger->SendMessage(&request, &reply) == B_OK) {
-		int32 value;
-		if (reply.FindInt32("location", &value) == B_OK)
-			location = static_cast<deskbar_location>(value);
-
-		if (_isExpanded
-			&& reply.FindBool("expanded", _isExpanded) != B_OK)
-			*_isExpanded = true;
-	}
-
-	return location;
+  return fMessenger->SendMessage(&request);
 }
 
+status_t BDeskbar::GetItemInfo(int32 id, const char **_name) const {
+  if (_name == NULL)
+    return B_BAD_VALUE;
 
-status_t
-BDeskbar::SetLocation(deskbar_location location, bool expanded)
-{
-	BMessage request(kMsgSetLocation);
-	request.AddInt32("location", static_cast<int32>(location));
-	request.AddBool("expand", expanded);
+  // Note: Be's implementation returns B_BAD_VALUE if *_name was NULL,
+  // not just if _name was NULL.  This doesn't make much sense, so we
+  // do not imitate this behaviour.
 
-	return fMessenger->SendMessage(&request);
+  BMessage request(kMsgGetItemInfo);
+  request.AddInt32("id", id);
+
+  BMessage reply;
+  status_t result = fMessenger->SendMessage(&request, &reply);
+  if (result == B_OK) {
+    const char *name;
+    result = reply.FindString("name", &name);
+    if (result == B_OK) {
+      *_name = strdup(name);
+      if (*_name == NULL)
+        result = B_NO_MEMORY;
+    }
+  }
+  return result;
 }
 
+status_t BDeskbar::GetItemInfo(const char *name, int32 *_id) const {
+  if (name == NULL)
+    return B_BAD_VALUE;
 
-bool
-BDeskbar::IsExpanded(void) const
-{
-	BMessage request(kMsgIsExpanded);
-	BMessage reply;
-	bool isExpanded;
+  BMessage request(kMsgGetItemInfo);
+  request.AddString("name", name);
 
-	if (fMessenger->SendMessage(&request, &reply) != B_OK
-		|| reply.FindBool("expanded", &isExpanded) != B_OK)
-		isExpanded = true;
+  BMessage reply;
+  status_t result = fMessenger->SendMessage(&request, &reply);
+  if (result == B_OK)
+    result = reply.FindInt32("id", _id);
 
-	return isExpanded;
+  return result;
 }
 
+bool BDeskbar::HasItem(int32 id) const {
+  BMessage request(kMsgHasItem);
+  request.AddInt32("id", id);
 
-status_t
-BDeskbar::Expand(bool expand)
-{
-	BMessage request(kMsgExpand);
-	request.AddBool("expand", expand);
+  BMessage reply;
+  if (fMessenger->SendMessage(&request, &reply) == B_OK)
+    return reply.FindBool("exists");
 
-	return fMessenger->SendMessage(&request);
+  return false;
 }
 
+bool BDeskbar::HasItem(const char *name) const {
+  BMessage request(kMsgHasItem);
+  request.AddString("name", name);
 
-status_t
-BDeskbar::GetItemInfo(int32 id, const char **_name) const
-{
-	if (_name == NULL)
-		return B_BAD_VALUE;
+  BMessage reply;
+  if (fMessenger->SendMessage(&request, &reply) == B_OK)
+    return reply.FindBool("exists");
 
-	// Note: Be's implementation returns B_BAD_VALUE if *_name was NULL,
-	// not just if _name was NULL.  This doesn't make much sense, so we
-	// do not imitate this behaviour.
-
-	BMessage request(kMsgGetItemInfo);
-	request.AddInt32("id", id);
-
-	BMessage reply;
-	status_t result = fMessenger->SendMessage(&request, &reply);
-	if (result == B_OK) {
-		const char *name;
-		result = reply.FindString("name", &name);
-		if (result == B_OK) {
-			*_name = strdup(name);
-			if (*_name == NULL)
-				result = B_NO_MEMORY;
-		}
-	}
-	return result;
+  return false;
 }
 
+uint32 BDeskbar::CountItems(void) const {
+  BMessage request(kMsgCountItems);
+  BMessage reply;
 
-status_t
-BDeskbar::GetItemInfo(const char *name, int32 *_id) const
-{
-	if (name == NULL)
-		return B_BAD_VALUE;
+  if (fMessenger->SendMessage(&request, &reply) == B_OK)
+    return reply.FindInt32("count");
 
-	BMessage request(kMsgGetItemInfo);
-	request.AddString("name", name);
-
-	BMessage reply;
-	status_t result = fMessenger->SendMessage(&request, &reply);
-	if (result == B_OK)
-		result = reply.FindInt32("id", _id);
-
-	return result;
+  return 0;
 }
 
+status_t BDeskbar::AddItem(BView *view, int32 *_id) {
+  BMessage archive;
+  status_t result = view->Archive(&archive);
+  if (result < B_OK)
+    return result;
 
-bool
-BDeskbar::HasItem(int32 id) const
-{
-	BMessage request(kMsgHasItem);
-	request.AddInt32("id", id);
+  BMessage request(kMsgAddView);
+  request.AddMessage("view", &archive);
 
-	BMessage reply;
-	if (fMessenger->SendMessage(&request, &reply) == B_OK)
-		return reply.FindBool("exists");
+  BMessage reply;
+  result = fMessenger->SendMessage(&request, &reply);
+  if (result == B_OK) {
+    if (_id != NULL)
+      result = reply.FindInt32("id", _id);
+    else
+      reply.FindInt32("error", &result);
+  }
 
-	return false;
+  return result;
 }
 
+status_t BDeskbar::AddItem(entry_ref *addon, int32 *_id) {
+  BMessage request(kMsgAddAddOn);
+  request.AddRef("addon", addon);
 
-bool
-BDeskbar::HasItem(const char *name) const
-{
-	BMessage request(kMsgHasItem);
-	request.AddString("name", name);
+  BMessage reply;
+  status_t status = fMessenger->SendMessage(&request, &reply);
+  if (status == B_OK) {
+    if (_id != NULL)
+      status = reply.FindInt32("id", _id);
+    else
+      reply.FindInt32("error", &status);
+  }
 
-	BMessage reply;
-	if (fMessenger->SendMessage(&request, &reply) == B_OK)
-		return reply.FindBool("exists");
-
-	return false;
+  return status;
 }
 
+status_t BDeskbar::RemoveItem(int32 id) {
+  BMessage request(kMsgRemoveItem);
+  request.AddInt32("id", id);
 
-uint32
-BDeskbar::CountItems(void) const
-{
-	BMessage request(kMsgCountItems);	
-	BMessage reply;
+  // ToDo: the Deskbar does not reply to this message, so we don't
+  // know if it really succeeded - we can just acknowledge that the
+  // message was sent to the Deskbar
 
-	if (fMessenger->SendMessage(&request, &reply) == B_OK)
-		return reply.FindInt32("count");
-
-	return 0;
+  return fMessenger->SendMessage(&request);
 }
 
+status_t BDeskbar::RemoveItem(const char *name) {
+  BMessage request(kMsgRemoveItem);
+  request.AddString("name", name);
 
-status_t
-BDeskbar::AddItem(BView *view, int32 *_id)
-{
-	BMessage archive;
-	status_t result = view->Archive(&archive);
-	if (result < B_OK)
-		return result;
+  // ToDo: the Deskbar does not reply to this message, so we don't
+  // know if it really succeeded - we can just acknowledge that the
+  // message was sent to the Deskbar
 
-	BMessage request(kMsgAddView);
-	request.AddMessage("view", &archive);
-
-	BMessage reply;
-	result = fMessenger->SendMessage(&request, &reply);
-	if (result == B_OK) {
-		if (_id != NULL)
-			result = reply.FindInt32("id", _id);
-		else
-			reply.FindInt32("error", &result);
-	}
-
-	return result;
+  return fMessenger->SendMessage(&request);
 }
-
-
-status_t
-BDeskbar::AddItem(entry_ref *addon, int32 *_id)
-{
-	BMessage request(kMsgAddAddOn);
-	request.AddRef("addon", addon);
-
-	BMessage reply;
-	status_t status = fMessenger->SendMessage(&request, &reply);
-	if (status == B_OK) {
-		if (_id != NULL)
-			status = reply.FindInt32("id", _id);
-		else
-			reply.FindInt32("error", &status);
-	}
-
-	return status;
-}
-
-
-status_t
-BDeskbar::RemoveItem(int32 id)
-{
-	BMessage request(kMsgRemoveItem);
-	request.AddInt32("id", id);
-
-	// ToDo: the Deskbar does not reply to this message, so we don't
-	// know if it really succeeded - we can just acknowledge that the
-	// message was sent to the Deskbar
-
-	return fMessenger->SendMessage(&request);
-}
-
-
-status_t
-BDeskbar::RemoveItem(const char *name)
-{
-	BMessage request(kMsgRemoveItem);
-	request.AddString("name", name);
-
-	// ToDo: the Deskbar does not reply to this message, so we don't
-	// know if it really succeeded - we can just acknowledge that the
-	// message was sent to the Deskbar
-
-	return fMessenger->SendMessage(&request);
-	
-}
-

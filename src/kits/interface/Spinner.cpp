@@ -6,286 +6,207 @@
  *		John Scipione, jscipione@gmail.com
  */
 
-
 #include <private/interface/Spinner.h>
 
 #include <stdint.h>
 #include <stdlib.h>
 
 #include <os/app/PropertyInfo.h>
-#include <os/support/String.h>
 #include <os/interface/TextView.h>
-
+#include <os/support/String.h>
 
 static property_info sProperties[] = {
-	{
-		"MaxValue",
-		{ B_GET_PROPERTY, 0 },
-		{ B_DIRECT_SPECIFIER, 0 },
-		"Returns the maximum value of the spinner.",
-		0,
-		{ B_INT32_TYPE }
-	},
-	{
-		"MaxValue",
-		{ B_SET_PROPERTY, 0 },
-		{ B_DIRECT_SPECIFIER, 0},
-		"Sets the maximum value of the spinner.",
-		0,
-		{ B_INT32_TYPE }
-	},
+    {"MaxValue",
+     {B_GET_PROPERTY, 0},
+     {B_DIRECT_SPECIFIER, 0},
+     "Returns the maximum value of the spinner.",
+     0,
+     {B_INT32_TYPE}},
+    {"MaxValue",
+     {B_SET_PROPERTY, 0},
+     {B_DIRECT_SPECIFIER, 0},
+     "Sets the maximum value of the spinner.",
+     0,
+     {B_INT32_TYPE}},
 
-	{
-		"MinValue",
-		{ B_GET_PROPERTY, 0 },
-		{ B_DIRECT_SPECIFIER, 0 },
-		"Returns the minimum value of the spinner.",
-		0,
-		{ B_INT32_TYPE }
-	},
-	{
-		"MinValue",
-		{ B_SET_PROPERTY, 0 },
-		{ B_DIRECT_SPECIFIER, 0},
-		"Sets the minimum value of the spinner.",
-		0,
-		{ B_INT32_TYPE }
-	},
+    {"MinValue",
+     {B_GET_PROPERTY, 0},
+     {B_DIRECT_SPECIFIER, 0},
+     "Returns the minimum value of the spinner.",
+     0,
+     {B_INT32_TYPE}},
+    {"MinValue",
+     {B_SET_PROPERTY, 0},
+     {B_DIRECT_SPECIFIER, 0},
+     "Sets the minimum value of the spinner.",
+     0,
+     {B_INT32_TYPE}},
 
-	{
-		"Value",
-		{ B_GET_PROPERTY, 0 },
-		{ B_DIRECT_SPECIFIER, 0 },
-		"Returns the value of the spinner.",
-		0,
-		{ B_INT32_TYPE }
-	},
-	{
-		"Value",
-		{ B_SET_PROPERTY, 0 },
-		{ B_DIRECT_SPECIFIER, 0},
-		"Sets the value of the spinner.",
-		0,
-		{ B_INT32_TYPE }
-	},
+    {"Value",
+     {B_GET_PROPERTY, 0},
+     {B_DIRECT_SPECIFIER, 0},
+     "Returns the value of the spinner.",
+     0,
+     {B_INT32_TYPE}},
+    {"Value",
+     {B_SET_PROPERTY, 0},
+     {B_DIRECT_SPECIFIER, 0},
+     "Sets the value of the spinner.",
+     0,
+     {B_INT32_TYPE}},
 
-	{ 0 }
-};
-
+    {0}};
 
 //	#pragma mark - BSpinner
 
-
-BSpinner::BSpinner(BRect frame, const char* name, const char* label,
-	BMessage* message, uint32 resizingMode, uint32 flags)
-	:
-	BAbstractSpinner(frame, name, label, message, resizingMode, flags)
-{
-	_InitObject();
+BSpinner::BSpinner(BRect frame, const char *name, const char *label,
+                   BMessage *message, uint32 resizingMode, uint32 flags)
+    : BAbstractSpinner(frame, name, label, message, resizingMode, flags) {
+  _InitObject();
 }
 
-
-BSpinner::BSpinner(const char* name, const char* label,
-	BMessage* message, uint32 flags)
-	:
-	BAbstractSpinner(name, label, message, flags)
-{
-	_InitObject();
+BSpinner::BSpinner(const char *name, const char *label, BMessage *message,
+                   uint32 flags)
+    : BAbstractSpinner(name, label, message, flags) {
+  _InitObject();
 }
 
+BSpinner::BSpinner(BMessage *data) : BAbstractSpinner(data) {
+  _InitObject();
 
-BSpinner::BSpinner(BMessage* data)
-	:
-	BAbstractSpinner(data)
-{
-	_InitObject();
+  if (data->FindInt32("_min", &fMinValue) != B_OK)
+    fMinValue = INT32_MIN;
 
-	if (data->FindInt32("_min", &fMinValue) != B_OK)
-		fMinValue = INT32_MIN;
+  if (data->FindInt32("_max", &fMaxValue) != B_OK)
+    fMaxValue = INT32_MAX;
 
-	if (data->FindInt32("_max", &fMaxValue) != B_OK)
-		fMaxValue = INT32_MAX;
-
-	if (data->FindInt32("_val", &fValue) != B_OK)
-		fValue = 0;
+  if (data->FindInt32("_val", &fValue) != B_OK)
+    fValue = 0;
 }
 
+BSpinner::~BSpinner() {}
 
-BSpinner::~BSpinner()
-{
+BArchivable *BSpinner::Instantiate(BMessage *data) {
+  if (validate_instantiation(data, "Spinner"))
+    return new BSpinner(data);
+
+  return NULL;
 }
 
+status_t BSpinner::Archive(BMessage *data, bool deep) const {
+  status_t status = BAbstractSpinner::Archive(data, deep);
+  data->AddString("class", "Spinner");
 
-BArchivable*
-BSpinner::Instantiate(BMessage* data)
-{
-	if (validate_instantiation(data, "Spinner"))
-		return new BSpinner(data);
+  if (status == B_OK)
+    status = data->AddInt32("_min", fMinValue);
 
-	return NULL;
+  if (status == B_OK)
+    status = data->AddInt32("_max", fMaxValue);
+
+  if (status == B_OK)
+    status = data->AddInt32("_val", fValue);
+
+  return status;
 }
 
+status_t BSpinner::GetSupportedSuites(BMessage *message) {
+  message->AddString("suites", "suite/vnd.Haiku-intenger-spinner");
 
-status_t
-BSpinner::Archive(BMessage* data, bool deep) const
-{
-	status_t status = BAbstractSpinner::Archive(data, deep);
-	data->AddString("class", "Spinner");
+  BPropertyInfo prop_info(sProperties);
+  message->AddFlat("messages", &prop_info);
 
-	if (status == B_OK)
-		status = data->AddInt32("_min", fMinValue);
-
-	if (status == B_OK)
-		status = data->AddInt32("_max", fMaxValue);
-
-	if (status == B_OK)
-		status = data->AddInt32("_val", fValue);
-
-	return status;
+  return BView::GetSupportedSuites(message);
 }
 
+void BSpinner::AttachedToWindow() {
+  SetValue(fValue);
 
-status_t
-BSpinner::GetSupportedSuites(BMessage* message)
-{
-	message->AddString("suites", "suite/vnd.Haiku-intenger-spinner");
-
-	BPropertyInfo prop_info(sProperties);
-	message->AddFlat("messages", &prop_info);
-
-	return BView::GetSupportedSuites(message);
+  BAbstractSpinner::AttachedToWindow();
 }
 
+void BSpinner::Decrement() { SetValue(Value() - 1); }
 
-void
-BSpinner::AttachedToWindow()
-{
-	SetValue(fValue);
+void BSpinner::Increment() { SetValue(Value() + 1); }
 
-	BAbstractSpinner::AttachedToWindow();
+void BSpinner::SetEnabled(bool enable) {
+  if (IsEnabled() == enable)
+    return;
+
+  SetIncrementEnabled(enable && Value() < fMaxValue);
+  SetDecrementEnabled(enable && Value() > fMinValue);
+
+  BAbstractSpinner::SetEnabled(enable);
 }
 
-
-void
-BSpinner::Decrement()
-{
-	SetValue(Value() - 1);
+void BSpinner::SetMinValue(int32 min) {
+  fMinValue = min;
+  if (fValue < fMinValue)
+    SetValue(fMinValue);
 }
 
-
-void
-BSpinner::Increment()
-{
-	SetValue(Value() + 1);
+void BSpinner::SetMaxValue(int32 max) {
+  fMaxValue = max;
+  if (fValue > fMaxValue)
+    SetValue(fMaxValue);
 }
 
-
-void
-BSpinner::SetEnabled(bool enable)
-{
-	if (IsEnabled() == enable)
-		return;
-
-	SetIncrementEnabled(enable && Value() < fMaxValue);
-	SetDecrementEnabled(enable && Value() > fMinValue);
-
-	BAbstractSpinner::SetEnabled(enable);
+void BSpinner::Range(int32 *min, int32 *max) {
+  *min = fMinValue;
+  *max = fMaxValue;
 }
 
-
-void
-BSpinner::SetMinValue(int32 min)
-{
-	fMinValue = min;
-	if (fValue < fMinValue)
-		SetValue(fMinValue);
+void BSpinner::SetRange(int32 min, int32 max) {
+  SetMinValue(min);
+  SetMaxValue(max);
 }
 
+void BSpinner::SetValue(int32 value) {
+  // clip to range
+  if (value < fMinValue)
+    value = fMinValue;
+  else if (value > fMaxValue)
+    value = fMaxValue;
 
-void
-BSpinner::SetMaxValue(int32 max)
-{
-	fMaxValue = max;
-	if (fValue > fMaxValue)
-		SetValue(fMaxValue);
+  // update the text view
+  BString valueString;
+  valueString << value;
+  TextView()->SetText(valueString.String());
+
+  // update the up and down arrows
+  SetIncrementEnabled(IsEnabled() && value < fMaxValue);
+  SetDecrementEnabled(IsEnabled() && value > fMinValue);
+
+  if (value == fValue)
+    return;
+
+  fValue = value;
+  ValueChanged();
+
+  Invoke();
+  Invalidate();
 }
 
-
-void
-BSpinner::Range(int32* min, int32* max)
-{
-	*min = fMinValue;
-	*max = fMaxValue;
-}
-
-
-void
-BSpinner::SetRange(int32 min, int32 max)
-{
-	SetMinValue(min);
-	SetMaxValue(max);
-}
-
-
-void
-BSpinner::SetValue(int32 value)
-{
-	// clip to range
-	if (value < fMinValue)
-		value = fMinValue;
-	else if (value > fMaxValue)
-		value = fMaxValue;
-
-	// update the text view
-	BString valueString;
-	valueString << value;
-	TextView()->SetText(valueString.String());
-
-	// update the up and down arrows
-	SetIncrementEnabled(IsEnabled() && value < fMaxValue);
-	SetDecrementEnabled(IsEnabled() && value > fMinValue);
-
-	if (value == fValue)
-		return;
-
-	fValue = value;
-	ValueChanged();
-
-	Invoke();
-	Invalidate();
-}
-
-
-void
-BSpinner::SetValueFromText()
-{
-	SetValue(atol(TextView()->Text()));
-}
-
+void BSpinner::SetValueFromText() { SetValue(atol(TextView()->Text())); }
 
 //	#pragma mark - BSpinner private methods
 
+void BSpinner::_InitObject() {
+  fMinValue = INT32_MIN;
+  fMaxValue = INT32_MAX;
+  fValue = 0;
 
-void
-BSpinner::_InitObject()
-{
-	fMinValue = INT32_MIN;
-	fMaxValue = INT32_MAX;
-	fValue = 0;
+  TextView()->SetAlignment(B_ALIGN_RIGHT);
+  for (uint32 c = 0; c <= 42; c++)
+    TextView()->DisallowChar(c);
 
-	TextView()->SetAlignment(B_ALIGN_RIGHT);
-	for (uint32 c = 0; c <= 42; c++)
-		TextView()->DisallowChar(c);
+  TextView()->DisallowChar(',');
 
-	TextView()->DisallowChar(',');
+  for (uint32 c = 46; c <= 47; c++)
+    TextView()->DisallowChar(c);
 
-	for (uint32 c = 46; c <= 47; c++)
-		TextView()->DisallowChar(c);
-
-	for (uint32 c = 58; c <= 127; c++)
-		TextView()->DisallowChar(c);
+  for (uint32 c = 58; c <= 127; c++)
+    TextView()->DisallowChar(c);
 }
-
 
 // FBC padding
 

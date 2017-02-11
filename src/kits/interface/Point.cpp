@@ -7,85 +7,52 @@
  *		John Scipione, jscipione@gmail.com
  */
 
-
 #include <os/interface/Point.h>
 
 #include <algorithm>
 
 #include <stdio.h>
 
-#include <os/support/SupportDefs.h>
 #include <os/interface/Rect.h>
-
+#include <os/support/SupportDefs.h>
 
 const BPoint B_ORIGIN(0, 0);
 
-
-void
-BPoint::ConstrainTo(BRect rect)
-{
-	x = std::max(std::min(x, rect.right), rect.left);
-	y = std::max(std::min(y, rect.bottom), rect.top);
+void BPoint::ConstrainTo(BRect rect) {
+  x = std::max(std::min(x, rect.right), rect.left);
+  y = std::max(std::min(y, rect.bottom), rect.top);
 }
 
+void BPoint::PrintToStream() const { printf("BPoint(x:%.0f, y:%.0f)\n", x, y); }
 
-void
-BPoint::PrintToStream() const
-{
-	printf("BPoint(x:%.0f, y:%.0f)\n", x, y);
+BPoint BPoint::operator-() const { return BPoint(-x, -y); }
+
+BPoint BPoint::operator+(const BPoint &other) const {
+  return BPoint(x + other.x, y + other.y);
 }
 
-
-BPoint
-BPoint::operator-() const
-{
-	return BPoint(-x, -y);
+BPoint BPoint::operator-(const BPoint &other) const {
+  return BPoint(x - other.x, y - other.y);
 }
 
+BPoint &BPoint::operator+=(const BPoint &other) {
+  x += other.x;
+  y += other.y;
 
-BPoint
-BPoint::operator+(const BPoint& other) const
-{
-	return BPoint(x + other.x, y + other.y);
+  return *this;
 }
 
+BPoint &BPoint::operator-=(const BPoint &other) {
+  x -= other.x;
+  y -= other.y;
 
-BPoint
-BPoint::operator-(const BPoint& other) const
-{
-	return BPoint(x - other.x, y - other.y);
+  return *this;
 }
 
-
-BPoint&
-BPoint::operator+=(const BPoint& other)
-{
-	x += other.x;
-	y += other.y;
-
-	return *this;
+bool BPoint::operator!=(const BPoint &other) const {
+  return x != other.x || y != other.y;
 }
 
-
-BPoint&
-BPoint::operator-=(const BPoint& other)
-{
-	x -= other.x;
-	y -= other.y;
-
-	return *this;
-}
-
-
-bool
-BPoint::operator!=(const BPoint& other) const
-{
-	return x != other.x || y != other.y;
-}
-
-
-bool
-BPoint::operator==(const BPoint& other) const
-{
-	return x == other.x && y == other.y;
+bool BPoint::operator==(const BPoint &other) const {
+  return x == other.x && y == other.y;
 }

@@ -3,13 +3,12 @@
  * All rights reserved. Distributed under the terms of the MIT License.
  *
  * Layouter implementation that can handle simple layout constraints
- * (restricting one element) only. It is 
+ * (restricting one element) only. It is
  */
-#ifndef	SIMPLE_LAYOUTER_H
-#define	SIMPLE_LAYOUTER_H
+#ifndef SIMPLE_LAYOUTER_H
+#define SIMPLE_LAYOUTER_H
 
 #include "Layouter.h"
-
 
 class BList;
 
@@ -18,55 +17,54 @@ namespace Layout {
 
 class SimpleLayouter : public Layouter {
 public:
-								SimpleLayouter(int32 elementCount,
-									float spacing);
-	virtual						~SimpleLayouter();
+  SimpleLayouter(int32 elementCount, float spacing);
+  virtual ~SimpleLayouter();
 
-	virtual	void				AddConstraints(int32 element, int32 length,
-									float min, float max, float preferred);
-	virtual	void				SetWeight(int32 element, float weight);
+  virtual void AddConstraints(int32 element, int32 length, float min, float max,
+                              float preferred);
+  virtual void SetWeight(int32 element, float weight);
 
-	virtual	float				MinSize();
-	virtual	float				MaxSize();
-	virtual	float				PreferredSize();
+  virtual float MinSize();
+  virtual float MaxSize();
+  virtual float PreferredSize();
 
-	virtual	LayoutInfo*			CreateLayoutInfo();
-	
-	virtual	void				Layout(LayoutInfo* layoutInfo, float size);
+  virtual LayoutInfo *CreateLayoutInfo();
 
-	virtual	Layouter*			CloneLayouter();
+  virtual void Layout(LayoutInfo *layoutInfo, float size);
 
-	static	void				DistributeSize(int32 size, float weights[],
-									int32 sizes[], int32 count);
+  virtual Layouter *CloneLayouter();
 
-private:
-	static	long				_CalculateSumWeight(BList& elementInfos);
-	
-			void				_ValidateMinMax();
-			void				_LayoutMax();
-			void				_LayoutStandard();
+  static void DistributeSize(int32 size, float weights[], int32 sizes[],
+                             int32 count);
 
 private:
-			class ElementLayoutInfo;
-			class ElementInfo;
-			class MyLayoutInfo;
+  static long _CalculateSumWeight(BList &elementInfos);
 
-			int32				fElementCount;
-			int32				fSpacing;
-			ElementInfo*		fElements;
+  void _ValidateMinMax();
+  void _LayoutMax();
+  void _LayoutStandard();
 
-			int32				fMin;
-			int32				fMax;
-			int32				fPreferred;
+private:
+  class ElementLayoutInfo;
+  class ElementInfo;
+  class MyLayoutInfo;
 
-			bool				fMinMaxValid;
+  int32 fElementCount;
+  int32 fSpacing;
+  ElementInfo *fElements;
 
-			MyLayoutInfo*		fLayoutInfo;
+  int32 fMin;
+  int32 fMax;
+  int32 fPreferred;
+
+  bool fMinMaxValid;
+
+  MyLayoutInfo *fLayoutInfo;
 };
 
-}	// namespace Layout
-}	// namespace BPrivate
+} // namespace Layout
+} // namespace BPrivate
 
 using BPrivate::Layout::SimpleLayouter;
 
-#endif	// SIMPLE_LAYOUTER_H
+#endif // SIMPLE_LAYOUTER_H

@@ -4,204 +4,117 @@
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
-
 #include <os/interface/AbstractLayoutItem.h>
 
-#include <os/interface/LayoutUtils.h>
 #include <os/app/Message.h>
-
+#include <os/interface/LayoutUtils.h>
 
 namespace {
-	const char* const kSizesField = "BAbstractLayoutItem:sizes";
-		// kSizesField == {min, max, preferred}
-	const char* const kAlignmentField = "BAbstractLayoutItem:alignment";
+const char *const kSizesField = "BAbstractLayoutItem:sizes";
+// kSizesField == {min, max, preferred}
+const char *const kAlignmentField = "BAbstractLayoutItem:alignment";
 }
-
 
 BAbstractLayoutItem::BAbstractLayoutItem()
-	:
-	fMinSize(),
-	fMaxSize(),
-	fPreferredSize(),
-	fAlignment()
-{
+    : fMinSize(), fMaxSize(), fPreferredSize(), fAlignment() {}
+
+BAbstractLayoutItem::BAbstractLayoutItem(BMessage *from)
+    : BLayoutItem(from), fMinSize(), fMaxSize(), fPreferredSize(),
+      fAlignment() {
+  from->FindSize(kSizesField, 0, &fMinSize);
+  from->FindSize(kSizesField, 1, &fMaxSize);
+  from->FindSize(kSizesField, 2, &fPreferredSize);
+  from->FindAlignment(kAlignmentField, &fAlignment);
 }
 
+BAbstractLayoutItem::~BAbstractLayoutItem() {}
 
-BAbstractLayoutItem::BAbstractLayoutItem(BMessage* from)
-	:
-	BLayoutItem(from),
-	fMinSize(),
-	fMaxSize(),
-	fPreferredSize(),
-	fAlignment()
-{
-	from->FindSize(kSizesField, 0, &fMinSize);
-	from->FindSize(kSizesField, 1, &fMaxSize);
-	from->FindSize(kSizesField, 2, &fPreferredSize);
-	from->FindAlignment(kAlignmentField, &fAlignment);
+BSize BAbstractLayoutItem::MinSize() {
+  return BLayoutUtils::ComposeSize(fMinSize, BaseMinSize());
 }
 
-
-BAbstractLayoutItem::~BAbstractLayoutItem()
-{
+BSize BAbstractLayoutItem::MaxSize() {
+  return BLayoutUtils::ComposeSize(fMaxSize, BaseMaxSize());
 }
 
-
-BSize
-BAbstractLayoutItem::MinSize()
-{
-	return BLayoutUtils::ComposeSize(fMinSize, BaseMinSize());
+BSize BAbstractLayoutItem::PreferredSize() {
+  return BLayoutUtils::ComposeSize(fMaxSize, BasePreferredSize());
 }
 
-
-BSize
-BAbstractLayoutItem::MaxSize()
-{
-	return BLayoutUtils::ComposeSize(fMaxSize, BaseMaxSize());
+BAlignment BAbstractLayoutItem::Alignment() {
+  return BLayoutUtils::ComposeAlignment(fAlignment, BaseAlignment());
 }
 
+void BAbstractLayoutItem::SetExplicitMinSize(BSize size) { fMinSize = size; }
 
-BSize
-BAbstractLayoutItem::PreferredSize()
-{
-	return BLayoutUtils::ComposeSize(fMaxSize, BasePreferredSize());
+void BAbstractLayoutItem::SetExplicitMaxSize(BSize size) { fMaxSize = size; }
+
+void BAbstractLayoutItem::SetExplicitPreferredSize(BSize size) {
+  fPreferredSize = size;
 }
 
-
-BAlignment
-BAbstractLayoutItem::Alignment()
-{
-	return BLayoutUtils::ComposeAlignment(fAlignment, BaseAlignment());
+void BAbstractLayoutItem::SetExplicitAlignment(BAlignment alignment) {
+  fAlignment = alignment;
 }
 
+BSize BAbstractLayoutItem::BaseMinSize() { return BSize(0, 0); }
 
-void
-BAbstractLayoutItem::SetExplicitMinSize(BSize size)
-{
-	fMinSize = size;
+BSize BAbstractLayoutItem::BaseMaxSize() {
+  return BSize(B_SIZE_UNLIMITED, B_SIZE_UNLIMITED);
 }
 
+BSize BAbstractLayoutItem::BasePreferredSize() { return BSize(0, 0); }
 
-void
-BAbstractLayoutItem::SetExplicitMaxSize(BSize size)
-{
-	fMaxSize = size;
+BAlignment BAbstractLayoutItem::BaseAlignment() {
+  return BAlignment(B_ALIGN_HORIZONTAL_CENTER, B_ALIGN_VERTICAL_CENTER);
 }
 
+status_t BAbstractLayoutItem::Archive(BMessage *into, bool deep) const {
+  BArchiver archiver(into);
+  status_t err = BLayoutItem::Archive(into, deep);
 
-void
-BAbstractLayoutItem::SetExplicitPreferredSize(BSize size)
-{
-	fPreferredSize = size;
+  if (err == B_OK)
+    err = into->AddSize(kSizesField, fMinSize);
+
+  if (err == B_OK)
+    err = into->AddSize(kSizesField, fMaxSize);
+
+  if (err == B_OK)
+    err = into->AddSize(kSizesField, fPreferredSize);
+
+  if (err == B_OK)
+    err = into->AddAlignment(kAlignmentField, fAlignment);
+
+  return archiver.Finish(err);
 }
 
-
-void
-BAbstractLayoutItem::SetExplicitAlignment(BAlignment alignment)
-{
-	fAlignment = alignment;
+status_t BAbstractLayoutItem::AllUnarchived(const BMessage *archive) {
+  return BLayoutItem::AllUnarchived(archive);
 }
 
-
-BSize
-BAbstractLayoutItem::BaseMinSize()
-{
-	return BSize(0, 0);
+status_t BAbstractLayoutItem::AllArchived(BMessage *archive) const {
+  return BLayoutItem::AllArchived(archive);
 }
 
-
-BSize
-BAbstractLayoutItem::BaseMaxSize()
-{
-	return BSize(B_SIZE_UNLIMITED, B_SIZE_UNLIMITED);
+void BAbstractLayoutItem::LayoutInvalidated(bool children) {
+  BLayoutItem::LayoutInvalidated(children);
 }
 
-
-BSize
-BAbstractLayoutItem::BasePreferredSize()
-{
-	return BSize(0, 0);
+void BAbstractLayoutItem::AttachedToLayout() {
+  BLayoutItem::AttachedToLayout();
 }
 
-
-BAlignment
-BAbstractLayoutItem::BaseAlignment()
-{
-	return BAlignment(B_ALIGN_HORIZONTAL_CENTER, B_ALIGN_VERTICAL_CENTER);
+void BAbstractLayoutItem::DetachedFromLayout(BLayout *layout) {
+  BLayoutItem::DetachedFromLayout(layout);
 }
 
-
-status_t
-BAbstractLayoutItem::Archive(BMessage* into, bool deep) const
-{
-	BArchiver archiver(into);
-	status_t err = BLayoutItem::Archive(into, deep);
-
-	if (err == B_OK)
-		err = into->AddSize(kSizesField, fMinSize);
-
-	if (err == B_OK)
-		err = into->AddSize(kSizesField, fMaxSize);
-
-	if (err == B_OK)
-		err = into->AddSize(kSizesField, fPreferredSize);
-
-	if (err == B_OK)
-		err = into->AddAlignment(kAlignmentField, fAlignment);
-
-	return archiver.Finish(err);
+void BAbstractLayoutItem::AncestorVisibilityChanged(bool shown) {
+  BLayoutItem::AncestorVisibilityChanged(shown);
 }
 
-
-status_t
-BAbstractLayoutItem::AllUnarchived(const BMessage* archive)
-{
-	return BLayoutItem::AllUnarchived(archive);
+status_t BAbstractLayoutItem::Perform(perform_code d, void *arg) {
+  return BLayoutItem::Perform(d, arg);
 }
-
-
-status_t
-BAbstractLayoutItem::AllArchived(BMessage* archive) const
-{
-	return BLayoutItem::AllArchived(archive);
-}
-
-
-void
-BAbstractLayoutItem::LayoutInvalidated(bool children)
-{
-	BLayoutItem::LayoutInvalidated(children);
-}
-
-
-void
-BAbstractLayoutItem::AttachedToLayout()
-{
-	BLayoutItem::AttachedToLayout();
-}
-
-
-void
-BAbstractLayoutItem::DetachedFromLayout(BLayout* layout)
-{
-	BLayoutItem::DetachedFromLayout(layout);
-}
-
-
-void
-BAbstractLayoutItem::AncestorVisibilityChanged(bool shown)
-{
-	BLayoutItem::AncestorVisibilityChanged(shown);
-}
-
-
-status_t
-BAbstractLayoutItem::Perform(perform_code d, void* arg)
-{
-	return BLayoutItem::Perform(d, arg);
-}
-
 
 void BAbstractLayoutItem::_ReservedAbstractLayoutItem1() {}
 void BAbstractLayoutItem::_ReservedAbstractLayoutItem2() {}
@@ -213,4 +126,3 @@ void BAbstractLayoutItem::_ReservedAbstractLayoutItem7() {}
 void BAbstractLayoutItem::_ReservedAbstractLayoutItem8() {}
 void BAbstractLayoutItem::_ReservedAbstractLayoutItem9() {}
 void BAbstractLayoutItem::_ReservedAbstractLayoutItem10() {}
-

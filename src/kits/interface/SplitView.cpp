@@ -8,385 +8,241 @@
 
 #include <stdio.h>
 
-#include <os/support/Archivable.h>
-#include <os/interface/ControlLook.h>
 #include <os/app/Cursor.h>
+#include <os/interface/ControlLook.h>
+#include <os/support/Archivable.h>
 
 #include "SplitLayout.h"
 
-
 BSplitView::BSplitView(orientation orientation, float spacing)
-	:
-	BView(NULL,
-		B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE | B_INVALIDATE_AFTER_LAYOUT,
-		fSplitLayout = new BSplitLayout(orientation, spacing))
-{
+    : BView(NULL,
+            B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE | B_INVALIDATE_AFTER_LAYOUT,
+            fSplitLayout = new BSplitLayout(orientation, spacing)) {}
+
+BSplitView::BSplitView(BMessage *from)
+    : BView(BUnarchiver::PrepareArchive(from)), fSplitLayout(NULL) {
+  BUnarchiver(from).Finish();
 }
 
+BSplitView::~BSplitView() {}
 
-BSplitView::BSplitView(BMessage* from)
-	:
-	BView(BUnarchiver::PrepareArchive(from)),
-	fSplitLayout(NULL)
-{
-	BUnarchiver(from).Finish();
+void BSplitView::SetInsets(float left, float top, float right, float bottom) {
+  left = BControlLook::ComposeSpacing(left);
+  top = BControlLook::ComposeSpacing(top);
+  right = BControlLook::ComposeSpacing(right);
+  bottom = BControlLook::ComposeSpacing(bottom);
+
+  fSplitLayout->SetInsets(left, top, right, bottom);
 }
 
-
-BSplitView::~BSplitView()
-{
+void BSplitView::SetInsets(float horizontal, float vertical) {
+  horizontal = BControlLook::ComposeSpacing(horizontal);
+  vertical = BControlLook::ComposeSpacing(vertical);
+  fSplitLayout->SetInsets(horizontal, vertical, horizontal, vertical);
 }
 
-
-void
-BSplitView::SetInsets(float left, float top, float right, float bottom)
-{
-	left = BControlLook::ComposeSpacing(left);
-	top = BControlLook::ComposeSpacing(top);
-	right = BControlLook::ComposeSpacing(right);
-	bottom = BControlLook::ComposeSpacing(bottom);
-
-	fSplitLayout->SetInsets(left, top, right, bottom);
+void BSplitView::SetInsets(float insets) {
+  insets = BControlLook::ComposeSpacing(insets);
+  fSplitLayout->SetInsets(insets, insets, insets, insets);
 }
 
-
-void
-BSplitView::SetInsets(float horizontal, float vertical)
-{
-	horizontal = BControlLook::ComposeSpacing(horizontal);
-	vertical = BControlLook::ComposeSpacing(vertical);
-	fSplitLayout->SetInsets(horizontal, vertical, horizontal, vertical);
+void BSplitView::GetInsets(float *left, float *top, float *right,
+                           float *bottom) const {
+  fSplitLayout->GetInsets(left, top, right, bottom);
 }
 
+float BSplitView::Spacing() const { return fSplitLayout->Spacing(); }
 
-void
-BSplitView::SetInsets(float insets)
-{
-	insets = BControlLook::ComposeSpacing(insets);
-	fSplitLayout->SetInsets(insets, insets, insets, insets);
+void BSplitView::SetSpacing(float spacing) {
+  fSplitLayout->SetSpacing(spacing);
 }
 
-
-void
-BSplitView::GetInsets(float* left, float* top, float* right,
-	float* bottom) const
-{
-	fSplitLayout->GetInsets(left, top, right, bottom);
+orientation BSplitView::Orientation() const {
+  return fSplitLayout->Orientation();
 }
 
-
-float
-BSplitView::Spacing() const
-{
-	return fSplitLayout->Spacing();
+void BSplitView::SetOrientation(orientation orientation) {
+  fSplitLayout->SetOrientation(orientation);
 }
 
+float BSplitView::SplitterSize() const { return fSplitLayout->SplitterSize(); }
 
-void
-BSplitView::SetSpacing(float spacing)
-{
-	fSplitLayout->SetSpacing(spacing);
+void BSplitView::SetSplitterSize(float size) {
+  fSplitLayout->SetSplitterSize(size);
 }
 
+int32 BSplitView::CountItems() const { return fSplitLayout->CountItems(); }
 
-orientation
-BSplitView::Orientation() const
-{
-	return fSplitLayout->Orientation();
+float BSplitView::ItemWeight(int32 index) const {
+  return fSplitLayout->ItemWeight(index);
 }
 
-
-void
-BSplitView::SetOrientation(orientation orientation)
-{
-	fSplitLayout->SetOrientation(orientation);
+float BSplitView::ItemWeight(BLayoutItem *item) const {
+  return fSplitLayout->ItemWeight(item);
 }
 
-
-float
-BSplitView::SplitterSize() const
-{
-	return fSplitLayout->SplitterSize();
+void BSplitView::SetItemWeight(int32 index, float weight,
+                               bool invalidateLayout) {
+  fSplitLayout->SetItemWeight(index, weight, invalidateLayout);
 }
 
-
-void
-BSplitView::SetSplitterSize(float size)
-{
-	fSplitLayout->SetSplitterSize(size);
+void BSplitView::SetItemWeight(BLayoutItem *item, float weight) {
+  fSplitLayout->SetItemWeight(item, weight);
 }
 
-
-int32
-BSplitView::CountItems() const
-{
-	return fSplitLayout->CountItems();
+bool BSplitView::IsCollapsible(int32 index) const {
+  return fSplitLayout->IsCollapsible(index);
 }
 
-
-float
-BSplitView::ItemWeight(int32 index) const
-{
-	return fSplitLayout->ItemWeight(index);
+void BSplitView::SetCollapsible(bool collapsible) {
+  fSplitLayout->SetCollapsible(collapsible);
 }
 
-
-float
-BSplitView::ItemWeight(BLayoutItem* item) const
-{
-	return fSplitLayout->ItemWeight(item);
+void BSplitView::SetCollapsible(int32 index, bool collapsible) {
+  fSplitLayout->SetCollapsible(index, collapsible);
 }
 
-
-void
-BSplitView::SetItemWeight(int32 index, float weight, bool invalidateLayout)
-{
-	fSplitLayout->SetItemWeight(index, weight, invalidateLayout);
+void BSplitView::SetCollapsible(int32 first, int32 last, bool collapsible) {
+  fSplitLayout->SetCollapsible(first, last, collapsible);
 }
 
-
-void
-BSplitView::SetItemWeight(BLayoutItem* item, float weight)
-{
-	fSplitLayout->SetItemWeight(item, weight);
+bool BSplitView::IsItemCollapsed(int32 index) const {
+  return fSplitLayout->IsItemCollapsed(index);
 }
 
-
-bool
-BSplitView::IsCollapsible(int32 index) const
-{
-	return fSplitLayout->IsCollapsible(index);
+void BSplitView::SetItemCollapsed(int32 index, bool collapsed) {
+  fSplitLayout->SetItemCollapsed(index, collapsed);
 }
 
-
-void
-BSplitView::SetCollapsible(bool collapsible)
-{
-	fSplitLayout->SetCollapsible(collapsible);
+void BSplitView::AddChild(BView *child, BView *sibling) {
+  BView::AddChild(child, sibling);
 }
 
-
-void
-BSplitView::SetCollapsible(int32 index, bool collapsible)
-{
-	fSplitLayout->SetCollapsible(index, collapsible);
+bool BSplitView::AddChild(BView *child, float weight) {
+  return fSplitLayout->AddView(child, weight);
 }
 
-
-void
-BSplitView::SetCollapsible(int32 first, int32 last, bool collapsible)
-{
-	fSplitLayout->SetCollapsible(first, last, collapsible);
+bool BSplitView::AddChild(int32 index, BView *child, float weight) {
+  return fSplitLayout->AddView(index, child, weight);
 }
 
-
-bool
-BSplitView::IsItemCollapsed(int32 index) const
-{
-	return fSplitLayout->IsItemCollapsed(index);
+bool BSplitView::AddChild(BLayoutItem *child) {
+  return fSplitLayout->AddItem(child);
 }
 
-
-void
-BSplitView::SetItemCollapsed(int32 index, bool collapsed)
-{
-	fSplitLayout->SetItemCollapsed(index, collapsed);
+bool BSplitView::AddChild(BLayoutItem *child, float weight) {
+  return fSplitLayout->AddItem(child, weight);
 }
 
-
-void
-BSplitView::AddChild(BView* child, BView* sibling)
-{
-	BView::AddChild(child, sibling);
+bool BSplitView::AddChild(int32 index, BLayoutItem *child, float weight) {
+  return fSplitLayout->AddItem(index, child, weight);
 }
 
+void BSplitView::AttachedToWindow() { AdoptParentColors(); }
 
-bool
-BSplitView::AddChild(BView* child, float weight)
-{
-	return fSplitLayout->AddView(child, weight);
+void BSplitView::Draw(BRect updateRect) {
+  // draw the splitters
+  int32 draggedSplitterIndex = fSplitLayout->DraggedSplitter();
+  int32 count = fSplitLayout->CountItems();
+  for (int32 i = 0; i < count - 1; i++) {
+    BRect frame = fSplitLayout->SplitterItemFrame(i);
+    DrawSplitter(frame, updateRect, Orientation(), draggedSplitterIndex == i);
+  }
 }
 
-
-bool
-BSplitView::AddChild(int32 index, BView* child, float weight)
-{
-	return fSplitLayout->AddView(index, child, weight);
+void BSplitView::DrawAfterChildren(BRect r) {
+  return BView::DrawAfterChildren(r);
 }
 
+void BSplitView::MouseDown(BPoint where) {
+  SetMouseEventMask(B_POINTER_EVENTS,
+                    B_LOCK_WINDOW_FOCUS | B_SUSPEND_VIEW_FOCUS);
 
-bool
-BSplitView::AddChild(BLayoutItem* child)
-{
-	return fSplitLayout->AddItem(child);
+  if (fSplitLayout->StartDraggingSplitter(where))
+    Invalidate();
 }
 
-
-bool
-BSplitView::AddChild(BLayoutItem* child, float weight)
-{
-	return fSplitLayout->AddItem(child, weight);
+void BSplitView::MouseUp(BPoint where) {
+  if (fSplitLayout->StopDraggingSplitter()) {
+    Relayout();
+    Invalidate();
+  }
 }
 
+void BSplitView::MouseMoved(BPoint where, uint32 transit,
+                            const BMessage *message) {
+  BCursor cursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 
-bool
-BSplitView::AddChild(int32 index, BLayoutItem* child, float weight)
-{
-	return fSplitLayout->AddItem(index, child, weight);
+  int32 splitterIndex = fSplitLayout->DraggedSplitter();
+
+  if (splitterIndex >= 0 || fSplitLayout->IsAboveSplitter(where)) {
+    if (Orientation() == B_VERTICAL)
+      cursor = BCursor(B_CURSOR_ID_RESIZE_NORTH_SOUTH);
+    else
+      cursor = BCursor(B_CURSOR_ID_RESIZE_EAST_WEST);
+  }
+
+  if (splitterIndex >= 0) {
+    BRect oldFrame = fSplitLayout->SplitterItemFrame(splitterIndex);
+    if (fSplitLayout->DragSplitter(where)) {
+      Invalidate(oldFrame);
+      Invalidate(fSplitLayout->SplitterItemFrame(splitterIndex));
+    }
+  }
+
+  SetViewCursor(&cursor, true);
 }
 
-
-void
-BSplitView::AttachedToWindow()
-{
-	AdoptParentColors();
+void BSplitView::MessageReceived(BMessage *message) {
+  return BView::MessageReceived(message);
 }
 
-
-void
-BSplitView::Draw(BRect updateRect)
-{
-	// draw the splitters
-	int32 draggedSplitterIndex = fSplitLayout->DraggedSplitter();
-	int32 count = fSplitLayout->CountItems();
-	for (int32 i = 0; i < count - 1; i++) {
-		BRect frame = fSplitLayout->SplitterItemFrame(i);
-		DrawSplitter(frame, updateRect, Orientation(),
-			draggedSplitterIndex == i);
-	}
+void BSplitView::SetLayout(BLayout *layout) {
+  // not allowed
 }
 
-
-void
-BSplitView::DrawAfterChildren(BRect r)
-{
-	return BView::DrawAfterChildren(r);
+status_t BSplitView::Archive(BMessage *into, bool deep) const {
+  return BView::Archive(into, deep);
 }
 
-
-void
-BSplitView::MouseDown(BPoint where)
-{
-	SetMouseEventMask(B_POINTER_EVENTS,
-		B_LOCK_WINDOW_FOCUS | B_SUSPEND_VIEW_FOCUS);
-
-	if (fSplitLayout->StartDraggingSplitter(where))
-		Invalidate();
+status_t BSplitView::AllArchived(BMessage *archive) const {
+  return BView::AllArchived(archive);
 }
 
-
-void
-BSplitView::MouseUp(BPoint where)
-{
-	if (fSplitLayout->StopDraggingSplitter()) {
-		Relayout();
-		Invalidate();
-	}
+status_t BSplitView::AllUnarchived(const BMessage *from) {
+  status_t err = BView::AllUnarchived(from);
+  if (err == B_OK) {
+    fSplitLayout = dynamic_cast<BSplitLayout *>(GetLayout());
+    if (!fSplitLayout && GetLayout())
+      return B_BAD_TYPE;
+    else if (!fSplitLayout)
+      return B_ERROR;
+  }
+  return err;
 }
 
-
-void
-BSplitView::MouseMoved(BPoint where, uint32 transit, const BMessage* message)
-{
-	BCursor cursor(B_CURSOR_ID_SYSTEM_DEFAULT);
-
-	int32 splitterIndex = fSplitLayout->DraggedSplitter();
-
-	if (splitterIndex >= 0 || fSplitLayout->IsAboveSplitter(where)) {
-		if (Orientation() == B_VERTICAL)
-			cursor = BCursor(B_CURSOR_ID_RESIZE_NORTH_SOUTH);
-		else
-			cursor = BCursor(B_CURSOR_ID_RESIZE_EAST_WEST);
-	}
-
-	if (splitterIndex >= 0) {
-		BRect oldFrame = fSplitLayout->SplitterItemFrame(splitterIndex);
-		if (fSplitLayout->DragSplitter(where)) {
-			Invalidate(oldFrame);
-			Invalidate(fSplitLayout->SplitterItemFrame(splitterIndex));
-		}
-	}
-
-	SetViewCursor(&cursor, true);
+BArchivable *BSplitView::Instantiate(BMessage *from) {
+  if (validate_instantiation(from, "BSplitView"))
+    return new BSplitView(from);
+  return NULL;
 }
 
-
-void
-BSplitView::MessageReceived(BMessage* message)
-{
-	return BView::MessageReceived(message);
+void BSplitView::DrawSplitter(BRect frame, const BRect &updateRect,
+                              orientation orientation, bool pressed) {
+  _DrawDefaultSplitter(this, frame, updateRect, orientation, pressed);
 }
 
-
-void
-BSplitView::SetLayout(BLayout* layout)
-{
-	// not allowed
+void BSplitView::_DrawDefaultSplitter(BView *view, BRect frame,
+                                      const BRect &updateRect,
+                                      orientation orientation, bool pressed) {
+  uint32 flags = pressed ? BControlLook::B_ACTIVATED : 0;
+  be_control_look->DrawSplitter(view, frame, updateRect, view->ViewColor(),
+                                orientation, flags, 0);
 }
 
-
-status_t
-BSplitView::Archive(BMessage* into, bool deep) const
-{
-	return BView::Archive(into, deep);
+status_t BSplitView::Perform(perform_code d, void *arg) {
+  return BView::Perform(d, arg);
 }
-
-
-status_t
-BSplitView::AllArchived(BMessage* archive) const
-{
-	return BView::AllArchived(archive);
-}
-
-
-status_t
-BSplitView::AllUnarchived(const BMessage* from)
-{
-	status_t err = BView::AllUnarchived(from);
-	if (err == B_OK) {
-		fSplitLayout = dynamic_cast<BSplitLayout*>(GetLayout());
-		if (!fSplitLayout && GetLayout())
-			return B_BAD_TYPE;
-		else if (!fSplitLayout)
-			return B_ERROR;
-	}
-	return err;
-}
-
-
-BArchivable*
-BSplitView::Instantiate(BMessage* from)
-{
-	if (validate_instantiation(from, "BSplitView"))
-		return new BSplitView(from);
-	return NULL;
-}
-
-
-void
-BSplitView::DrawSplitter(BRect frame, const BRect& updateRect,
-	orientation orientation, bool pressed)
-{
-	_DrawDefaultSplitter(this, frame, updateRect, orientation, pressed);
-}
-
-
-void
-BSplitView::_DrawDefaultSplitter(BView* view, BRect frame,
-	const BRect& updateRect, orientation orientation, bool pressed)
-{
-	uint32 flags = pressed ? BControlLook::B_ACTIVATED : 0;
-	be_control_look->DrawSplitter(view, frame, updateRect, view->ViewColor(),
-		orientation, flags, 0);
-}
-
-
-status_t
-BSplitView::Perform(perform_code d, void* arg)
-{
-	return BView::Perform(d, arg);
-}
-
 
 void BSplitView::_ReservedSplitView1() {}
 void BSplitView::_ReservedSplitView2() {}

@@ -5,74 +5,44 @@
  * Distributed under the terms of the MIT License.
  */
 
-
 #include <os/interface/GroupView.h>
 
-
 BGroupView::BGroupView(orientation orientation, float spacing)
-	:
-	BView(NULL, 0, new BGroupLayout(orientation, spacing))
-{
-	AdoptSystemColors();
+    : BView(NULL, 0, new BGroupLayout(orientation, spacing)) {
+  AdoptSystemColors();
 }
 
-
-BGroupView::BGroupView(const char* name, orientation orientation,
-	float spacing)
-	:
-	BView(name, 0, new BGroupLayout(orientation, spacing))
-{
-	AdoptSystemColors();
+BGroupView::BGroupView(const char *name, orientation orientation, float spacing)
+    : BView(name, 0, new BGroupLayout(orientation, spacing)) {
+  AdoptSystemColors();
 }
 
+BGroupView::BGroupView(BMessage *from) : BView(from) { AdoptSystemColors(); }
 
-BGroupView::BGroupView(BMessage* from)
-	:
-	BView(from)
-{
-	AdoptSystemColors();
+BGroupView::~BGroupView() {}
+
+void BGroupView::SetLayout(BLayout *layout) {
+  // only BGroupLayouts are allowed
+  if (!dynamic_cast<BGroupLayout *>(layout))
+    return;
+
+  BView::SetLayout(layout);
 }
 
+BArchivable *BGroupView::Instantiate(BMessage *from) {
+  if (validate_instantiation(from, "BGroupView"))
+    return new BGroupView(from);
 
-BGroupView::~BGroupView()
-{
+  return NULL;
 }
 
-
-void
-BGroupView::SetLayout(BLayout* layout)
-{
-	// only BGroupLayouts are allowed
-	if (!dynamic_cast<BGroupLayout*>(layout))
-		return;
-
-	BView::SetLayout(layout);
+BGroupLayout *BGroupView::GroupLayout() const {
+  return dynamic_cast<BGroupLayout *>(GetLayout());
 }
 
-
-BArchivable*
-BGroupView::Instantiate(BMessage* from)
-{
-	if (validate_instantiation(from, "BGroupView"))
-		return new BGroupView(from);
-
-	return NULL;
+status_t BGroupView::Perform(perform_code code, void *_data) {
+  return BView::Perform(code, _data);
 }
-
-
-BGroupLayout*
-BGroupView::GroupLayout() const
-{
-	return dynamic_cast<BGroupLayout*>(GetLayout());
-}
-
-
-status_t
-BGroupView::Perform(perform_code code, void* _data)
-{
-	return BView::Perform(code, _data);
-}
-
 
 void BGroupView::_ReservedGroupView1() {}
 void BGroupView::_ReservedGroupView2() {}

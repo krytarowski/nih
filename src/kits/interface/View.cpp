@@ -11,7 +11,6 @@
  *		Joseph Groover, looncraz@looncraz.net
  */
 
-
 #include <os/interface/View.h>
 
 #include <algorithm>
@@ -21,4366 +20,3617 @@
 #include <stdio.h>
 
 #include <os/app/Application.h>
+#include <os/app/Cursor.h>
+#include <os/app/Message.h>
+#include <os/app/MessageQueue.h>
+#include <os/app/PropertyInfo.h>
 #include <os/interface/Bitmap.h>
 #include <os/interface/Button.h>
-#include <os/app/Cursor.h>
-#include <os/storage/File.h>
+#include <os/interface/GradientConic.h>
+#include <os/interface/GradientDiamond.h>
 #include <os/interface/GradientLinear.h>
 #include <os/interface/GradientRadial.h>
 #include <os/interface/GradientRadialFocus.h>
-#include <os/interface/GradientDiamond.h>
-#include <os/interface/GradientConic.h>
 #include <os/interface/InterfaceDefs.h>
 #include <os/interface/Layout.h>
 #include <os/interface/LayoutContext.h>
 #include <os/interface/LayoutUtils.h>
 #include <os/interface/MenuBar.h>
-#include <os/app/Message.h>
-#include <os/app/MessageQueue.h>
-#include <os/support/ObjectList.h>
 #include <os/interface/Picture.h>
 #include <os/interface/Point.h>
 #include <os/interface/Polygon.h>
-#include <os/app/PropertyInfo.h>
 #include <os/interface/Region.h>
 #include <os/interface/ScrollBar.h>
 #include <os/interface/Shape.h>
 #include <os/interface/Shelf.h>
-#include <os/support/String.h>
 #include <os/interface/Window.h>
+#include <os/storage/File.h>
+#include <os/support/ObjectList.h>
+#include <os/support/String.h>
 
 #include <private/app/AppMisc.h>
 #include <private/app/AppServerLink.h>
-#include <private/binary_compatibility/Interface.h>
-#include <private/binary_compatibility/Support.h>
 #include <private/app/MessagePrivate.h>
 #include <private/app/MessageUtils.h>
 #include <private/app/PortLink.h>
 #include <private/app/ServerProtocol.h>
 #include <private/app/ServerProtocolStructs.h>
+#include <private/app/TokenSpace.h>
+#include <private/binary_compatibility/Interface.h>
+#include <private/binary_compatibility/Support.h>
 #include <private/interface/ShapePrivate.h>
 #include <private/interface/ToolTip.h>
 #include <private/interface/ToolTipManager.h>
-#include <private/app/TokenSpace.h>
 #include <private/interface/ViewPrivate.h>
 
 using std::nothrow;
 
 //#define DEBUG_BVIEW
 #ifdef DEBUG_BVIEW
-#	include <stdio.h>
-#	define STRACE(x) printf x
-#	define BVTRACE _PrintToStream()
+#include <stdio.h>
+#define STRACE(x) printf x
+#define BVTRACE _PrintToStream()
 #else
-#	define STRACE(x) ;
-#	define BVTRACE ;
+#define STRACE(x) ;
+#define BVTRACE ;
 #endif
 
-
 static property_info sViewPropInfo[] = {
-	{ "Frame", { B_GET_PROPERTY, B_SET_PROPERTY },
-		{ B_DIRECT_SPECIFIER, 0 }, "The view's frame rectangle.", 0,
-		{ B_RECT_TYPE }
-	},
-	{ "Hidden", { B_GET_PROPERTY, B_SET_PROPERTY },
-		{ B_DIRECT_SPECIFIER, 0 }, "Whether or not the view is hidden.",
-		0, { B_BOOL_TYPE }
-	},
-	{ "Shelf", { 0 },
-		{ B_DIRECT_SPECIFIER, 0 }, "Directs the scripting message to the "
-			"shelf.", 0
-	},
-	{ "View", { B_COUNT_PROPERTIES, 0 },
-		{ B_DIRECT_SPECIFIER, 0 }, "Returns the number of child views.", 0,
-		{ B_INT32_TYPE }
-	},
-	{ "View", { 0 },
-		{ B_INDEX_SPECIFIER, B_REVERSE_INDEX_SPECIFIER, B_NAME_SPECIFIER, 0 },
-		"Directs the scripting message to the specified view.", 0
-	},
+    {"Frame",
+     {B_GET_PROPERTY, B_SET_PROPERTY},
+     {B_DIRECT_SPECIFIER, 0},
+     "The view's frame rectangle.",
+     0,
+     {B_RECT_TYPE}},
+    {"Hidden",
+     {B_GET_PROPERTY, B_SET_PROPERTY},
+     {B_DIRECT_SPECIFIER, 0},
+     "Whether or not the view is hidden.",
+     0,
+     {B_BOOL_TYPE}},
+    {"Shelf",
+     {0},
+     {B_DIRECT_SPECIFIER, 0},
+     "Directs the scripting message to the "
+     "shelf.",
+     0},
+    {"View",
+     {B_COUNT_PROPERTIES, 0},
+     {B_DIRECT_SPECIFIER, 0},
+     "Returns the number of child views.",
+     0,
+     {B_INT32_TYPE}},
+    {"View",
+     {0},
+     {B_INDEX_SPECIFIER, B_REVERSE_INDEX_SPECIFIER, B_NAME_SPECIFIER, 0},
+     "Directs the scripting message to the specified view.",
+     0},
 
-	{ 0, { 0 }, { 0 }, 0, 0 }
-};
-
-
-//	#pragma mark -
-
-
-static inline uint32
-get_uint32_color(rgb_color color)
-{
-	return B_BENDIAN_TO_HOST_INT32(*(uint32*)&color);
-		// rgb_color is always in rgba format, no matter what endian;
-		// we always return the int32 value in host endian.
-}
-
-
-static inline rgb_color
-get_rgb_color(uint32 value)
-{
-	value = B_HOST_TO_BENDIAN_INT32(value);
-	return *(rgb_color*)&value;
-}
-
+    {0, {0}, {0}, 0, 0}};
 
 //	#pragma mark -
 
+static inline uint32 get_uint32_color(rgb_color color) {
+  return B_BENDIAN_TO_HOST_INT32(*(uint32 *)&color);
+  // rgb_color is always in rgba format, no matter what endian;
+  // we always return the int32 value in host endian.
+}
+
+static inline rgb_color get_rgb_color(uint32 value) {
+  value = B_HOST_TO_BENDIAN_INT32(value);
+  return *(rgb_color *)&value;
+}
+
+//	#pragma mark -
 
 namespace BPrivate {
 
-ViewState::ViewState()
-{
-	pen_location.Set(0, 0);
-	pen_size = 1.0;
+ViewState::ViewState() {
+  pen_location.Set(0, 0);
+  pen_size = 1.0;
 
-	// NOTE: the clipping_region is empty
-	// on construction but it is not used yet,
-	// we avoid having to keep track of it via
-	// this flag
-	clipping_region_used = false;
+  // NOTE: the clipping_region is empty
+  // on construction but it is not used yet,
+  // we avoid having to keep track of it via
+  // this flag
+  clipping_region_used = false;
 
-	high_color = (rgb_color){ 0, 0, 0, 255 };
-	low_color = (rgb_color){ 255, 255, 255, 255 };
-	view_color = low_color;
-	which_view_color = B_NO_COLOR;
-	which_view_color_tint = B_NO_TINT;
+  high_color = (rgb_color){0, 0, 0, 255};
+  low_color = (rgb_color){255, 255, 255, 255};
+  view_color = low_color;
+  which_view_color = B_NO_COLOR;
+  which_view_color_tint = B_NO_TINT;
 
-	which_high_color = B_NO_COLOR;
-	which_high_color_tint = B_NO_TINT;
+  which_high_color = B_NO_COLOR;
+  which_high_color_tint = B_NO_TINT;
 
-	which_low_color = B_NO_COLOR;
-	which_low_color_tint = B_NO_TINT;
+  which_low_color = B_NO_COLOR;
+  which_low_color_tint = B_NO_TINT;
 
-	pattern = B_SOLID_HIGH;
-	drawing_mode = B_OP_COPY;
+  pattern = B_SOLID_HIGH;
+  drawing_mode = B_OP_COPY;
 
-	origin.Set(0, 0);
+  origin.Set(0, 0);
 
-	line_join = B_MITER_JOIN;
-	line_cap = B_BUTT_CAP;
-	miter_limit = B_DEFAULT_MITER_LIMIT;
-	fill_rule = B_NONZERO;
+  line_join = B_MITER_JOIN;
+  line_cap = B_BUTT_CAP;
+  miter_limit = B_DEFAULT_MITER_LIMIT;
+  fill_rule = B_NONZERO;
 
-	alpha_source_mode = B_PIXEL_ALPHA;
-	alpha_function_mode = B_ALPHA_OVERLAY;
+  alpha_source_mode = B_PIXEL_ALPHA;
+  alpha_function_mode = B_ALPHA_OVERLAY;
 
-	scale = 1.0;
+  scale = 1.0;
 
-	font = *be_plain_font;
-	font_flags = font.Flags();
-	font_aliasing = false;
+  font = *be_plain_font;
+  font_flags = font.Flags();
+  font_aliasing = false;
 
-	// We only keep the B_VIEW_CLIP_REGION_BIT flag invalidated,
-	// because we should get the clipping region from app_server.
-	// The other flags do not need to be included because the data they
-	// represent is already in sync with app_server - app_server uses the
-	// same init (default) values.
-	valid_flags = ~B_VIEW_CLIP_REGION_BIT;
+  // We only keep the B_VIEW_CLIP_REGION_BIT flag invalidated,
+  // because we should get the clipping region from app_server.
+  // The other flags do not need to be included because the data they
+  // represent is already in sync with app_server - app_server uses the
+  // same init (default) values.
+  valid_flags = ~B_VIEW_CLIP_REGION_BIT;
 
-	archiving_flags = B_VIEW_FRAME_BIT | B_VIEW_RESIZE_BIT;
+  archiving_flags = B_VIEW_FRAME_BIT | B_VIEW_RESIZE_BIT;
 }
 
+void ViewState::UpdateServerFontState(BPrivate::PortLink &link) {
+  link.StartMessage(AS_VIEW_SET_FONT_STATE);
+  link.Attach<uint16>(font_flags);
+  // always present
 
-void
-ViewState::UpdateServerFontState(BPrivate::PortLink &link)
-{
-	link.StartMessage(AS_VIEW_SET_FONT_STATE);
-	link.Attach<uint16>(font_flags);
-		// always present
+  if (font_flags & B_FONT_FAMILY_AND_STYLE)
+    link.Attach<uint32>(font.FamilyAndStyle());
 
-	if (font_flags & B_FONT_FAMILY_AND_STYLE)
-		link.Attach<uint32>(font.FamilyAndStyle());
+  if (font_flags & B_FONT_SIZE)
+    link.Attach<float>(font.Size());
 
-	if (font_flags & B_FONT_SIZE)
-		link.Attach<float>(font.Size());
+  if (font_flags & B_FONT_SHEAR)
+    link.Attach<float>(font.Shear());
 
-	if (font_flags & B_FONT_SHEAR)
-		link.Attach<float>(font.Shear());
+  if (font_flags & B_FONT_ROTATION)
+    link.Attach<float>(font.Rotation());
 
-	if (font_flags & B_FONT_ROTATION)
-		link.Attach<float>(font.Rotation());
+  if (font_flags & B_FONT_FALSE_BOLD_WIDTH)
+    link.Attach<float>(font.FalseBoldWidth());
 
-	if (font_flags & B_FONT_FALSE_BOLD_WIDTH)
-		link.Attach<float>(font.FalseBoldWidth());
+  if (font_flags & B_FONT_SPACING)
+    link.Attach<uint8>(font.Spacing());
 
-	if (font_flags & B_FONT_SPACING)
-		link.Attach<uint8>(font.Spacing());
+  if (font_flags & B_FONT_ENCODING)
+    link.Attach<uint8>(font.Encoding());
 
-	if (font_flags & B_FONT_ENCODING)
-		link.Attach<uint8>(font.Encoding());
+  if (font_flags & B_FONT_FACE)
+    link.Attach<uint16>(font.Face());
 
-	if (font_flags & B_FONT_FACE)
-		link.Attach<uint16>(font.Face());
-
-	if (font_flags & B_FONT_FLAGS)
-		link.Attach<uint32>(font.Flags());
+  if (font_flags & B_FONT_FLAGS)
+    link.Attach<uint32>(font.Flags());
 }
 
+void ViewState::UpdateServerState(BPrivate::PortLink &link) {
+  UpdateServerFontState(link);
 
-void
-ViewState::UpdateServerState(BPrivate::PortLink &link)
-{
-	UpdateServerFontState(link);
+  link.StartMessage(AS_VIEW_SET_STATE);
 
-	link.StartMessage(AS_VIEW_SET_STATE);
+  ViewSetStateInfo info;
+  info.penLocation = pen_location;
+  info.penSize = pen_size;
+  info.highColor = high_color;
+  info.lowColor = low_color;
+  info.whichHighColor = which_high_color;
+  info.whichLowColor = which_low_color;
+  info.whichHighColorTint = which_high_color_tint;
+  info.whichLowColorTint = which_low_color_tint;
+  info.pattern = pattern;
+  info.drawingMode = drawing_mode;
+  info.origin = origin;
+  info.scale = scale;
+  info.transform = transform;
+  info.lineJoin = line_join;
+  info.lineCap = line_cap;
+  info.miterLimit = miter_limit;
+  info.fillRule = fill_rule;
+  info.alphaSourceMode = alpha_source_mode;
+  info.alphaFunctionMode = alpha_function_mode;
+  info.fontAntialiasing = font_aliasing;
+  link.Attach<ViewSetStateInfo>(info);
 
-	ViewSetStateInfo info;
-	info.penLocation = pen_location;
-	info.penSize = pen_size;
-	info.highColor = high_color;
-	info.lowColor = low_color;
-	info.whichHighColor = which_high_color;
-	info.whichLowColor = which_low_color;
-	info.whichHighColorTint = which_high_color_tint;
-	info.whichLowColorTint = which_low_color_tint;
-	info.pattern = pattern;
-	info.drawingMode = drawing_mode;
-	info.origin = origin;
-	info.scale = scale;
-	info.transform = transform;
-	info.lineJoin = line_join;
-	info.lineCap = line_cap;
-	info.miterLimit = miter_limit;
-	info.fillRule = fill_rule;
-	info.alphaSourceMode = alpha_source_mode;
-	info.alphaFunctionMode = alpha_function_mode;
-	info.fontAntialiasing = font_aliasing;
-	link.Attach<ViewSetStateInfo>(info);
+  // we send the 'local' clipping region... if we have one...
+  // TODO: Could be optimized, but is low prio, since most views won't
+  // have a custom clipping region.
+  if (clipping_region_used) {
+    int32 count = clipping_region.CountRects();
+    link.Attach<int32>(count);
+    for (int32 i = 0; i < count; i++)
+      link.Attach<BRect>(clipping_region.RectAt(i));
+  } else {
+    // no clipping region
+    link.Attach<int32>(-1);
+  }
 
-	// we send the 'local' clipping region... if we have one...
-	// TODO: Could be optimized, but is low prio, since most views won't
-	// have a custom clipping region.
-	if (clipping_region_used) {
-		int32 count = clipping_region.CountRects();
-		link.Attach<int32>(count);
-		for (int32 i = 0; i < count; i++)
-			link.Attach<BRect>(clipping_region.RectAt(i));
-	} else {
-		// no clipping region
-		link.Attach<int32>(-1);
-	}
+  // Although we might have a 'local' clipping region, when we call
+  // BView::GetClippingRegion() we ask for the 'global' one and it
+  // is kept on server, so we must invalidate B_VIEW_CLIP_REGION_BIT flag
 
-	// Although we might have a 'local' clipping region, when we call
-	// BView::GetClippingRegion() we ask for the 'global' one and it
-	// is kept on server, so we must invalidate B_VIEW_CLIP_REGION_BIT flag
-
-	valid_flags = ~B_VIEW_CLIP_REGION_BIT;
+  valid_flags = ~B_VIEW_CLIP_REGION_BIT;
 }
 
+void ViewState::UpdateFrom(BPrivate::PortLink &link) {
+  link.StartMessage(AS_VIEW_GET_STATE);
 
-void
-ViewState::UpdateFrom(BPrivate::PortLink &link)
-{
-	link.StartMessage(AS_VIEW_GET_STATE);
+  int32 code;
+  if (link.FlushWithReply(code) != B_OK || code != B_OK)
+    return;
 
-	int32 code;
-	if (link.FlushWithReply(code) != B_OK
-		|| code != B_OK)
-		return;
+  ViewGetStateInfo info;
+  link.Read<ViewGetStateInfo>(&info);
 
-	ViewGetStateInfo info;
-	link.Read<ViewGetStateInfo>(&info);
+  // set view's font state
+  font_flags = B_FONT_ALL;
+  font.SetFamilyAndStyle(info.fontID);
+  font.SetSize(info.fontSize);
+  font.SetShear(info.fontShear);
+  font.SetRotation(info.fontRotation);
+  font.SetFalseBoldWidth(info.fontFalseBoldWidth);
+  font.SetSpacing(info.fontSpacing);
+  font.SetEncoding(info.fontEncoding);
+  font.SetFace(info.fontFace);
+  font.SetFlags(info.fontFlags);
 
-	// set view's font state
-	font_flags = B_FONT_ALL;
-	font.SetFamilyAndStyle(info.fontID);
-	font.SetSize(info.fontSize);
-	font.SetShear(info.fontShear);
-	font.SetRotation(info.fontRotation);
-	font.SetFalseBoldWidth(info.fontFalseBoldWidth);
-	font.SetSpacing(info.fontSpacing);
-	font.SetEncoding(info.fontEncoding);
-	font.SetFace(info.fontFace);
-	font.SetFlags(info.fontFlags);
+  // set view's state
+  pen_location = info.viewStateInfo.penLocation;
+  pen_size = info.viewStateInfo.penSize;
+  high_color = info.viewStateInfo.highColor;
+  low_color = info.viewStateInfo.lowColor;
+  pattern = info.viewStateInfo.pattern;
+  drawing_mode = info.viewStateInfo.drawingMode;
+  origin = info.viewStateInfo.origin;
+  scale = info.viewStateInfo.scale;
+  transform = info.viewStateInfo.transform;
+  line_join = info.viewStateInfo.lineJoin;
+  line_cap = info.viewStateInfo.lineCap;
+  miter_limit = info.viewStateInfo.miterLimit;
+  fill_rule = info.viewStateInfo.fillRule;
+  alpha_source_mode = info.viewStateInfo.alphaSourceMode;
+  alpha_function_mode = info.viewStateInfo.alphaFunctionMode;
+  font_aliasing = info.viewStateInfo.fontAntialiasing;
 
-	// set view's state
-	pen_location = info.viewStateInfo.penLocation;
-	pen_size = info.viewStateInfo.penSize;
-	high_color = info.viewStateInfo.highColor;
-	low_color = info.viewStateInfo.lowColor;
-	pattern = info.viewStateInfo.pattern;
-	drawing_mode = info.viewStateInfo.drawingMode;
-	origin = info.viewStateInfo.origin;
-	scale = info.viewStateInfo.scale;
-	transform = info.viewStateInfo.transform;
-	line_join = info.viewStateInfo.lineJoin;
-	line_cap = info.viewStateInfo.lineCap;
-	miter_limit = info.viewStateInfo.miterLimit;
-	fill_rule = info.viewStateInfo.fillRule;
-	alpha_source_mode = info.viewStateInfo.alphaSourceMode;
-	alpha_function_mode = info.viewStateInfo.alphaFunctionMode;
-	font_aliasing = info.viewStateInfo.fontAntialiasing;
+  // read the user clipping
+  // (that's NOT the current View visible clipping but the additional
+  // user specified clipping!)
+  int32 clippingRectCount;
+  link.Read<int32>(&clippingRectCount);
+  if (clippingRectCount >= 0) {
+    clipping_region.MakeEmpty();
+    for (int32 i = 0; i < clippingRectCount; i++) {
+      BRect rect;
+      link.Read<BRect>(&rect);
+      clipping_region.Include(rect);
+    }
+  } else {
+    // no user clipping used
+    clipping_region_used = false;
+  }
 
-	// read the user clipping
-	// (that's NOT the current View visible clipping but the additional
-	// user specified clipping!)
-	int32 clippingRectCount;
-	link.Read<int32>(&clippingRectCount);
-	if (clippingRectCount >= 0) {
-		clipping_region.MakeEmpty();
-		for (int32 i = 0; i < clippingRectCount; i++) {
-			BRect rect;
-			link.Read<BRect>(&rect);
-			clipping_region.Include(rect);
-		}
-	} else {
-		// no user clipping used
-		clipping_region_used = false;
-	}
-
-	valid_flags = ~B_VIEW_CLIP_REGION_BIT;
+  valid_flags = ~B_VIEW_CLIP_REGION_BIT;
 }
 
-}	// namespace BPrivate
-
+} // namespace BPrivate
 
 //	#pragma mark -
 
-
 // archiving constants
 namespace {
-	const char* const kSizesField = "BView:sizes";
-		// kSizesField = {min, max, pref}
-	const char* const kAlignmentField = "BView:alignment";
-	const char* const kLayoutField = "BView:layout";
+const char *const kSizesField = "BView:sizes";
+// kSizesField = {min, max, pref}
+const char *const kAlignmentField = "BView:alignment";
+const char *const kLayoutField = "BView:layout";
 }
-
 
 struct BView::LayoutData {
-	LayoutData()
-		:
-		fMinSize(),
-		fMaxSize(),
-		fPreferredSize(),
-		fAlignment(),
-		fLayoutInvalidationDisabled(0),
-		fLayout(NULL),
-		fLayoutContext(NULL),
-		fLayoutItems(5, false),
-		fLayoutValid(true),		// TODO: Rethink these initial values!
-		fMinMaxValid(true),		//
-		fLayoutInProgress(false),
-		fNeedsRelayout(true)
-	{
-	}
+  LayoutData()
+      : fMinSize(), fMaxSize(), fPreferredSize(), fAlignment(),
+        fLayoutInvalidationDisabled(0), fLayout(NULL), fLayoutContext(NULL),
+        fLayoutItems(5, false),
+        fLayoutValid(true), // TODO: Rethink these initial values!
+        fMinMaxValid(true), //
+        fLayoutInProgress(false), fNeedsRelayout(true) {}
 
-	status_t
-	AddDataToArchive(BMessage* archive)
-	{
-		status_t err = archive->AddSize(kSizesField, fMinSize);
+  status_t AddDataToArchive(BMessage *archive) {
+    status_t err = archive->AddSize(kSizesField, fMinSize);
 
-		if (err == B_OK)
-			err = archive->AddSize(kSizesField, fMaxSize);
+    if (err == B_OK)
+      err = archive->AddSize(kSizesField, fMaxSize);
 
-		if (err == B_OK)
-			err = archive->AddSize(kSizesField, fPreferredSize);
+    if (err == B_OK)
+      err = archive->AddSize(kSizesField, fPreferredSize);
 
-		if (err == B_OK)
-			err = archive->AddAlignment(kAlignmentField, fAlignment);
+    if (err == B_OK)
+      err = archive->AddAlignment(kAlignmentField, fAlignment);
 
-		return err;
-	}
+    return err;
+  }
 
-	void
-	PopulateFromArchive(BMessage* archive)
-	{
-		archive->FindSize(kSizesField, 0, &fMinSize);
-		archive->FindSize(kSizesField, 1, &fMaxSize);
-		archive->FindSize(kSizesField, 2, &fPreferredSize);
-		archive->FindAlignment(kAlignmentField, &fAlignment);
-	}
+  void PopulateFromArchive(BMessage *archive) {
+    archive->FindSize(kSizesField, 0, &fMinSize);
+    archive->FindSize(kSizesField, 1, &fMaxSize);
+    archive->FindSize(kSizesField, 2, &fPreferredSize);
+    archive->FindAlignment(kAlignmentField, &fAlignment);
+  }
 
-	BSize			fMinSize;
-	BSize			fMaxSize;
-	BSize			fPreferredSize;
-	BAlignment		fAlignment;
-	int				fLayoutInvalidationDisabled;
-	BLayout*		fLayout;
-	BLayoutContext*	fLayoutContext;
-	BObjectList<BLayoutItem> fLayoutItems;
-	bool			fLayoutValid;
-	bool			fMinMaxValid;
-	bool			fLayoutInProgress;
-	bool			fNeedsRelayout;
+  BSize fMinSize;
+  BSize fMaxSize;
+  BSize fPreferredSize;
+  BAlignment fAlignment;
+  int fLayoutInvalidationDisabled;
+  BLayout *fLayout;
+  BLayoutContext *fLayoutContext;
+  BObjectList<BLayoutItem> fLayoutItems;
+  bool fLayoutValid;
+  bool fMinMaxValid;
+  bool fLayoutInProgress;
+  bool fNeedsRelayout;
 };
 
-
-BView::BView(const char* name, uint32 flags, BLayout* layout)
-	:
-	BHandler(name)
-{
-	_InitData(BRect(0, 0, 0, 0), name, B_FOLLOW_NONE,
-		flags | B_SUPPORTS_LAYOUT);
-	SetLayout(layout);
+BView::BView(const char *name, uint32 flags, BLayout *layout) : BHandler(name) {
+  _InitData(BRect(0, 0, 0, 0), name, B_FOLLOW_NONE, flags | B_SUPPORTS_LAYOUT);
+  SetLayout(layout);
 }
 
-
-BView::BView(BRect frame, const char* name, uint32 resizingMode, uint32 flags)
-	:
-	BHandler(name)
-{
-	_InitData(frame, name, resizingMode, flags);
+BView::BView(BRect frame, const char *name, uint32 resizingMode, uint32 flags)
+    : BHandler(name) {
+  _InitData(frame, name, resizingMode, flags);
 }
 
+BView::BView(BMessage *archive)
+    : BHandler(BUnarchiver::PrepareArchive(archive)) {
+  BUnarchiver unarchiver(archive);
+  if (!archive)
+    debugger("BView cannot be constructed from a NULL archive.");
 
-BView::BView(BMessage* archive)
-	:
-	BHandler(BUnarchiver::PrepareArchive(archive))
-{
-	BUnarchiver unarchiver(archive);
-	if (!archive)
-		debugger("BView cannot be constructed from a NULL archive.");
+  BRect frame;
+  archive->FindRect("_frame", &frame);
 
-	BRect frame;
-	archive->FindRect("_frame", &frame);
+  uint32 resizingMode;
+  if (archive->FindInt32("_resize_mode", (int32 *)&resizingMode) != B_OK)
+    resizingMode = 0;
 
-	uint32 resizingMode;
-	if (archive->FindInt32("_resize_mode", (int32*)&resizingMode) != B_OK)
-		resizingMode = 0;
+  uint32 flags;
+  if (archive->FindInt32("_flags", (int32 *)&flags) != B_OK)
+    flags = 0;
 
-	uint32 flags;
-	if (archive->FindInt32("_flags", (int32*)&flags) != B_OK)
-		flags = 0;
+  _InitData(frame, Name(), resizingMode, flags);
 
-	_InitData(frame, Name(), resizingMode, flags);
+  font_family family;
+  font_style style;
+  if (archive->FindString("_fname", 0, (const char **)&family) == B_OK &&
+      archive->FindString("_fname", 1, (const char **)&style) == B_OK) {
+    BFont font;
+    font.SetFamilyAndStyle(family, style);
 
-	font_family family;
-	font_style style;
-	if (archive->FindString("_fname", 0, (const char**)&family) == B_OK
-		&& archive->FindString("_fname", 1, (const char**)&style) == B_OK) {
-		BFont font;
-		font.SetFamilyAndStyle(family, style);
+    float size;
+    if (archive->FindFloat("_fflt", 0, &size) == B_OK)
+      font.SetSize(size);
 
-		float size;
-		if (archive->FindFloat("_fflt", 0, &size) == B_OK)
-			font.SetSize(size);
+    float shear;
+    if (archive->FindFloat("_fflt", 1, &shear) == B_OK && shear >= 45.0 &&
+        shear <= 135.0)
+      font.SetShear(shear);
 
-		float shear;
-		if (archive->FindFloat("_fflt", 1, &shear) == B_OK
-			&& shear >= 45.0 && shear <= 135.0)
-			font.SetShear(shear);
+    float rotation;
+    if (archive->FindFloat("_fflt", 2, &rotation) == B_OK && rotation >= 0 &&
+        rotation <= 360)
+      font.SetRotation(rotation);
 
-		float rotation;
-		if (archive->FindFloat("_fflt", 2, &rotation) == B_OK
-			&& rotation >=0 && rotation <= 360)
-			font.SetRotation(rotation);
+    SetFont(&font, B_FONT_FAMILY_AND_STYLE | B_FONT_SIZE | B_FONT_SHEAR |
+                       B_FONT_ROTATION);
+  }
 
-		SetFont(&font, B_FONT_FAMILY_AND_STYLE | B_FONT_SIZE
-			| B_FONT_SHEAR | B_FONT_ROTATION);
-	}
+  int32 color = 0;
+  if (archive->FindInt32("_color", 0, &color) == B_OK)
+    SetHighColor(get_rgb_color(color));
+  if (archive->FindInt32("_color", 1, &color) == B_OK)
+    SetLowColor(get_rgb_color(color));
+  if (archive->FindInt32("_color", 2, &color) == B_OK)
+    SetViewColor(get_rgb_color(color));
 
-	int32 color = 0;
-	if (archive->FindInt32("_color", 0, &color) == B_OK)
-		SetHighColor(get_rgb_color(color));
-	if (archive->FindInt32("_color", 1, &color) == B_OK)
-		SetLowColor(get_rgb_color(color));
-	if (archive->FindInt32("_color", 2, &color) == B_OK)
-		SetViewColor(get_rgb_color(color));
+  float tint = B_NO_TINT;
+  if (archive->FindInt32("_uicolor", 0, &color) == B_OK &&
+      color != B_NO_COLOR) {
+    if (archive->FindFloat("_uitint", 0, &tint) != B_OK)
+      tint = B_NO_TINT;
 
-	float tint = B_NO_TINT;
-	if (archive->FindInt32("_uicolor", 0, &color) == B_OK
-		&& color != B_NO_COLOR) {
-		if (archive->FindFloat("_uitint", 0, &tint) != B_OK)
-			tint = B_NO_TINT;
+    SetHighUIColor((color_which)color, tint);
+  }
+  if (archive->FindInt32("_uicolor", 1, &color) == B_OK &&
+      color != B_NO_COLOR) {
+    if (archive->FindFloat("_uitint", 1, &tint) != B_OK)
+      tint = B_NO_TINT;
 
-		SetHighUIColor((color_which)color, tint);
-	}
-	if (archive->FindInt32("_uicolor", 1, &color) == B_OK
-		&& color != B_NO_COLOR) {
-		if (archive->FindFloat("_uitint", 1, &tint) != B_OK)
-			tint = B_NO_TINT;
+    SetLowUIColor((color_which)color, tint);
+  }
+  if (archive->FindInt32("_uicolor", 2, &color) == B_OK &&
+      color != B_NO_COLOR) {
+    if (archive->FindFloat("_uitint", 2, &tint) != B_OK)
+      tint = B_NO_TINT;
 
-		SetLowUIColor((color_which)color, tint);
-	}
-	if (archive->FindInt32("_uicolor", 2, &color) == B_OK
-		&& color != B_NO_COLOR) {
-		if (archive->FindFloat("_uitint", 2, &tint) != B_OK)
-			tint = B_NO_TINT;
+    SetViewUIColor((color_which)color, tint);
+  }
 
-		SetViewUIColor((color_which)color, tint);
-	}
+  uint32 evMask;
+  uint32 options;
+  if (archive->FindInt32("_evmask", 0, (int32 *)&evMask) == B_OK &&
+      archive->FindInt32("_evmask", 1, (int32 *)&options) == B_OK)
+    SetEventMask(evMask, options);
 
-	uint32 evMask;
-	uint32 options;
-	if (archive->FindInt32("_evmask", 0, (int32*)&evMask) == B_OK
-		&& archive->FindInt32("_evmask", 1, (int32*)&options) == B_OK)
-		SetEventMask(evMask, options);
+  BPoint origin;
+  if (archive->FindPoint("_origin", &origin) == B_OK)
+    SetOrigin(origin);
 
-	BPoint origin;
-	if (archive->FindPoint("_origin", &origin) == B_OK)
-		SetOrigin(origin);
+  float scale;
+  if (archive->FindFloat("_scale", &scale) == B_OK)
+    SetScale(scale);
 
-	float scale;
-	if (archive->FindFloat("_scale", &scale) == B_OK)
-		SetScale(scale);
+  BAffineTransform transform;
+  if (archive->FindFlat("_transform", &transform) == B_OK)
+    SetTransform(transform);
 
-	BAffineTransform transform;
-	if (archive->FindFlat("_transform", &transform) == B_OK)
-		SetTransform(transform);
+  float penSize;
+  if (archive->FindFloat("_psize", &penSize) == B_OK)
+    SetPenSize(penSize);
 
-	float penSize;
-	if (archive->FindFloat("_psize", &penSize) == B_OK)
-		SetPenSize(penSize);
+  BPoint penLocation;
+  if (archive->FindPoint("_ploc", &penLocation) == B_OK)
+    MovePenTo(penLocation);
 
-	BPoint penLocation;
-	if (archive->FindPoint("_ploc", &penLocation) == B_OK)
-		MovePenTo(penLocation);
+  int16 lineCap;
+  int16 lineJoin;
+  float lineMiter;
+  if (archive->FindInt16("_lmcapjoin", 0, &lineCap) == B_OK &&
+      archive->FindInt16("_lmcapjoin", 1, &lineJoin) == B_OK &&
+      archive->FindFloat("_lmmiter", &lineMiter) == B_OK)
+    SetLineMode((cap_mode)lineCap, (join_mode)lineJoin, lineMiter);
 
-	int16 lineCap;
-	int16 lineJoin;
-	float lineMiter;
-	if (archive->FindInt16("_lmcapjoin", 0, &lineCap) == B_OK
-		&& archive->FindInt16("_lmcapjoin", 1, &lineJoin) == B_OK
-		&& archive->FindFloat("_lmmiter", &lineMiter) == B_OK)
-		SetLineMode((cap_mode)lineCap, (join_mode)lineJoin, lineMiter);
+  int16 fillRule;
+  if (archive->FindInt16("_fillrule", &fillRule) == B_OK)
+    SetFillRule(fillRule);
 
-	int16 fillRule;
-	if (archive->FindInt16("_fillrule", &fillRule) == B_OK)
-		SetFillRule(fillRule);
+  int16 alphaBlend;
+  int16 modeBlend;
+  if (archive->FindInt16("_blend", 0, &alphaBlend) == B_OK &&
+      archive->FindInt16("_blend", 1, &modeBlend) == B_OK)
+    SetBlendingMode((source_alpha)alphaBlend, (alpha_function)modeBlend);
 
-	int16 alphaBlend;
-	int16 modeBlend;
-	if (archive->FindInt16("_blend", 0, &alphaBlend) == B_OK
-		&& archive->FindInt16("_blend", 1, &modeBlend) == B_OK)
-		SetBlendingMode( (source_alpha)alphaBlend, (alpha_function)modeBlend);
+  uint32 drawingMode;
+  if (archive->FindInt32("_dmod", (int32 *)&drawingMode) == B_OK)
+    SetDrawingMode((drawing_mode)drawingMode);
 
-	uint32 drawingMode;
-	if (archive->FindInt32("_dmod", (int32*)&drawingMode) == B_OK)
-		SetDrawingMode((drawing_mode)drawingMode);
+  fLayoutData->PopulateFromArchive(archive);
 
-	fLayoutData->PopulateFromArchive(archive);
+  if (archive->FindInt16("_show", &fShowLevel) != B_OK)
+    fShowLevel = 0;
 
-	if (archive->FindInt16("_show", &fShowLevel) != B_OK)
-		fShowLevel = 0;
+  if (BUnarchiver::IsArchiveManaged(archive)) {
+    int32 i = 0;
+    while (unarchiver.EnsureUnarchived("_views", i++) == B_OK)
+      ;
+    unarchiver.EnsureUnarchived(kLayoutField);
 
-	if (BUnarchiver::IsArchiveManaged(archive)) {
-		int32 i = 0;
-		while (unarchiver.EnsureUnarchived("_views", i++) == B_OK)
-				;
-		unarchiver.EnsureUnarchived(kLayoutField);
-
-	} else {
-		BMessage msg;
-		for (int32 i = 0; archive->FindMessage("_views", i, &msg) == B_OK;
-			i++) {
-			BArchivable* object = instantiate_object(&msg);
-			if (BView* child = dynamic_cast<BView*>(object))
-				AddChild(child);
-		}
-	}
+  } else {
+    BMessage msg;
+    for (int32 i = 0; archive->FindMessage("_views", i, &msg) == B_OK; i++) {
+      BArchivable *object = instantiate_object(&msg);
+      if (BView *child = dynamic_cast<BView *>(object))
+        AddChild(child);
+    }
+  }
 }
 
+BArchivable *BView::Instantiate(BMessage *data) {
+  if (!validate_instantiation(data, "BView"))
+    return NULL;
 
-BArchivable*
-BView::Instantiate(BMessage* data)
-{
-	if (!validate_instantiation(data , "BView"))
-		return NULL;
-
-	return new(std::nothrow) BView(data);
+  return new (std::nothrow) BView(data);
 }
 
+status_t BView::Archive(BMessage *data, bool deep) const {
+  BArchiver archiver(data);
+  status_t ret = BHandler::Archive(data, deep);
 
-status_t
-BView::Archive(BMessage* data, bool deep) const
-{
-	BArchiver archiver(data);
-	status_t ret = BHandler::Archive(data, deep);
+  if (ret != B_OK)
+    return ret;
 
-	if (ret != B_OK)
-		return ret;
+  if ((fState->archiving_flags & B_VIEW_FRAME_BIT) != 0)
+    ret = data->AddRect("_frame", Bounds().OffsetToCopy(fParentOffset));
 
-	if ((fState->archiving_flags & B_VIEW_FRAME_BIT) != 0)
-		ret = data->AddRect("_frame", Bounds().OffsetToCopy(fParentOffset));
+  if (ret == B_OK)
+    ret = data->AddInt32("_resize_mode", ResizingMode());
 
-	if (ret == B_OK)
-		ret = data->AddInt32("_resize_mode", ResizingMode());
+  if (ret == B_OK)
+    ret = data->AddInt32("_flags", Flags());
 
-	if (ret == B_OK)
-		ret = data->AddInt32("_flags", Flags());
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_EVENT_MASK_BIT) != 0) {
+    ret = data->AddInt32("_evmask", fEventMask);
+    if (ret == B_OK)
+      ret = data->AddInt32("_evmask", fEventOptions);
+  }
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_EVENT_MASK_BIT) != 0) {
-		ret = data->AddInt32("_evmask", fEventMask);
-		if (ret == B_OK)
-			ret = data->AddInt32("_evmask", fEventOptions);
-	}
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_FONT_BIT) != 0) {
+    BFont font;
+    GetFont(&font);
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_FONT_BIT) != 0) {
-		BFont font;
-		GetFont(&font);
+    font_family family;
+    font_style style;
+    font.GetFamilyAndStyle(&family, &style);
+    ret = data->AddString("_fname", family);
+    if (ret == B_OK)
+      ret = data->AddString("_fname", style);
+    if (ret == B_OK)
+      ret = data->AddFloat("_fflt", font.Size());
+    if (ret == B_OK)
+      ret = data->AddFloat("_fflt", font.Shear());
+    if (ret == B_OK)
+      ret = data->AddFloat("_fflt", font.Rotation());
+  }
 
-		font_family family;
-		font_style style;
-		font.GetFamilyAndStyle(&family, &style);
-		ret = data->AddString("_fname", family);
-		if (ret == B_OK)
-			ret = data->AddString("_fname", style);
-		if (ret == B_OK)
-			ret = data->AddFloat("_fflt", font.Size());
-		if (ret == B_OK)
-			ret = data->AddFloat("_fflt", font.Shear());
-		if (ret == B_OK)
-			ret = data->AddFloat("_fflt", font.Rotation());
-	}
+  // colors
+  if (ret == B_OK)
+    ret = data->AddInt32("_color", get_uint32_color(HighColor()));
+  if (ret == B_OK)
+    ret = data->AddInt32("_color", get_uint32_color(LowColor()));
+  if (ret == B_OK)
+    ret = data->AddInt32("_color", get_uint32_color(ViewColor()));
 
-	// colors
-	if (ret == B_OK)
-		ret = data->AddInt32("_color", get_uint32_color(HighColor()));
-	if (ret == B_OK)
-		ret = data->AddInt32("_color", get_uint32_color(LowColor()));
-	if (ret == B_OK)
-		ret = data->AddInt32("_color", get_uint32_color(ViewColor()));
+  if (ret == B_OK)
+    ret = data->AddInt32("_uicolor", (int32)HighUIColor());
+  if (ret == B_OK)
+    ret = data->AddInt32("_uicolor", (int32)LowUIColor());
+  if (ret == B_OK)
+    ret = data->AddInt32("_uicolor", (int32)ViewUIColor());
 
-	if (ret == B_OK)
-		ret = data->AddInt32("_uicolor", (int32)HighUIColor());
-	if (ret == B_OK)
-		ret = data->AddInt32("_uicolor", (int32)LowUIColor());
-	if (ret == B_OK)
-		ret = data->AddInt32("_uicolor", (int32)ViewUIColor());
+  if (ret == B_OK)
+    ret = data->AddFloat("_uitint", fState->which_high_color_tint);
+  if (ret == B_OK)
+    ret = data->AddFloat("_uitint", fState->which_low_color_tint);
+  if (ret == B_OK)
+    ret = data->AddFloat("_uitint", fState->which_view_color_tint);
 
-	if (ret == B_OK)
-		ret = data->AddFloat("_uitint", fState->which_high_color_tint);
-	if (ret == B_OK)
-		ret = data->AddFloat("_uitint", fState->which_low_color_tint);
-	if (ret == B_OK)
-		ret = data->AddFloat("_uitint", fState->which_view_color_tint);
+  //	NOTE: we do not use this flag any more
+  //	if ( 1 ){
+  //		ret = data->AddInt32("_dbuf", 1);
+  //	}
 
-//	NOTE: we do not use this flag any more
-//	if ( 1 ){
-//		ret = data->AddInt32("_dbuf", 1);
-//	}
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_ORIGIN_BIT) != 0)
+    ret = data->AddPoint("_origin", Origin());
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_ORIGIN_BIT) != 0)
-		ret = data->AddPoint("_origin", Origin());
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_SCALE_BIT) != 0)
+    ret = data->AddFloat("_scale", Scale());
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_SCALE_BIT) != 0)
-		ret = data->AddFloat("_scale", Scale());
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_TRANSFORM_BIT) != 0) {
+    BAffineTransform transform = Transform();
+    ret = data->AddFlat("_transform", &transform);
+  }
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_TRANSFORM_BIT) != 0) {
-		BAffineTransform transform = Transform();
-		ret = data->AddFlat("_transform", &transform);
-	}
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_PEN_SIZE_BIT) != 0)
+    ret = data->AddFloat("_psize", PenSize());
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_PEN_SIZE_BIT) != 0)
-		ret = data->AddFloat("_psize", PenSize());
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_PEN_LOCATION_BIT) != 0)
+    ret = data->AddPoint("_ploc", PenLocation());
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_PEN_LOCATION_BIT) != 0)
-		ret = data->AddPoint("_ploc", PenLocation());
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_LINE_MODES_BIT) != 0) {
+    ret = data->AddInt16("_lmcapjoin", (int16)LineCapMode());
+    if (ret == B_OK)
+      ret = data->AddInt16("_lmcapjoin", (int16)LineJoinMode());
+    if (ret == B_OK)
+      ret = data->AddFloat("_lmmiter", LineMiterLimit());
+  }
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_LINE_MODES_BIT) != 0) {
-		ret = data->AddInt16("_lmcapjoin", (int16)LineCapMode());
-		if (ret == B_OK)
-			ret = data->AddInt16("_lmcapjoin", (int16)LineJoinMode());
-		if (ret == B_OK)
-			ret = data->AddFloat("_lmmiter", LineMiterLimit());
-	}
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_FILL_RULE_BIT) != 0)
+    ret = data->AddInt16("_fillrule", (int16)FillRule());
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_FILL_RULE_BIT) != 0)
-		ret = data->AddInt16("_fillrule", (int16)FillRule());
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_BLENDING_BIT) != 0) {
+    source_alpha alphaSourceMode;
+    alpha_function alphaFunctionMode;
+    GetBlendingMode(&alphaSourceMode, &alphaFunctionMode);
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_BLENDING_BIT) != 0) {
-		source_alpha alphaSourceMode;
-		alpha_function alphaFunctionMode;
-		GetBlendingMode(&alphaSourceMode, &alphaFunctionMode);
+    ret = data->AddInt16("_blend", (int16)alphaSourceMode);
+    if (ret == B_OK)
+      ret = data->AddInt16("_blend", (int16)alphaFunctionMode);
+  }
 
-		ret = data->AddInt16("_blend", (int16)alphaSourceMode);
-		if (ret == B_OK)
-			ret = data->AddInt16("_blend", (int16)alphaFunctionMode);
-	}
+  if (ret == B_OK && (fState->archiving_flags & B_VIEW_DRAWING_MODE_BIT) != 0)
+    ret = data->AddInt32("_dmod", DrawingMode());
 
-	if (ret == B_OK && (fState->archiving_flags & B_VIEW_DRAWING_MODE_BIT) != 0)
-		ret = data->AddInt32("_dmod", DrawingMode());
+  if (ret == B_OK)
+    ret = fLayoutData->AddDataToArchive(data);
 
-	if (ret == B_OK)
-		ret = fLayoutData->AddDataToArchive(data);
+  if (ret == B_OK)
+    ret = data->AddInt16("_show", fShowLevel);
 
-	if (ret == B_OK)
-		ret = data->AddInt16("_show", fShowLevel);
+  if (deep && ret == B_OK) {
+    for (BView *child = fFirstChild; child != NULL && ret == B_OK;
+         child = child->fNextSibling)
+      ret = archiver.AddArchivable("_views", child, deep);
 
-	if (deep && ret == B_OK) {
-		for (BView* child = fFirstChild; child != NULL && ret == B_OK;
-			child = child->fNextSibling)
-			ret = archiver.AddArchivable("_views", child, deep);
+    if (ret == B_OK)
+      ret = archiver.AddArchivable(kLayoutField, GetLayout(), deep);
+  }
 
-		if (ret == B_OK)
-			ret = archiver.AddArchivable(kLayoutField, GetLayout(), deep);
-	}
-
-	return archiver.Finish(ret);
+  return archiver.Finish(ret);
 }
 
+status_t BView::AllUnarchived(const BMessage *from) {
+  BUnarchiver unarchiver(from);
+  status_t err = B_OK;
 
-status_t
-BView::AllUnarchived(const BMessage* from)
-{
-	BUnarchiver unarchiver(from);
-	status_t err = B_OK;
+  int32 count;
+  from->GetInfo("_views", NULL, &count);
 
-	int32 count;
-	from->GetInfo("_views", NULL, &count);
+  for (int32 i = 0; err == B_OK && i < count; i++) {
+    BView *child;
+    err = unarchiver.FindObject<BView>("_views", i, child);
+    if (err == B_OK)
+      err = _AddChild(child, NULL) ? B_OK : B_ERROR;
+  }
 
-	for (int32 i = 0; err == B_OK && i < count; i++) {
-		BView* child;
-		err = unarchiver.FindObject<BView>("_views", i, child);
-		if (err == B_OK)
-			err = _AddChild(child, NULL) ? B_OK : B_ERROR;
-	}
+  if (err == B_OK) {
+    BLayout *&layout = fLayoutData->fLayout;
+    err = unarchiver.FindObject(kLayoutField, layout);
+    if (err == B_OK && layout) {
+      fFlags |= B_SUPPORTS_LAYOUT;
+      fLayoutData->fLayout->SetOwner(this);
+    }
+  }
 
-	if (err == B_OK) {
-		BLayout*& layout = fLayoutData->fLayout;
-		err = unarchiver.FindObject(kLayoutField, layout);
-		if (err == B_OK && layout) {
-			fFlags |= B_SUPPORTS_LAYOUT;
-			fLayoutData->fLayout->SetOwner(this);
-		}
-	}
-
-	return err;
+  return err;
 }
 
-
-status_t
-BView::AllArchived(BMessage* into) const
-{
-	return BHandler::AllArchived(into);
+status_t BView::AllArchived(BMessage *into) const {
+  return BHandler::AllArchived(into);
 }
 
+BView::~BView() {
+  STRACE(("BView(%s)::~BView()\n", this->Name()));
 
-BView::~BView()
-{
-	STRACE(("BView(%s)::~BView()\n", this->Name()));
+  if (fOwner != NULL) {
+    debugger("Trying to delete a view that belongs to a window. "
+             "Call RemoveSelf first.");
+  }
 
-	if (fOwner != NULL) {
-		debugger("Trying to delete a view that belongs to a window. "
-			"Call RemoveSelf first.");
-	}
+  // we also delete all our children
 
-	// we also delete all our children
+  BView *child = fFirstChild;
+  while (child) {
+    BView *nextChild = child->fNextSibling;
 
-	BView* child = fFirstChild;
-	while (child) {
-		BView* nextChild = child->fNextSibling;
+    delete child;
+    child = nextChild;
+  }
 
-		delete child;
-		child = nextChild;
-	}
+  SetLayout(NULL);
+  _RemoveLayoutItemsFromLayout(true);
 
-	SetLayout(NULL);
-	_RemoveLayoutItemsFromLayout(true);
+  delete fLayoutData;
 
-	delete fLayoutData;
+  _RemoveSelf();
 
-	_RemoveSelf();
+  if (fToolTip != NULL)
+    fToolTip->ReleaseReference();
 
-	if (fToolTip != NULL)
-		fToolTip->ReleaseReference();
+  if (fVerScroller != NULL)
+    fVerScroller->SetTarget((BView *)NULL);
+  if (fHorScroller != NULL)
+    fHorScroller->SetTarget((BView *)NULL);
 
-	if (fVerScroller != NULL)
-		fVerScroller->SetTarget((BView*)NULL);
-	if (fHorScroller != NULL)
-		fHorScroller->SetTarget((BView*)NULL);
+  SetName(NULL);
 
-	SetName(NULL);
-
-	_RemoveCommArray();
-	delete fState;
+  _RemoveCommArray();
+  delete fState;
 }
 
+BRect BView::Bounds() const {
+  _CheckLock();
 
-BRect
-BView::Bounds() const
-{
-	_CheckLock();
+  if (fIsPrinting)
+    return fState->print_rect;
 
-	if (fIsPrinting)
-		return fState->print_rect;
-
-	return fBounds;
+  return fBounds;
 }
 
+void BView::_ConvertToParent(BPoint *point, bool checkLock) const {
+  if (!fParent)
+    return;
 
-void
-BView::_ConvertToParent(BPoint* point, bool checkLock) const
-{
-	if (!fParent)
-		return;
+  if (checkLock)
+    _CheckLock();
 
-	if (checkLock)
-		_CheckLock();
-
-	// - our scrolling offset
-	// + our bounds location within the parent
-	point->x += -fBounds.left + fParentOffset.x;
-	point->y += -fBounds.top + fParentOffset.y;
+  // - our scrolling offset
+  // + our bounds location within the parent
+  point->x += -fBounds.left + fParentOffset.x;
+  point->y += -fBounds.top + fParentOffset.y;
 }
 
-
-void
-BView::ConvertToParent(BPoint* point) const
-{
-	_ConvertToParent(point, true);
+void BView::ConvertToParent(BPoint *point) const {
+  _ConvertToParent(point, true);
 }
 
+BPoint BView::ConvertToParent(BPoint point) const {
+  ConvertToParent(&point);
 
-BPoint
-BView::ConvertToParent(BPoint point) const
-{
-	ConvertToParent(&point);
-
-	return point;
+  return point;
 }
 
+void BView::_ConvertFromParent(BPoint *point, bool checkLock) const {
+  if (!fParent)
+    return;
 
-void
-BView::_ConvertFromParent(BPoint* point, bool checkLock) const
-{
-	if (!fParent)
-		return;
+  if (checkLock)
+    _CheckLock();
 
-	if (checkLock)
-		_CheckLock();
-
-	// - our bounds location within the parent
-	// + our scrolling offset
-	point->x += -fParentOffset.x + fBounds.left;
-	point->y += -fParentOffset.y + fBounds.top;
+  // - our bounds location within the parent
+  // + our scrolling offset
+  point->x += -fParentOffset.x + fBounds.left;
+  point->y += -fParentOffset.y + fBounds.top;
 }
 
-
-void
-BView::ConvertFromParent(BPoint* point) const
-{
-	_ConvertFromParent(point, true);
+void BView::ConvertFromParent(BPoint *point) const {
+  _ConvertFromParent(point, true);
 }
 
+BPoint BView::ConvertFromParent(BPoint point) const {
+  ConvertFromParent(&point);
 
-BPoint
-BView::ConvertFromParent(BPoint point) const
-{
-	ConvertFromParent(&point);
-
-	return point;
+  return point;
 }
 
+void BView::ConvertToParent(BRect *rect) const {
+  if (!fParent)
+    return;
 
-void
-BView::ConvertToParent(BRect* rect) const
-{
-	if (!fParent)
-		return;
+  _CheckLock();
 
-	_CheckLock();
-
-	// - our scrolling offset
-	// + our bounds location within the parent
-	rect->OffsetBy(-fBounds.left + fParentOffset.x,
-		-fBounds.top + fParentOffset.y);
+  // - our scrolling offset
+  // + our bounds location within the parent
+  rect->OffsetBy(-fBounds.left + fParentOffset.x,
+                 -fBounds.top + fParentOffset.y);
 }
 
+BRect BView::ConvertToParent(BRect rect) const {
+  ConvertToParent(&rect);
 
-BRect
-BView::ConvertToParent(BRect rect) const
-{
-	ConvertToParent(&rect);
-
-	return rect;
+  return rect;
 }
 
+void BView::ConvertFromParent(BRect *rect) const {
+  if (!fParent)
+    return;
 
-void
-BView::ConvertFromParent(BRect* rect) const
-{
-	if (!fParent)
-		return;
+  _CheckLock();
 
-	_CheckLock();
-
-	// - our bounds location within the parent
-	// + our scrolling offset
-	rect->OffsetBy(-fParentOffset.x + fBounds.left,
-		-fParentOffset.y + fBounds.top);
+  // - our bounds location within the parent
+  // + our scrolling offset
+  rect->OffsetBy(-fParentOffset.x + fBounds.left,
+                 -fParentOffset.y + fBounds.top);
 }
 
+BRect BView::ConvertFromParent(BRect rect) const {
+  ConvertFromParent(&rect);
 
-BRect
-BView::ConvertFromParent(BRect rect) const
-{
-	ConvertFromParent(&rect);
-
-	return rect;
+  return rect;
 }
 
+void BView::_ConvertToScreen(BPoint *point, bool checkLock) const {
+  if (!fParent) {
+    if (fOwner)
+      fOwner->ConvertToScreen(point);
 
-void
-BView::_ConvertToScreen(BPoint* point, bool checkLock) const
-{
-	if (!fParent) {
-		if (fOwner)
-			fOwner->ConvertToScreen(point);
+    return;
+  }
 
-		return;
-	}
+  if (checkLock)
+    _CheckOwnerLock();
 
-	if (checkLock)
-		_CheckOwnerLock();
-
-	_ConvertToParent(point, false);
-	fParent->_ConvertToScreen(point, false);
+  _ConvertToParent(point, false);
+  fParent->_ConvertToScreen(point, false);
 }
 
-
-void
-BView::ConvertToScreen(BPoint* point) const
-{
-	_ConvertToScreen(point, true);
+void BView::ConvertToScreen(BPoint *point) const {
+  _ConvertToScreen(point, true);
 }
 
+BPoint BView::ConvertToScreen(BPoint point) const {
+  ConvertToScreen(&point);
 
-BPoint
-BView::ConvertToScreen(BPoint point) const
-{
-	ConvertToScreen(&point);
-
-	return point;
+  return point;
 }
 
+void BView::_ConvertFromScreen(BPoint *point, bool checkLock) const {
+  if (!fParent) {
+    if (fOwner)
+      fOwner->ConvertFromScreen(point);
 
-void
-BView::_ConvertFromScreen(BPoint* point, bool checkLock) const
-{
-	if (!fParent) {
-		if (fOwner)
-			fOwner->ConvertFromScreen(point);
+    return;
+  }
 
-		return;
-	}
+  if (checkLock)
+    _CheckOwnerLock();
 
-	if (checkLock)
-		_CheckOwnerLock();
-
-	_ConvertFromParent(point, false);
-	fParent->_ConvertFromScreen(point, false);
+  _ConvertFromParent(point, false);
+  fParent->_ConvertFromScreen(point, false);
 }
 
-
-void
-BView::ConvertFromScreen(BPoint* point) const
-{
-	_ConvertFromScreen(point, true);
+void BView::ConvertFromScreen(BPoint *point) const {
+  _ConvertFromScreen(point, true);
 }
 
+BPoint BView::ConvertFromScreen(BPoint point) const {
+  ConvertFromScreen(&point);
 
-BPoint
-BView::ConvertFromScreen(BPoint point) const
-{
-	ConvertFromScreen(&point);
-
-	return point;
+  return point;
 }
 
-
-void
-BView::ConvertToScreen(BRect* rect) const
-{
-	BPoint offset(0.0, 0.0);
-	ConvertToScreen(&offset);
-	rect->OffsetBy(offset);
+void BView::ConvertToScreen(BRect *rect) const {
+  BPoint offset(0.0, 0.0);
+  ConvertToScreen(&offset);
+  rect->OffsetBy(offset);
 }
 
+BRect BView::ConvertToScreen(BRect rect) const {
+  ConvertToScreen(&rect);
 
-BRect
-BView::ConvertToScreen(BRect rect) const
-{
-	ConvertToScreen(&rect);
-
-	return rect;
+  return rect;
 }
 
-
-void
-BView::ConvertFromScreen(BRect* rect) const
-{
-	BPoint offset(0.0, 0.0);
-	ConvertFromScreen(&offset);
-	rect->OffsetBy(offset);
+void BView::ConvertFromScreen(BRect *rect) const {
+  BPoint offset(0.0, 0.0);
+  ConvertFromScreen(&offset);
+  rect->OffsetBy(offset);
 }
 
+BRect BView::ConvertFromScreen(BRect rect) const {
+  ConvertFromScreen(&rect);
 
-BRect
-BView::ConvertFromScreen(BRect rect) const
-{
-	ConvertFromScreen(&rect);
-
-	return rect;
+  return rect;
 }
 
-
-uint32
-BView::Flags() const
-{
-	_CheckLock();
-	return fFlags & ~_RESIZE_MASK_;
+uint32 BView::Flags() const {
+  _CheckLock();
+  return fFlags & ~_RESIZE_MASK_;
 }
 
+void BView::SetFlags(uint32 flags) {
+  if (Flags() == flags)
+    return;
 
-void
-BView::SetFlags(uint32 flags)
-{
-	if (Flags() == flags)
-		return;
+  if (fOwner) {
+    if (flags & B_PULSE_NEEDED) {
+      _CheckLock();
+      if (fOwner->fPulseRunner == NULL)
+        fOwner->SetPulseRate(fOwner->PulseRate());
+    }
 
-	if (fOwner) {
-		if (flags & B_PULSE_NEEDED) {
-			_CheckLock();
-			if (fOwner->fPulseRunner == NULL)
-				fOwner->SetPulseRate(fOwner->PulseRate());
-		}
+    uint32 changesFlags = flags ^ fFlags;
+    if (changesFlags & (B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE | B_FRAME_EVENTS |
+                        B_SUBPIXEL_PRECISE)) {
+      _CheckLockAndSwitchCurrent();
 
-		uint32 changesFlags = flags ^ fFlags;
-		if (changesFlags & (B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE
-				| B_FRAME_EVENTS | B_SUBPIXEL_PRECISE)) {
-			_CheckLockAndSwitchCurrent();
+      fOwner->fLink->StartMessage(AS_VIEW_SET_FLAGS);
+      fOwner->fLink->Attach<uint32>(flags);
+      fOwner->fLink->Flush();
+    }
+  }
 
-			fOwner->fLink->StartMessage(AS_VIEW_SET_FLAGS);
-			fOwner->fLink->Attach<uint32>(flags);
-			fOwner->fLink->Flush();
-		}
-	}
+  /* Some useful info:
+          fFlags is a unsigned long (32 bits)
+          * bits 1-16 are used for BView's flags
+          * bits 17-32 are used for BView' resize mask
+          * _RESIZE_MASK_ is used for that. Look into View.h to see how
+                  it's defined
+  */
+  fFlags = (flags & ~_RESIZE_MASK_) | (fFlags & _RESIZE_MASK_);
 
-	/* Some useful info:
-		fFlags is a unsigned long (32 bits)
-		* bits 1-16 are used for BView's flags
-		* bits 17-32 are used for BView' resize mask
-		* _RESIZE_MASK_ is used for that. Look into View.h to see how
-			it's defined
-	*/
-	fFlags = (flags & ~_RESIZE_MASK_) | (fFlags & _RESIZE_MASK_);
-
-	fState->archiving_flags |= B_VIEW_FLAGS_BIT;
+  fState->archiving_flags |= B_VIEW_FLAGS_BIT;
 }
 
-
-BRect
-BView::Frame() const
-{
-	return Bounds().OffsetToCopy(fParentOffset.x, fParentOffset.y);
+BRect BView::Frame() const {
+  return Bounds().OffsetToCopy(fParentOffset.x, fParentOffset.y);
 }
 
+void BView::Hide() {
+  if (fOwner && fShowLevel == 0) {
+    _CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_HIDE);
+    fOwner->fLink->Flush();
+  }
+  fShowLevel++;
 
-void
-BView::Hide()
-{
-	if (fOwner && fShowLevel == 0) {
-		_CheckLockAndSwitchCurrent();
-		fOwner->fLink->StartMessage(AS_VIEW_HIDE);
-		fOwner->fLink->Flush();
-	}
-	fShowLevel++;
-
-	if (fShowLevel == 1)
-		_InvalidateParentLayout();
+  if (fShowLevel == 1)
+    _InvalidateParentLayout();
 }
 
+void BView::Show() {
+  fShowLevel--;
+  if (fOwner && fShowLevel == 0) {
+    _CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_SHOW);
+    fOwner->fLink->Flush();
+  }
 
-void
-BView::Show()
-{
-	fShowLevel--;
-	if (fOwner && fShowLevel == 0) {
-		_CheckLockAndSwitchCurrent();
-		fOwner->fLink->StartMessage(AS_VIEW_SHOW);
-		fOwner->fLink->Flush();
-	}
-
-	if (fShowLevel == 0)
-		_InvalidateParentLayout();
+  if (fShowLevel == 0)
+    _InvalidateParentLayout();
 }
 
-
-bool
-BView::IsFocus() const
-{
-	if (fOwner) {
-		_CheckLock();
-		return fOwner->CurrentFocus() == this;
-	} else
-		return false;
+bool BView::IsFocus() const {
+  if (fOwner) {
+    _CheckLock();
+    return fOwner->CurrentFocus() == this;
+  } else
+    return false;
 }
 
+bool BView::IsHidden(const BView *lookingFrom) const {
+  if (fShowLevel > 0)
+    return true;
 
-bool
-BView::IsHidden(const BView* lookingFrom) const
-{
-	if (fShowLevel > 0)
-		return true;
+  // may we be egocentric?
+  if (lookingFrom == this)
+    return false;
 
-	// may we be egocentric?
-	if (lookingFrom == this)
-		return false;
+  // we have the same visibility state as our
+  // parent, if there is one
+  if (fParent)
+    return fParent->IsHidden(lookingFrom);
 
-	// we have the same visibility state as our
-	// parent, if there is one
-	if (fParent)
-		return fParent->IsHidden(lookingFrom);
+  // if we're the top view, and we're interested
+  // in the "global" view, we're inheriting the
+  // state of the window's visibility
+  if (fOwner && lookingFrom == NULL)
+    return fOwner->IsHidden();
 
-	// if we're the top view, and we're interested
-	// in the "global" view, we're inheriting the
-	// state of the window's visibility
-	if (fOwner && lookingFrom == NULL)
-		return fOwner->IsHidden();
-
-	return false;
+  return false;
 }
 
+bool BView::IsHidden() const { return IsHidden(NULL); }
 
-bool
-BView::IsHidden() const
-{
-	return IsHidden(NULL);
+bool BView::IsPrinting() const { return fIsPrinting; }
+
+BPoint BView::LeftTop() const { return Bounds().LeftTop(); }
+
+void BView::SetResizingMode(uint32 mode) {
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
+
+    fOwner->fLink->StartMessage(AS_VIEW_RESIZE_MODE);
+    fOwner->fLink->Attach<uint32>(mode);
+  }
+
+  // look at SetFlags() for more info on the below line
+  fFlags = (fFlags & ~_RESIZE_MASK_) | (mode & _RESIZE_MASK_);
 }
 
+uint32 BView::ResizingMode() const { return fFlags & _RESIZE_MASK_; }
 
-bool
-BView::IsPrinting() const
-{
-	return fIsPrinting;
+void BView::SetViewCursor(const BCursor *cursor, bool sync) {
+  if (cursor == NULL || fOwner == NULL)
+    return;
+
+  _CheckLock();
+
+  ViewSetViewCursorInfo info;
+  info.cursorToken = cursor->fServerToken;
+  info.viewToken = _get_object_token_(this);
+  info.sync = sync;
+
+  BPrivate::AppServerLink link;
+  link.StartMessage(AS_SET_VIEW_CURSOR);
+  link.Attach<ViewSetViewCursorInfo>(info);
+
+  if (sync) {
+    // Make sure the server has processed the message.
+    int32 code;
+    link.FlushWithReply(code);
+  }
 }
 
-
-BPoint
-BView::LeftTop() const
-{
-	return Bounds().LeftTop();
+void BView::Flush() const {
+  if (fOwner)
+    fOwner->Flush();
 }
 
-
-void
-BView::SetResizingMode(uint32 mode)
-{
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
-
-		fOwner->fLink->StartMessage(AS_VIEW_RESIZE_MODE);
-		fOwner->fLink->Attach<uint32>(mode);
-	}
-
-	// look at SetFlags() for more info on the below line
-	fFlags = (fFlags & ~_RESIZE_MASK_) | (mode & _RESIZE_MASK_);
+void BView::Sync() const {
+  _CheckOwnerLock();
+  if (fOwner)
+    fOwner->Sync();
 }
 
-
-uint32
-BView::ResizingMode() const
-{
-	return fFlags & _RESIZE_MASK_;
-}
-
-
-void
-BView::SetViewCursor(const BCursor* cursor, bool sync)
-{
-	if (cursor == NULL || fOwner == NULL)
-		return;
-
-	_CheckLock();
-
-	ViewSetViewCursorInfo info;
-	info.cursorToken = cursor->fServerToken;
-	info.viewToken = _get_object_token_(this);
-	info.sync = sync;
-
-	BPrivate::AppServerLink link;
-	link.StartMessage(AS_SET_VIEW_CURSOR);
-	link.Attach<ViewSetViewCursorInfo>(info);
-
-	if (sync) {
-		// Make sure the server has processed the message.
-		int32 code;
-		link.FlushWithReply(code);
-	}
-}
-
-
-void
-BView::Flush() const
-{
-	if (fOwner)
-		fOwner->Flush();
-}
-
-
-void
-BView::Sync() const
-{
-	_CheckOwnerLock();
-	if (fOwner)
-		fOwner->Sync();
-}
-
-
-BWindow*
-BView::Window() const
-{
-	return fOwner;
-}
-
+BWindow *BView::Window() const { return fOwner; }
 
 //	#pragma mark - Hook Functions
 
-
-void
-BView::AttachedToWindow()
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::AttachedToWindow()\n", Name()));
+void BView::AttachedToWindow() {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::AttachedToWindow()\n", Name()));
 }
 
-
-void
-BView::AllAttached()
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::AllAttached()\n", Name()));
+void BView::AllAttached() {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::AllAttached()\n", Name()));
 }
 
-
-void
-BView::DetachedFromWindow()
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::DetachedFromWindow()\n", Name()));
+void BView::DetachedFromWindow() {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::DetachedFromWindow()\n", Name()));
 }
 
-
-void
-BView::AllDetached()
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::AllDetached()\n", Name()));
+void BView::AllDetached() {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::AllDetached()\n", Name()));
 }
 
-
-void
-BView::Draw(BRect updateRect)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::Draw()\n", Name()));
+void BView::Draw(BRect updateRect) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::Draw()\n", Name()));
 }
 
-
-void
-BView::DrawAfterChildren(BRect updateRect)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::DrawAfterChildren()\n", Name()));
+void BView::DrawAfterChildren(BRect updateRect) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::DrawAfterChildren()\n", Name()));
 }
 
-
-void
-BView::FrameMoved(BPoint newPosition)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::FrameMoved()\n", Name()));
+void BView::FrameMoved(BPoint newPosition) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::FrameMoved()\n", Name()));
 }
 
-
-void
-BView::FrameResized(float newWidth, float newHeight)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::FrameResized()\n", Name()));
+void BView::FrameResized(float newWidth, float newHeight) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::FrameResized()\n", Name()));
 }
 
+void BView::GetPreferredSize(float *_width, float *_height) {
+  STRACE(("\tHOOK: BView(%s)::GetPreferredSize()\n", Name()));
 
-void
-BView::GetPreferredSize(float* _width, float* _height)
-{
-	STRACE(("\tHOOK: BView(%s)::GetPreferredSize()\n", Name()));
-
-	if (_width != NULL)
-		*_width = fBounds.Width();
-	if (_height != NULL)
-		*_height = fBounds.Height();
+  if (_width != NULL)
+    *_width = fBounds.Width();
+  if (_height != NULL)
+    *_height = fBounds.Height();
 }
 
+void BView::ResizeToPreferred() {
+  STRACE(("\tHOOK: BView(%s)::ResizeToPreferred()\n", Name()));
 
-void
-BView::ResizeToPreferred()
-{
-	STRACE(("\tHOOK: BView(%s)::ResizeToPreferred()\n", Name()));
+  float width;
+  float height;
+  GetPreferredSize(&width, &height);
 
-	float width;
-	float height;
-	GetPreferredSize(&width, &height);
-
-	ResizeTo(width, height);
+  ResizeTo(width, height);
 }
 
+void BView::KeyDown(const char *bytes, int32 numBytes) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::KeyDown()\n", Name()));
 
-void
-BView::KeyDown(const char* bytes, int32 numBytes)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::KeyDown()\n", Name()));
-
-	if (Window())
-		Window()->_KeyboardNavigation();
+  if (Window())
+    Window()->_KeyboardNavigation();
 }
 
-
-void
-BView::KeyUp(const char* bytes, int32 numBytes)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::KeyUp()\n", Name()));
+void BView::KeyUp(const char *bytes, int32 numBytes) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::KeyUp()\n", Name()));
 }
 
-
-void
-BView::MouseDown(BPoint where)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::MouseDown()\n", Name()));
+void BView::MouseDown(BPoint where) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::MouseDown()\n", Name()));
 }
 
-
-void
-BView::MouseUp(BPoint where)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::MouseUp()\n", Name()));
+void BView::MouseUp(BPoint where) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::MouseUp()\n", Name()));
 }
 
-
-void
-BView::MouseMoved(BPoint where, uint32 code, const BMessage* dragMessage)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::MouseMoved()\n", Name()));
+void BView::MouseMoved(BPoint where, uint32 code, const BMessage *dragMessage) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::MouseMoved()\n", Name()));
 }
 
-
-void
-BView::Pulse()
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::Pulse()\n", Name()));
+void BView::Pulse() {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::Pulse()\n", Name()));
 }
 
-
-void
-BView::TargetedByScrollView(BScrollView* scroll_view)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::TargetedByScrollView()\n", Name()));
+void BView::TargetedByScrollView(BScrollView *scroll_view) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::TargetedByScrollView()\n", Name()));
 }
 
-
-void
-BView::WindowActivated(bool active)
-{
-	// Hook function
-	STRACE(("\tHOOK: BView(%s)::WindowActivated()\n", Name()));
+void BView::WindowActivated(bool active) {
+  // Hook function
+  STRACE(("\tHOOK: BView(%s)::WindowActivated()\n", Name()));
 }
-
 
 //	#pragma mark - Input Functions
 
-
-void
-BView::BeginRectTracking(BRect startRect, uint32 style)
-{
-	if (_CheckOwnerLockAndSwitchCurrent()) {
-		fOwner->fLink->StartMessage(AS_VIEW_BEGIN_RECT_TRACK);
-		fOwner->fLink->Attach<BRect>(startRect);
-		fOwner->fLink->Attach<uint32>(style);
-		fOwner->fLink->Flush();
-	}
+void BView::BeginRectTracking(BRect startRect, uint32 style) {
+  if (_CheckOwnerLockAndSwitchCurrent()) {
+    fOwner->fLink->StartMessage(AS_VIEW_BEGIN_RECT_TRACK);
+    fOwner->fLink->Attach<BRect>(startRect);
+    fOwner->fLink->Attach<uint32>(style);
+    fOwner->fLink->Flush();
+  }
 }
 
-
-void
-BView::EndRectTracking()
-{
-	if (_CheckOwnerLockAndSwitchCurrent()) {
-		fOwner->fLink->StartMessage(AS_VIEW_END_RECT_TRACK);
-		fOwner->fLink->Flush();
-	}
+void BView::EndRectTracking() {
+  if (_CheckOwnerLockAndSwitchCurrent()) {
+    fOwner->fLink->StartMessage(AS_VIEW_END_RECT_TRACK);
+    fOwner->fLink->Flush();
+  }
 }
 
+void BView::DragMessage(BMessage *message, BRect dragRect, BHandler *replyTo) {
+  if (!message)
+    return;
 
-void
-BView::DragMessage(BMessage* message, BRect dragRect, BHandler* replyTo)
-{
-	if (!message)
-		return;
+  _CheckOwnerLock();
 
-	_CheckOwnerLock();
+  // calculate the offset
+  BPoint offset;
+  uint32 buttons;
+  BMessage *current = fOwner->CurrentMessage();
+  if (!current || current->FindPoint("be:view_where", &offset) != B_OK)
+    GetMouse(&offset, &buttons, false);
+  offset -= dragRect.LeftTop();
 
-	// calculate the offset
-	BPoint offset;
-	uint32 buttons;
-	BMessage* current = fOwner->CurrentMessage();
-	if (!current || current->FindPoint("be:view_where", &offset) != B_OK)
-		GetMouse(&offset, &buttons, false);
-	offset -= dragRect.LeftTop();
+  if (!dragRect.IsValid()) {
+    DragMessage(message, NULL, B_OP_BLEND, offset, replyTo);
+    return;
+  }
 
-	if (!dragRect.IsValid()) {
-		DragMessage(message, NULL, B_OP_BLEND, offset, replyTo);
-		return;
-	}
+  // TODO: that's not really what should happen - the app_server should take
+  // the chance *NOT* to need to drag a whole bitmap around but just a frame.
 
-	// TODO: that's not really what should happen - the app_server should take
-	// the chance *NOT* to need to drag a whole bitmap around but just a frame.
+  // create a drag bitmap for the rect
+  BBitmap *bitmap = new (std::nothrow) BBitmap(dragRect, B_RGBA32);
+  if (bitmap == NULL)
+    return;
 
-	// create a drag bitmap for the rect
-	BBitmap* bitmap = new(std::nothrow) BBitmap(dragRect, B_RGBA32);
-	if (bitmap == NULL)
-		return;
+  uint32 *bits = (uint32 *)bitmap->Bits();
+  uint32 bytesPerRow = bitmap->BytesPerRow();
+  uint32 width = dragRect.IntegerWidth() + 1;
+  uint32 height = dragRect.IntegerHeight() + 1;
+  uint32 lastRow = (height - 1) * width;
 
-	uint32* bits = (uint32*)bitmap->Bits();
-	uint32 bytesPerRow = bitmap->BytesPerRow();
-	uint32 width = dragRect.IntegerWidth() + 1;
-	uint32 height = dragRect.IntegerHeight() + 1;
-	uint32 lastRow = (height - 1) * width;
+  memset(bits, 0x00, height * bytesPerRow);
 
-	memset(bits, 0x00, height * bytesPerRow);
+  // top
+  for (uint32 i = 0; i < width; i += 2)
+    bits[i] = 0xff000000;
 
-	// top
-	for (uint32 i = 0; i < width; i += 2)
-		bits[i] = 0xff000000;
+  // bottom
+  for (uint32 i = (height % 2 == 0 ? 1 : 0); i < width; i += 2)
+    bits[lastRow + i] = 0xff000000;
 
-	// bottom
-	for (uint32 i = (height % 2 == 0 ? 1 : 0); i < width; i += 2)
-		bits[lastRow + i] = 0xff000000;
+  // left
+  for (uint32 i = 0; i < lastRow; i += width * 2)
+    bits[i] = 0xff000000;
 
-	// left
-	for (uint32 i = 0; i < lastRow; i += width * 2)
-		bits[i] = 0xff000000;
+  // right
+  for (uint32 i = (width % 2 == 0 ? width : 0); i < lastRow; i += width * 2)
+    bits[width - 1 + i] = 0xff000000;
 
-	// right
-	for (uint32 i = (width % 2 == 0 ? width : 0); i < lastRow; i += width * 2)
-		bits[width - 1 + i] = 0xff000000;
-
-	DragMessage(message, bitmap, B_OP_BLEND, offset, replyTo);
+  DragMessage(message, bitmap, B_OP_BLEND, offset, replyTo);
 }
 
-
-void
-BView::DragMessage(BMessage* message, BBitmap* image, BPoint offset,
-	BHandler* replyTo)
-{
-	DragMessage(message, image, B_OP_COPY, offset, replyTo);
+void BView::DragMessage(BMessage *message, BBitmap *image, BPoint offset,
+                        BHandler *replyTo) {
+  DragMessage(message, image, B_OP_COPY, offset, replyTo);
 }
 
+void BView::DragMessage(BMessage *message, BBitmap *image,
+                        drawing_mode dragMode, BPoint offset,
+                        BHandler *replyTo) {
+  if (message == NULL)
+    return;
 
-void
-BView::DragMessage(BMessage* message, BBitmap* image,
-	drawing_mode dragMode, BPoint offset, BHandler* replyTo)
-{
-	if (message == NULL)
-		return;
+  if (image == NULL) {
+    // TODO: workaround for drags without a bitmap - should not be necessary if
+    //	we move the rectangle dragging into the app_server
+    image = new (std::nothrow) BBitmap(BRect(0, 0, 0, 0), B_RGBA32);
+    if (image == NULL)
+      return;
+  }
 
-	if (image == NULL) {
-		// TODO: workaround for drags without a bitmap - should not be necessary if
-		//	we move the rectangle dragging into the app_server
-		image = new(std::nothrow) BBitmap(BRect(0, 0, 0, 0), B_RGBA32);
-		if (image == NULL)
-			return;
-	}
+  if (replyTo == NULL)
+    replyTo = this;
 
-	if (replyTo == NULL)
-		replyTo = this;
+  if (replyTo->Looper() == NULL)
+    debugger("DragMessage: warning - the Handler needs a looper");
 
-	if (replyTo->Looper() == NULL)
-		debugger("DragMessage: warning - the Handler needs a looper");
+  _CheckOwnerLock();
 
-	_CheckOwnerLock();
+  if (!message->HasInt32("buttons")) {
+    BMessage *msg = fOwner->CurrentMessage();
+    uint32 buttons;
 
-	if (!message->HasInt32("buttons")) {
-		BMessage* msg = fOwner->CurrentMessage();
-		uint32 buttons;
+    if (msg == NULL || msg->FindInt32("buttons", (int32 *)&buttons) != B_OK) {
+      BPoint point;
+      GetMouse(&point, &buttons, false);
+    }
 
-		if (msg == NULL
-			|| msg->FindInt32("buttons", (int32*)&buttons) != B_OK) {
-			BPoint point;
-			GetMouse(&point, &buttons, false);
-		}
+    message->AddInt32("buttons", buttons);
+  }
 
-		message->AddInt32("buttons", buttons);
-	}
+  BMessage::Private privateMessage(message);
+  privateMessage.SetReply(BMessenger(replyTo, replyTo->Looper()));
 
-	BMessage::Private privateMessage(message);
-	privateMessage.SetReply(BMessenger(replyTo, replyTo->Looper()));
+  int32 bufferSize = message->FlattenedSize();
+  char *buffer = new (std::nothrow) char[bufferSize];
+  if (buffer != NULL) {
+    message->Flatten(buffer, bufferSize);
 
-	int32 bufferSize = message->FlattenedSize();
-	char* buffer = new(std::nothrow) char[bufferSize];
-	if (buffer != NULL) {
-		message->Flatten(buffer, bufferSize);
+    fOwner->fLink->StartMessage(AS_VIEW_DRAG_IMAGE);
+    fOwner->fLink->Attach<int32>(image->_ServerToken());
+    fOwner->fLink->Attach<int32>((int32)dragMode);
+    fOwner->fLink->Attach<BPoint>(offset);
+    fOwner->fLink->Attach<int32>(bufferSize);
+    fOwner->fLink->Attach(buffer, bufferSize);
 
-		fOwner->fLink->StartMessage(AS_VIEW_DRAG_IMAGE);
-		fOwner->fLink->Attach<int32>(image->_ServerToken());
-		fOwner->fLink->Attach<int32>((int32)dragMode);
-		fOwner->fLink->Attach<BPoint>(offset);
-		fOwner->fLink->Attach<int32>(bufferSize);
-		fOwner->fLink->Attach(buffer, bufferSize);
+    // we need to wait for the server
+    // to actually process this message
+    // before we can delete the bitmap
+    int32 code;
+    fOwner->fLink->FlushWithReply(code);
 
-		// we need to wait for the server
-		// to actually process this message
-		// before we can delete the bitmap
-		int32 code;
-		fOwner->fLink->FlushWithReply(code);
+    delete[] buffer;
+  } else {
+    fprintf(stderr, "BView::DragMessage() - no memory to flatten drag "
+                    "message\n");
+  }
 
-		delete [] buffer;
-	} else {
-		fprintf(stderr, "BView::DragMessage() - no memory to flatten drag "
-			"message\n");
-	}
-
-	delete image;
+  delete image;
 }
 
+void BView::GetMouse(BPoint *_location, uint32 *_buttons,
+                     bool checkMessageQueue) {
+  if (_location == NULL && _buttons == NULL)
+    return;
 
-void
-BView::GetMouse(BPoint* _location, uint32* _buttons, bool checkMessageQueue)
-{
-	if (_location == NULL && _buttons == NULL)
-		return;
+  _CheckOwnerLockAndSwitchCurrent();
 
-	_CheckOwnerLockAndSwitchCurrent();
+  uint32 eventOptions = fEventOptions | fMouseEventOptions;
+  bool noHistory = eventOptions & B_NO_POINTER_HISTORY;
+  bool fullHistory = eventOptions & B_FULL_POINTER_HISTORY;
 
-	uint32 eventOptions = fEventOptions | fMouseEventOptions;
-	bool noHistory = eventOptions & B_NO_POINTER_HISTORY;
-	bool fullHistory = eventOptions & B_FULL_POINTER_HISTORY;
+  if (checkMessageQueue && !noHistory) {
+    Window()->UpdateIfNeeded();
+    BMessageQueue *queue = Window()->MessageQueue();
+    queue->Lock();
 
-	if (checkMessageQueue && !noHistory) {
-		Window()->UpdateIfNeeded();
-		BMessageQueue* queue = Window()->MessageQueue();
-		queue->Lock();
+    // Look out for mouse update messages
 
-		// Look out for mouse update messages
+    BMessage *message;
+    for (int32 i = 0; (message = queue->FindMessage(i)) != NULL; i++) {
+      switch (message->what) {
+      case B_MOUSE_MOVED:
+      case B_MOUSE_UP:
+      case B_MOUSE_DOWN:
+        bool deleteMessage;
+        if (!Window()->_StealMouseMessage(message, deleteMessage))
+          continue;
 
-		BMessage* message;
-		for (int32 i = 0; (message = queue->FindMessage(i)) != NULL; i++) {
-			switch (message->what) {
-				case B_MOUSE_MOVED:
-				case B_MOUSE_UP:
-				case B_MOUSE_DOWN:
-					bool deleteMessage;
-					if (!Window()->_StealMouseMessage(message, deleteMessage))
-						continue;
+        if (!fullHistory && message->what == B_MOUSE_MOVED) {
+          // Check if the message is too old. Some applications
+          // check the message queue in such a way that mouse
+          // messages *must* pile up. This check makes them work
+          // as intended, although these applications could simply
+          // use the version of BView::GetMouse() that does not
+          // check the history. Also note that it isn't a problem
+          // to delete the message in case there is not a newer
+          // one. If we don't find a message in the queue, we will
+          // just fall back to asking the app_sever directly. So
+          // the imposed delay will not be a problem on slower
+          // computers. This check also prevents another problem,
+          // when the message that we use is *not* removed from
+          // the queue. Subsequent calls to GetMouse() would find
+          // this message over and over!
+          bigtime_t eventTime;
+          if (message->FindInt64("when", &eventTime) == B_OK &&
+              system_time() - eventTime > 10000) {
+            // just discard the message
+            if (deleteMessage)
+              delete message;
+            continue;
+          }
+        }
+        if (_location != NULL)
+          message->FindPoint("screen_where", _location);
+        if (_buttons != NULL)
+          message->FindInt32("buttons", (int32 *)_buttons);
+        queue->Unlock();
+        // we need to hold the queue lock until here, because
+        // the message might still be used for something else
 
-					if (!fullHistory && message->what == B_MOUSE_MOVED) {
-						// Check if the message is too old. Some applications
-						// check the message queue in such a way that mouse
-						// messages *must* pile up. This check makes them work
-						// as intended, although these applications could simply
-						// use the version of BView::GetMouse() that does not
-						// check the history. Also note that it isn't a problem
-						// to delete the message in case there is not a newer
-						// one. If we don't find a message in the queue, we will
-						// just fall back to asking the app_sever directly. So
-						// the imposed delay will not be a problem on slower
-						// computers. This check also prevents another problem,
-						// when the message that we use is *not* removed from
-						// the queue. Subsequent calls to GetMouse() would find
-						// this message over and over!
-						bigtime_t eventTime;
-						if (message->FindInt64("when", &eventTime) == B_OK
-							&& system_time() - eventTime > 10000) {
-							// just discard the message
-							if (deleteMessage)
-								delete message;
-							continue;
-						}
-					}
-					if (_location != NULL)
-						message->FindPoint("screen_where", _location);
-					if (_buttons != NULL)
-						message->FindInt32("buttons", (int32*)_buttons);
-					queue->Unlock();
-						// we need to hold the queue lock until here, because
-						// the message might still be used for something else
+        if (_location != NULL)
+          ConvertFromScreen(_location);
 
-					if (_location != NULL)
-						ConvertFromScreen(_location);
+        if (deleteMessage)
+          delete message;
 
-					if (deleteMessage)
-						delete message;
+        return;
+      }
+    }
+    queue->Unlock();
+  }
 
-					return;
-			}
-		}
-		queue->Unlock();
-	}
+  // If no mouse update message has been found in the message queue,
+  // we get the current mouse location and buttons from the app_server
 
-	// If no mouse update message has been found in the message queue,
-	// we get the current mouse location and buttons from the app_server
+  fOwner->fLink->StartMessage(AS_GET_MOUSE);
 
-	fOwner->fLink->StartMessage(AS_GET_MOUSE);
+  int32 code;
+  if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+    BPoint location;
+    uint32 buttons;
+    fOwner->fLink->Read<BPoint>(&location);
+    fOwner->fLink->Read<uint32>(&buttons);
+    // TODO: ServerWindow replies with an int32 here
 
-	int32 code;
-	if (fOwner->fLink->FlushWithReply(code) == B_OK
-		&& code == B_OK) {
-		BPoint location;
-		uint32 buttons;
-		fOwner->fLink->Read<BPoint>(&location);
-		fOwner->fLink->Read<uint32>(&buttons);
-			// TODO: ServerWindow replies with an int32 here
-
-		ConvertFromScreen(&location);
-			// TODO: in beos R5, location is already converted to the view
-			// local coordinate system, so if an app checks the window message
-			// queue by itself, it might not find what it expects.
-			// NOTE: the fact that we have mouse coords in screen space in our
-			// queue avoids the problem that messages already in the queue will
-			// be outdated as soon as a window or even the view moves. The
-			// second situation being quite common actually, also with regards
-			// to scrolling. An app reading these messages would have to know
-			// the locations of the window and view for each message...
-			// otherwise it is potentially broken anyways.
-		if (_location != NULL)
-			*_location = location;
-		if (_buttons != NULL)
-			*_buttons = buttons;
-	} else {
-		if (_location != NULL)
-			_location->Set(0, 0);
-		if (_buttons != NULL)
-			*_buttons = 0;
-	}
+    ConvertFromScreen(&location);
+    // TODO: in beos R5, location is already converted to the view
+    // local coordinate system, so if an app checks the window message
+    // queue by itself, it might not find what it expects.
+    // NOTE: the fact that we have mouse coords in screen space in our
+    // queue avoids the problem that messages already in the queue will
+    // be outdated as soon as a window or even the view moves. The
+    // second situation being quite common actually, also with regards
+    // to scrolling. An app reading these messages would have to know
+    // the locations of the window and view for each message...
+    // otherwise it is potentially broken anyways.
+    if (_location != NULL)
+      *_location = location;
+    if (_buttons != NULL)
+      *_buttons = buttons;
+  } else {
+    if (_location != NULL)
+      _location->Set(0, 0);
+    if (_buttons != NULL)
+      *_buttons = 0;
+  }
 }
 
+void BView::MakeFocus(bool focus) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::MakeFocus(bool focus)
-{
-	if (fOwner == NULL)
-		return;
+  // TODO: If this view has focus and focus == false,
+  // will there really be no other view with focus? No
+  // cycling to the next one?
+  BView *focusView = fOwner->CurrentFocus();
+  if (focus) {
+    // Unfocus a previous focus view
+    if (focusView != NULL && focusView != this)
+      focusView->MakeFocus(false);
 
-	// TODO: If this view has focus and focus == false,
-	// will there really be no other view with focus? No
-	// cycling to the next one?
-	BView* focusView = fOwner->CurrentFocus();
-	if (focus) {
-		// Unfocus a previous focus view
-		if (focusView != NULL && focusView != this)
-			focusView->MakeFocus(false);
-
-		// if we want to make this view the current focus view
-		fOwner->_SetFocus(this, true);
-	} else {
-		// we want to unfocus this view, but only if it actually has focus
-		if (focusView == this)
-			fOwner->_SetFocus(NULL, true);
-	}
+    // if we want to make this view the current focus view
+    fOwner->_SetFocus(this, true);
+  } else {
+    // we want to unfocus this view, but only if it actually has focus
+    if (focusView == this)
+      fOwner->_SetFocus(NULL, true);
+  }
 }
 
+BScrollBar *BView::ScrollBar(orientation direction) const {
+  switch (direction) {
+  case B_VERTICAL:
+    return fVerScroller;
 
-BScrollBar*
-BView::ScrollBar(orientation direction) const
-{
-	switch (direction) {
-		case B_VERTICAL:
-			return fVerScroller;
+  case B_HORIZONTAL:
+    return fHorScroller;
 
-		case B_HORIZONTAL:
-			return fHorScroller;
-
-		default:
-			return NULL;
-	}
+  default:
+    return NULL;
+  }
 }
 
-
-void
-BView::ScrollBy(float deltaX, float deltaY)
-{
-	ScrollTo(BPoint(fBounds.left + deltaX, fBounds.top + deltaY));
+void BView::ScrollBy(float deltaX, float deltaY) {
+  ScrollTo(BPoint(fBounds.left + deltaX, fBounds.top + deltaY));
 }
 
+void BView::ScrollTo(BPoint where) {
+  // scrolling by fractional values is not supported
+  where.x = roundf(where.x);
+  where.y = roundf(where.y);
 
-void
-BView::ScrollTo(BPoint where)
-{
-	// scrolling by fractional values is not supported
-	where.x = roundf(where.x);
-	where.y = roundf(where.y);
+  // no reason to process this further if no scroll is intended.
+  if (where.x == fBounds.left && where.y == fBounds.top)
+    return;
 
-	// no reason to process this further if no scroll is intended.
-	if (where.x == fBounds.left && where.y == fBounds.top)
-		return;
+  // make sure scrolling is within valid bounds
+  if (fHorScroller) {
+    float min, max;
+    fHorScroller->GetRange(&min, &max);
 
-	// make sure scrolling is within valid bounds
-	if (fHorScroller) {
-		float min, max;
-		fHorScroller->GetRange(&min, &max);
+    if (where.x < min)
+      where.x = min;
+    else if (where.x > max)
+      where.x = max;
+  }
+  if (fVerScroller) {
+    float min, max;
+    fVerScroller->GetRange(&min, &max);
 
-		if (where.x < min)
-			where.x = min;
-		else if (where.x > max)
-			where.x = max;
-	}
-	if (fVerScroller) {
-		float min, max;
-		fVerScroller->GetRange(&min, &max);
+    if (where.y < min)
+      where.y = min;
+    else if (where.y > max)
+      where.y = max;
+  }
 
-		if (where.y < min)
-			where.y = min;
-		else if (where.y > max)
-			where.y = max;
-	}
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  float xDiff = where.x - fBounds.left;
+  float yDiff = where.y - fBounds.top;
 
-	float xDiff = where.x - fBounds.left;
-	float yDiff = where.y - fBounds.top;
+  // if we're attached to a window tell app_server about this change
+  if (fOwner) {
+    fOwner->fLink->StartMessage(AS_VIEW_SCROLL);
+    fOwner->fLink->Attach<float>(xDiff);
+    fOwner->fLink->Attach<float>(yDiff);
 
-	// if we're attached to a window tell app_server about this change
-	if (fOwner) {
-		fOwner->fLink->StartMessage(AS_VIEW_SCROLL);
-		fOwner->fLink->Attach<float>(xDiff);
-		fOwner->fLink->Attach<float>(yDiff);
+    fOwner->fLink->Flush();
 
-		fOwner->fLink->Flush();
+    //		fState->valid_flags &= ~B_VIEW_FRAME_BIT;
+  }
 
-//		fState->valid_flags &= ~B_VIEW_FRAME_BIT;
-	}
+  // we modify our bounds rectangle by deltaX/deltaY coord units hor/ver.
+  fBounds.OffsetTo(where.x, where.y);
 
-	// we modify our bounds rectangle by deltaX/deltaY coord units hor/ver.
-	fBounds.OffsetTo(where.x, where.y);
-
-	// then set the new values of the scrollbars
-	if (fHorScroller && xDiff != 0.0)
-		fHorScroller->SetValue(fBounds.left);
-	if (fVerScroller && yDiff != 0.0)
-		fVerScroller->SetValue(fBounds.top);
-
+  // then set the new values of the scrollbars
+  if (fHorScroller && xDiff != 0.0)
+    fHorScroller->SetValue(fBounds.left);
+  if (fVerScroller && yDiff != 0.0)
+    fVerScroller->SetValue(fBounds.top);
 }
 
+status_t BView::SetEventMask(uint32 mask, uint32 options) {
+  if (fEventMask == mask && fEventOptions == options)
+    return B_OK;
 
-status_t
-BView::SetEventMask(uint32 mask, uint32 options)
-{
-	if (fEventMask == mask && fEventOptions == options)
-		return B_OK;
+  // don't change the mask if it's zero and we've got options
+  if (mask != 0 || options == 0)
+    fEventMask = mask | (fEventMask & 0xffff0000);
+  fEventOptions = options;
 
-	// don't change the mask if it's zero and we've got options
-	if (mask != 0 || options == 0)
-		fEventMask = mask | (fEventMask & 0xffff0000);
-	fEventOptions = options;
+  fState->archiving_flags |= B_VIEW_EVENT_MASK_BIT;
 
-	fState->archiving_flags |= B_VIEW_EVENT_MASK_BIT;
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_SET_EVENT_MASK);
+    fOwner->fLink->Attach<uint32>(mask);
+    fOwner->fLink->Attach<uint32>(options);
+    fOwner->fLink->Flush();
+  }
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_EVENT_MASK);
-		fOwner->fLink->Attach<uint32>(mask);
-		fOwner->fLink->Attach<uint32>(options);
-		fOwner->fLink->Flush();
-	}
-
-	return B_OK;
+  return B_OK;
 }
 
+uint32 BView::EventMask() { return fEventMask; }
 
-uint32
-BView::EventMask()
-{
-	return fEventMask;
+status_t BView::SetMouseEventMask(uint32 mask, uint32 options) {
+  // Just don't do anything if the view is not yet attached
+  // or we were called outside of BView::MouseDown()
+  if (fOwner != NULL && fOwner->CurrentMessage() != NULL &&
+      fOwner->CurrentMessage()->what == B_MOUSE_DOWN) {
+    _CheckLockAndSwitchCurrent();
+    fMouseEventOptions = options;
+
+    fOwner->fLink->StartMessage(AS_VIEW_SET_MOUSE_EVENT_MASK);
+    fOwner->fLink->Attach<uint32>(mask);
+    fOwner->fLink->Attach<uint32>(options);
+    fOwner->fLink->Flush();
+    return B_OK;
+  }
+
+  return B_ERROR;
 }
-
-
-status_t
-BView::SetMouseEventMask(uint32 mask, uint32 options)
-{
-	// Just don't do anything if the view is not yet attached
-	// or we were called outside of BView::MouseDown()
-	if (fOwner != NULL
-		&& fOwner->CurrentMessage() != NULL
-		&& fOwner->CurrentMessage()->what == B_MOUSE_DOWN) {
-		_CheckLockAndSwitchCurrent();
-		fMouseEventOptions = options;
-
-		fOwner->fLink->StartMessage(AS_VIEW_SET_MOUSE_EVENT_MASK);
-		fOwner->fLink->Attach<uint32>(mask);
-		fOwner->fLink->Attach<uint32>(options);
-		fOwner->fLink->Flush();
-		return B_OK;
-	}
-
-	return B_ERROR;
-}
-
 
 //	#pragma mark - Graphic State Functions
 
+void BView::PushState() {
+  _CheckOwnerLockAndSwitchCurrent();
 
-void
-BView::PushState()
-{
-	_CheckOwnerLockAndSwitchCurrent();
+  fOwner->fLink->StartMessage(AS_VIEW_PUSH_STATE);
 
-	fOwner->fLink->StartMessage(AS_VIEW_PUSH_STATE);
-
-	// initialize origin, scale and transform, new states start "clean".
-	fState->valid_flags |= B_VIEW_SCALE_BIT | B_VIEW_ORIGIN_BIT
-		| B_VIEW_TRANSFORM_BIT;
-	fState->scale = 1.0f;
-	fState->origin.Set(0, 0);
-	fState->transform.Reset();
+  // initialize origin, scale and transform, new states start "clean".
+  fState->valid_flags |=
+      B_VIEW_SCALE_BIT | B_VIEW_ORIGIN_BIT | B_VIEW_TRANSFORM_BIT;
+  fState->scale = 1.0f;
+  fState->origin.Set(0, 0);
+  fState->transform.Reset();
 }
 
+void BView::PopState() {
+  _CheckOwnerLockAndSwitchCurrent();
 
-void
-BView::PopState()
-{
-	_CheckOwnerLockAndSwitchCurrent();
+  fOwner->fLink->StartMessage(AS_VIEW_POP_STATE);
+  _FlushIfNotInTransaction();
 
-	fOwner->fLink->StartMessage(AS_VIEW_POP_STATE);
-	_FlushIfNotInTransaction();
-
-	// invalidate all flags (except those that are not part of pop/push)
-	fState->valid_flags = B_VIEW_VIEW_COLOR_BIT;
+  // invalidate all flags (except those that are not part of pop/push)
+  fState->valid_flags = B_VIEW_VIEW_COLOR_BIT;
 }
 
+void BView::SetOrigin(BPoint where) { SetOrigin(where.x, where.y); }
 
-void
-BView::SetOrigin(BPoint where)
-{
-	SetOrigin(where.x, where.y);
+void BView::SetOrigin(float x, float y) {
+  if (fState->IsValid(B_VIEW_ORIGIN_BIT) && x == fState->origin.x &&
+      y == fState->origin.y)
+    return;
+
+  fState->origin.x = x;
+  fState->origin.y = y;
+
+  if (_CheckOwnerLockAndSwitchCurrent()) {
+    fOwner->fLink->StartMessage(AS_VIEW_SET_ORIGIN);
+    fOwner->fLink->Attach<float>(x);
+    fOwner->fLink->Attach<float>(y);
+
+    fState->valid_flags |= B_VIEW_ORIGIN_BIT;
+  }
+
+  // our local coord system origin has changed, so when archiving we'll add
+  // this too
+  fState->archiving_flags |= B_VIEW_ORIGIN_BIT;
 }
 
+BPoint BView::Origin() const {
+  if (!fState->IsValid(B_VIEW_ORIGIN_BIT)) {
+    // we don't keep graphics state information, therefor
+    // we need to ask the server for the origin after PopState()
+    _CheckOwnerLockAndSwitchCurrent();
 
-void
-BView::SetOrigin(float x, float y)
-{
-	if (fState->IsValid(B_VIEW_ORIGIN_BIT)
-		&& x == fState->origin.x && y == fState->origin.y)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_GET_ORIGIN);
 
-	fState->origin.x = x;
-	fState->origin.y = y;
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK)
+      fOwner->fLink->Read<BPoint>(&fState->origin);
 
-	if (_CheckOwnerLockAndSwitchCurrent()) {
-		fOwner->fLink->StartMessage(AS_VIEW_SET_ORIGIN);
-		fOwner->fLink->Attach<float>(x);
-		fOwner->fLink->Attach<float>(y);
+    fState->valid_flags |= B_VIEW_ORIGIN_BIT;
+  }
 
-		fState->valid_flags |= B_VIEW_ORIGIN_BIT;
-	}
-
-	// our local coord system origin has changed, so when archiving we'll add
-	// this too
-	fState->archiving_flags |= B_VIEW_ORIGIN_BIT;
+  return fState->origin;
 }
 
+void BView::SetScale(float scale) const {
+  if (fState->IsValid(B_VIEW_SCALE_BIT) && scale == fState->scale)
+    return;
 
-BPoint
-BView::Origin() const
-{
-	if (!fState->IsValid(B_VIEW_ORIGIN_BIT)) {
-		// we don't keep graphics state information, therefor
-		// we need to ask the server for the origin after PopState()
-		_CheckOwnerLockAndSwitchCurrent();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_ORIGIN);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_SCALE);
+    fOwner->fLink->Attach<float>(scale);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK)
-			fOwner->fLink->Read<BPoint>(&fState->origin);
+    fState->valid_flags |= B_VIEW_SCALE_BIT;
+  }
 
-		fState->valid_flags |= B_VIEW_ORIGIN_BIT;
-	}
-
-	return fState->origin;
+  fState->scale = scale;
+  fState->archiving_flags |= B_VIEW_SCALE_BIT;
 }
 
+float BView::Scale() const {
+  if (!fState->IsValid(B_VIEW_SCALE_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::SetScale(float scale) const
-{
-	if (fState->IsValid(B_VIEW_SCALE_BIT) && scale == fState->scale)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_GET_SCALE);
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK)
+      fOwner->fLink->Read<float>(&fState->scale);
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_SCALE);
-		fOwner->fLink->Attach<float>(scale);
+    fState->valid_flags |= B_VIEW_SCALE_BIT;
+  }
 
-		fState->valid_flags |= B_VIEW_SCALE_BIT;
-	}
-
-	fState->scale = scale;
-	fState->archiving_flags |= B_VIEW_SCALE_BIT;
+  return fState->scale;
 }
 
+void BView::SetTransform(BAffineTransform transform) {
+  if (fState->IsValid(B_VIEW_TRANSFORM_BIT) && transform == fState->transform)
+    return;
 
-float
-BView::Scale() const
-{
-	if (!fState->IsValid(B_VIEW_SCALE_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+  if (fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_SCALE);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_TRANSFORM);
+    fOwner->fLink->Attach<BAffineTransform>(transform);
 
- 		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK)
-			fOwner->fLink->Read<float>(&fState->scale);
+    fState->valid_flags |= B_VIEW_TRANSFORM_BIT;
+  }
 
-		fState->valid_flags |= B_VIEW_SCALE_BIT;
-	}
-
-	return fState->scale;
+  fState->transform = transform;
+  fState->archiving_flags |= B_VIEW_TRANSFORM_BIT;
 }
 
+BAffineTransform BView::Transform() const {
+  if (!fState->IsValid(B_VIEW_TRANSFORM_BIT) && fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::SetTransform(BAffineTransform transform)
-{
-	if (fState->IsValid(B_VIEW_TRANSFORM_BIT) && transform == fState->transform)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_GET_TRANSFORM);
 
-	if (fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK)
+      fOwner->fLink->Read<BAffineTransform>(&fState->transform);
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_TRANSFORM);
-		fOwner->fLink->Attach<BAffineTransform>(transform);
+    fState->valid_flags |= B_VIEW_TRANSFORM_BIT;
+  }
 
-		fState->valid_flags |= B_VIEW_TRANSFORM_BIT;
-	}
-
-	fState->transform = transform;
-	fState->archiving_flags |= B_VIEW_TRANSFORM_BIT;
+  return fState->transform;
 }
 
+void BView::TranslateBy(double x, double y) {
+  if (fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-BAffineTransform
-BView::Transform() const
-{
-	if (!fState->IsValid(B_VIEW_TRANSFORM_BIT) && fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_AFFINE_TRANSLATE);
+    fOwner->fLink->Attach<double>(x);
+    fOwner->fLink->Attach<double>(y);
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_TRANSFORM);
+    fState->valid_flags &= ~B_VIEW_TRANSFORM_BIT;
+  }
 
- 		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK)
-			fOwner->fLink->Read<BAffineTransform>(&fState->transform);
-
-		fState->valid_flags |= B_VIEW_TRANSFORM_BIT;
-	}
-
-	return fState->transform;
+  fState->archiving_flags |= B_VIEW_TRANSFORM_BIT;
 }
 
+void BView::ScaleBy(double x, double y) {
+  if (fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::TranslateBy(double x, double y)
-{
-	if (fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_AFFINE_SCALE);
+    fOwner->fLink->Attach<double>(x);
+    fOwner->fLink->Attach<double>(y);
 
-		fOwner->fLink->StartMessage(AS_VIEW_AFFINE_TRANSLATE);
-		fOwner->fLink->Attach<double>(x);
-		fOwner->fLink->Attach<double>(y);
+    fState->valid_flags &= ~B_VIEW_TRANSFORM_BIT;
+  }
 
-		fState->valid_flags &= ~B_VIEW_TRANSFORM_BIT;
-	}
-
-	fState->archiving_flags |= B_VIEW_TRANSFORM_BIT;
+  fState->archiving_flags |= B_VIEW_TRANSFORM_BIT;
 }
 
+void BView::RotateBy(double angleRadians) {
+  if (fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::ScaleBy(double x, double y)
-{
-	if (fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_AFFINE_ROTATE);
+    fOwner->fLink->Attach<double>(angleRadians);
 
-		fOwner->fLink->StartMessage(AS_VIEW_AFFINE_SCALE);
-		fOwner->fLink->Attach<double>(x);
-		fOwner->fLink->Attach<double>(y);
+    fState->valid_flags &= ~B_VIEW_TRANSFORM_BIT;
+  }
 
-		fState->valid_flags &= ~B_VIEW_TRANSFORM_BIT;
-	}
-
-	fState->archiving_flags |= B_VIEW_TRANSFORM_BIT;
+  fState->archiving_flags |= B_VIEW_TRANSFORM_BIT;
 }
 
+void BView::SetLineMode(cap_mode lineCap, join_mode lineJoin,
+                        float miterLimit) {
+  if (fState->IsValid(B_VIEW_LINE_MODES_BIT) && lineCap == fState->line_cap &&
+      lineJoin == fState->line_join && miterLimit == fState->miter_limit)
+    return;
 
-void
-BView::RotateBy(double angleRadians)
-{
-	if (fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_AFFINE_ROTATE);
-		fOwner->fLink->Attach<double>(angleRadians);
+    ViewSetLineModeInfo info;
+    info.lineJoin = lineJoin;
+    info.lineCap = lineCap;
+    info.miterLimit = miterLimit;
 
-		fState->valid_flags &= ~B_VIEW_TRANSFORM_BIT;
-	}
+    fOwner->fLink->StartMessage(AS_VIEW_SET_LINE_MODE);
+    fOwner->fLink->Attach<ViewSetLineModeInfo>(info);
 
-	fState->archiving_flags |= B_VIEW_TRANSFORM_BIT;
+    fState->valid_flags |= B_VIEW_LINE_MODES_BIT;
+  }
+
+  fState->line_cap = lineCap;
+  fState->line_join = lineJoin;
+  fState->miter_limit = miterLimit;
+
+  fState->archiving_flags |= B_VIEW_LINE_MODES_BIT;
 }
 
+join_mode BView::LineJoinMode() const {
+  // This will update the current state, if necessary
+  if (!fState->IsValid(B_VIEW_LINE_MODES_BIT))
+    LineMiterLimit();
 
-void
-BView::SetLineMode(cap_mode lineCap, join_mode lineJoin, float miterLimit)
-{
-	if (fState->IsValid(B_VIEW_LINE_MODES_BIT)
-		&& lineCap == fState->line_cap && lineJoin == fState->line_join
-		&& miterLimit == fState->miter_limit)
-		return;
-
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
-
-		ViewSetLineModeInfo info;
-		info.lineJoin = lineJoin;
-		info.lineCap = lineCap;
-		info.miterLimit = miterLimit;
-
-		fOwner->fLink->StartMessage(AS_VIEW_SET_LINE_MODE);
-		fOwner->fLink->Attach<ViewSetLineModeInfo>(info);
-
-		fState->valid_flags |= B_VIEW_LINE_MODES_BIT;
-	}
-
-	fState->line_cap = lineCap;
-	fState->line_join = lineJoin;
-	fState->miter_limit = miterLimit;
-
-	fState->archiving_flags |= B_VIEW_LINE_MODES_BIT;
+  return fState->line_join;
 }
 
+cap_mode BView::LineCapMode() const {
+  // This will update the current state, if necessary
+  if (!fState->IsValid(B_VIEW_LINE_MODES_BIT))
+    LineMiterLimit();
 
-join_mode
-BView::LineJoinMode() const
-{
-	// This will update the current state, if necessary
-	if (!fState->IsValid(B_VIEW_LINE_MODES_BIT))
-		LineMiterLimit();
-
-	return fState->line_join;
+  return fState->line_cap;
 }
 
+float BView::LineMiterLimit() const {
+  if (!fState->IsValid(B_VIEW_LINE_MODES_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-cap_mode
-BView::LineCapMode() const
-{
-	// This will update the current state, if necessary
-	if (!fState->IsValid(B_VIEW_LINE_MODES_BIT))
-		LineMiterLimit();
+    fOwner->fLink->StartMessage(AS_VIEW_GET_LINE_MODE);
 
-	return fState->line_cap;
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+
+      ViewSetLineModeInfo info;
+      fOwner->fLink->Read<ViewSetLineModeInfo>(&info);
+
+      fState->line_cap = info.lineCap;
+      fState->line_join = info.lineJoin;
+      fState->miter_limit = info.miterLimit;
+    }
+
+    fState->valid_flags |= B_VIEW_LINE_MODES_BIT;
+  }
+
+  return fState->miter_limit;
 }
 
+void BView::SetFillRule(int32 fillRule) {
+  if (fState->IsValid(B_VIEW_FILL_RULE_BIT) && fillRule == fState->fill_rule)
+    return;
 
-float
-BView::LineMiterLimit() const
-{
-	if (!fState->IsValid(B_VIEW_LINE_MODES_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_LINE_MODE);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_FILL_RULE);
+    fOwner->fLink->Attach<int32>(fillRule);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+    fState->valid_flags |= B_VIEW_FILL_RULE_BIT;
+  }
 
-			ViewSetLineModeInfo info;
-			fOwner->fLink->Read<ViewSetLineModeInfo>(&info);
+  fState->fill_rule = fillRule;
 
-			fState->line_cap = info.lineCap;
-			fState->line_join = info.lineJoin;
-			fState->miter_limit = info.miterLimit;
-		}
-
-		fState->valid_flags |= B_VIEW_LINE_MODES_BIT;
-	}
-
-	return fState->miter_limit;
+  fState->archiving_flags |= B_VIEW_FILL_RULE_BIT;
 }
 
+int32 BView::FillRule() const {
+  if (!fState->IsValid(B_VIEW_FILL_RULE_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::SetFillRule(int32 fillRule)
-{
-	if (fState->IsValid(B_VIEW_FILL_RULE_BIT) && fillRule == fState->fill_rule)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_GET_FILL_RULE);
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_FILL_RULE);
-		fOwner->fLink->Attach<int32>(fillRule);
+      int32 fillRule;
+      fOwner->fLink->Read<int32>(&fillRule);
 
-		fState->valid_flags |= B_VIEW_FILL_RULE_BIT;
-	}
+      fState->fill_rule = fillRule;
+    }
 
-	fState->fill_rule = fillRule;
+    fState->valid_flags |= B_VIEW_FILL_RULE_BIT;
+  }
 
-	fState->archiving_flags |= B_VIEW_FILL_RULE_BIT;
+  return fState->fill_rule;
 }
 
+void BView::SetDrawingMode(drawing_mode mode) {
+  if (fState->IsValid(B_VIEW_DRAWING_MODE_BIT) && mode == fState->drawing_mode)
+    return;
 
-int32
-BView::FillRule() const
-{
-	if (!fState->IsValid(B_VIEW_FILL_RULE_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_FILL_RULE);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_DRAWING_MODE);
+    fOwner->fLink->Attach<int8>((int8)mode);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+    fState->valid_flags |= B_VIEW_DRAWING_MODE_BIT;
+  }
 
-			int32 fillRule;
-			fOwner->fLink->Read<int32>(&fillRule);
-
-			fState->fill_rule = fillRule;
-		}
-
-		fState->valid_flags |= B_VIEW_FILL_RULE_BIT;
-	}
-
-	return fState->fill_rule;
+  fState->drawing_mode = mode;
+  fState->archiving_flags |= B_VIEW_DRAWING_MODE_BIT;
 }
 
+drawing_mode BView::DrawingMode() const {
+  if (!fState->IsValid(B_VIEW_DRAWING_MODE_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::SetDrawingMode(drawing_mode mode)
-{
-	if (fState->IsValid(B_VIEW_DRAWING_MODE_BIT)
-		&& mode == fState->drawing_mode)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_GET_DRAWING_MODE);
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      int8 drawingMode;
+      fOwner->fLink->Read<int8>(&drawingMode);
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_DRAWING_MODE);
-		fOwner->fLink->Attach<int8>((int8)mode);
+      fState->drawing_mode = (drawing_mode)drawingMode;
+      fState->valid_flags |= B_VIEW_DRAWING_MODE_BIT;
+    }
+  }
 
-		fState->valid_flags |= B_VIEW_DRAWING_MODE_BIT;
-	}
-
-	fState->drawing_mode = mode;
-	fState->archiving_flags |= B_VIEW_DRAWING_MODE_BIT;
+  return fState->drawing_mode;
 }
 
+void BView::SetBlendingMode(source_alpha sourceAlpha,
+                            alpha_function alphaFunction) {
+  if (fState->IsValid(B_VIEW_BLENDING_BIT) &&
+      sourceAlpha == fState->alpha_source_mode &&
+      alphaFunction == fState->alpha_function_mode)
+    return;
 
-drawing_mode
-BView::DrawingMode() const
-{
-	if (!fState->IsValid(B_VIEW_DRAWING_MODE_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_DRAWING_MODE);
+    ViewBlendingModeInfo info;
+    info.sourceAlpha = sourceAlpha;
+    info.alphaFunction = alphaFunction;
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			int8 drawingMode;
-			fOwner->fLink->Read<int8>(&drawingMode);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_BLENDING_MODE);
+    fOwner->fLink->Attach<ViewBlendingModeInfo>(info);
 
-			fState->drawing_mode = (drawing_mode)drawingMode;
-			fState->valid_flags |= B_VIEW_DRAWING_MODE_BIT;
-		}
-	}
+    fState->valid_flags |= B_VIEW_BLENDING_BIT;
+  }
 
-	return fState->drawing_mode;
+  fState->alpha_source_mode = sourceAlpha;
+  fState->alpha_function_mode = alphaFunction;
+
+  fState->archiving_flags |= B_VIEW_BLENDING_BIT;
 }
 
+void BView::GetBlendingMode(source_alpha *_sourceAlpha,
+                            alpha_function *_alphaFunction) const {
+  if (!fState->IsValid(B_VIEW_BLENDING_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::SetBlendingMode(source_alpha sourceAlpha, alpha_function alphaFunction)
-{
-	if (fState->IsValid(B_VIEW_BLENDING_BIT)
-		&& sourceAlpha == fState->alpha_source_mode
-		&& alphaFunction == fState->alpha_function_mode)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_GET_BLENDING_MODE);
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      ViewBlendingModeInfo info;
+      fOwner->fLink->Read<ViewBlendingModeInfo>(&info);
 
-		ViewBlendingModeInfo info;
-		info.sourceAlpha = sourceAlpha;
-		info.alphaFunction = alphaFunction;
+      fState->alpha_source_mode = info.sourceAlpha;
+      fState->alpha_function_mode = info.alphaFunction;
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_BLENDING_MODE);
-		fOwner->fLink->Attach<ViewBlendingModeInfo>(info);
+      fState->valid_flags |= B_VIEW_BLENDING_BIT;
+    }
+  }
 
-		fState->valid_flags |= B_VIEW_BLENDING_BIT;
-	}
+  if (_sourceAlpha)
+    *_sourceAlpha = fState->alpha_source_mode;
 
-	fState->alpha_source_mode = sourceAlpha;
-	fState->alpha_function_mode = alphaFunction;
-
-	fState->archiving_flags |= B_VIEW_BLENDING_BIT;
+  if (_alphaFunction)
+    *_alphaFunction = fState->alpha_function_mode;
 }
 
+void BView::MovePenTo(BPoint point) { MovePenTo(point.x, point.y); }
 
-void
-BView::GetBlendingMode(source_alpha* _sourceAlpha,
-	alpha_function* _alphaFunction) const
-{
-	if (!fState->IsValid(B_VIEW_BLENDING_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+void BView::MovePenTo(float x, float y) {
+  if (fState->IsValid(B_VIEW_PEN_LOCATION_BIT) && x == fState->pen_location.x &&
+      y == fState->pen_location.y)
+    return;
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_BLENDING_MODE);
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		int32 code;
- 		if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
- 			ViewBlendingModeInfo info;
-			fOwner->fLink->Read<ViewBlendingModeInfo>(&info);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_PEN_LOC);
+    fOwner->fLink->Attach<BPoint>(BPoint(x, y));
 
-			fState->alpha_source_mode = info.sourceAlpha;
-			fState->alpha_function_mode = info.alphaFunction;
+    fState->valid_flags |= B_VIEW_PEN_LOCATION_BIT;
+  }
 
-			fState->valid_flags |= B_VIEW_BLENDING_BIT;
-		}
-	}
+  fState->pen_location.x = x;
+  fState->pen_location.y = y;
 
-	if (_sourceAlpha)
-		*_sourceAlpha = fState->alpha_source_mode;
-
-	if (_alphaFunction)
-		*_alphaFunction = fState->alpha_function_mode;
+  fState->archiving_flags |= B_VIEW_PEN_LOCATION_BIT;
 }
 
+void BView::MovePenBy(float x, float y) {
+  // this will update the pen location if necessary
+  if (!fState->IsValid(B_VIEW_PEN_LOCATION_BIT))
+    PenLocation();
 
-void
-BView::MovePenTo(BPoint point)
-{
-	MovePenTo(point.x, point.y);
+  MovePenTo(fState->pen_location.x + x, fState->pen_location.y + y);
 }
 
+BPoint BView::PenLocation() const {
+  if (!fState->IsValid(B_VIEW_PEN_LOCATION_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::MovePenTo(float x, float y)
-{
-	if (fState->IsValid(B_VIEW_PEN_LOCATION_BIT)
-		&& x == fState->pen_location.x && y == fState->pen_location.y)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_GET_PEN_LOC);
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->Read<BPoint>(&fState->pen_location);
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_PEN_LOC);
-		fOwner->fLink->Attach<BPoint>(BPoint(x, y));
+      fState->valid_flags |= B_VIEW_PEN_LOCATION_BIT;
+    }
+  }
 
-		fState->valid_flags |= B_VIEW_PEN_LOCATION_BIT;
-	}
-
-	fState->pen_location.x = x;
-	fState->pen_location.y = y;
-
-	fState->archiving_flags |= B_VIEW_PEN_LOCATION_BIT;
+  return fState->pen_location;
 }
 
+void BView::SetPenSize(float size) {
+  if (fState->IsValid(B_VIEW_PEN_SIZE_BIT) && size == fState->pen_size)
+    return;
 
-void
-BView::MovePenBy(float x, float y)
-{
-	// this will update the pen location if necessary
-	if (!fState->IsValid(B_VIEW_PEN_LOCATION_BIT))
-		PenLocation();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-	MovePenTo(fState->pen_location.x + x, fState->pen_location.y + y);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_PEN_SIZE);
+    fOwner->fLink->Attach<float>(size);
+
+    fState->valid_flags |= B_VIEW_PEN_SIZE_BIT;
+  }
+
+  fState->pen_size = size;
+  fState->archiving_flags |= B_VIEW_PEN_SIZE_BIT;
 }
 
+float BView::PenSize() const {
+  if (!fState->IsValid(B_VIEW_PEN_SIZE_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-BPoint
-BView::PenLocation() const
-{
-	if (!fState->IsValid(B_VIEW_PEN_LOCATION_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_GET_PEN_SIZE);
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_PEN_LOC);
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->Read<float>(&fState->pen_size);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			fOwner->fLink->Read<BPoint>(&fState->pen_location);
+      fState->valid_flags |= B_VIEW_PEN_SIZE_BIT;
+    }
+  }
 
-			fState->valid_flags |= B_VIEW_PEN_LOCATION_BIT;
-		}
-	}
-
-	return fState->pen_location;
+  return fState->pen_size;
 }
 
+void BView::SetHighColor(rgb_color color) {
+  SetHighUIColor(B_NO_COLOR);
 
-void
-BView::SetPenSize(float size)
-{
-	if (fState->IsValid(B_VIEW_PEN_SIZE_BIT) && size == fState->pen_size)
-		return;
+  // are we up-to-date already?
+  if (fState->IsValid(B_VIEW_HIGH_COLOR_BIT) && fState->high_color == color)
+    return;
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_PEN_SIZE);
-		fOwner->fLink->Attach<float>(size);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_HIGH_COLOR);
+    fOwner->fLink->Attach<rgb_color>(color);
 
-		fState->valid_flags |= B_VIEW_PEN_SIZE_BIT;
-	}
+    fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
+  }
 
-	fState->pen_size = size;
-	fState->archiving_flags	|= B_VIEW_PEN_SIZE_BIT;
+  fState->high_color = color;
+
+  fState->archiving_flags |= B_VIEW_HIGH_COLOR_BIT;
 }
 
+rgb_color BView::HighColor() const {
+  if (!fState->IsValid(B_VIEW_HIGH_COLOR_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-float
-BView::PenSize() const
-{
-	if (!fState->IsValid(B_VIEW_PEN_SIZE_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_GET_HIGH_COLOR);
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_PEN_SIZE);
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->Read<rgb_color>(&fState->high_color);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			fOwner->fLink->Read<float>(&fState->pen_size);
+      fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
+    }
+  }
 
-			fState->valid_flags |= B_VIEW_PEN_SIZE_BIT;
-		}
-	}
-
-	return fState->pen_size;
+  return fState->high_color;
 }
 
+void BView::SetHighUIColor(color_which which, float tint) {
+  if (fState->IsValid(B_VIEW_WHICH_HIGH_COLOR_BIT) &&
+      fState->which_high_color == which &&
+      fState->which_high_color_tint == tint)
+    return;
 
-void
-BView::SetHighColor(rgb_color color)
-{
-	SetHighUIColor(B_NO_COLOR);
+  if (fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-	// are we up-to-date already?
-	if (fState->IsValid(B_VIEW_HIGH_COLOR_BIT)
-		&& fState->high_color == color)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_SET_HIGH_UI_COLOR);
+    fOwner->fLink->Attach<color_which>(which);
+    fOwner->fLink->Attach<float>(tint);
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    fState->valid_flags |= B_VIEW_WHICH_HIGH_COLOR_BIT;
+  }
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_HIGH_COLOR);
-		fOwner->fLink->Attach<rgb_color>(color);
+  fState->which_high_color = which;
+  fState->which_high_color_tint = tint;
 
-		fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
-	}
+  if (which != B_NO_COLOR) {
+    fState->archiving_flags |= B_VIEW_WHICH_HIGH_COLOR_BIT;
+    fState->archiving_flags &= ~B_VIEW_HIGH_COLOR_BIT;
+    fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
 
-	fState->high_color = color;
-
-	fState->archiving_flags |= B_VIEW_HIGH_COLOR_BIT;
+    fState->high_color = tint_color(ui_color(which), tint);
+  } else {
+    fState->valid_flags &= ~B_VIEW_HIGH_COLOR_BIT;
+    fState->archiving_flags &= ~B_VIEW_WHICH_HIGH_COLOR_BIT;
+  }
 }
 
+color_which BView::HighUIColor(float *tint) const {
+  if (!fState->IsValid(B_VIEW_WHICH_HIGH_COLOR_BIT) && fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-rgb_color
-BView::HighColor() const
-{
-	if (!fState->IsValid(B_VIEW_HIGH_COLOR_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_GET_HIGH_UI_COLOR);
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_HIGH_COLOR);
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->Read<color_which>(&fState->which_high_color);
+      fOwner->fLink->Read<float>(&fState->which_high_color_tint);
+      fOwner->fLink->Read<rgb_color>(&fState->high_color);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			fOwner->fLink->Read<rgb_color>(&fState->high_color);
+      fState->valid_flags |= B_VIEW_WHICH_HIGH_COLOR_BIT;
+      fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
+    }
+  }
 
-			fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
-		}
-	}
+  if (tint != NULL)
+    *tint = fState->which_high_color_tint;
 
-	return fState->high_color;
+  return fState->which_high_color;
 }
 
+void BView::SetLowColor(rgb_color color) {
+  SetLowUIColor(B_NO_COLOR);
 
-void
-BView::SetHighUIColor(color_which which, float tint)
-{
-	if (fState->IsValid(B_VIEW_WHICH_HIGH_COLOR_BIT)
-		&& fState->which_high_color == which
-		&& fState->which_high_color_tint == tint)
-		return;
+  if (fState->IsValid(B_VIEW_LOW_COLOR_BIT) && fState->low_color == color)
+    return;
 
-	if (fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_HIGH_UI_COLOR);
-		fOwner->fLink->Attach<color_which>(which);
-		fOwner->fLink->Attach<float>(tint);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_LOW_COLOR);
+    fOwner->fLink->Attach<rgb_color>(color);
 
-		fState->valid_flags |= B_VIEW_WHICH_HIGH_COLOR_BIT;
-	}
+    fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
+  }
 
-	fState->which_high_color = which;
-	fState->which_high_color_tint = tint;
+  fState->low_color = color;
 
-	if (which != B_NO_COLOR) {
-		fState->archiving_flags |= B_VIEW_WHICH_HIGH_COLOR_BIT;
-		fState->archiving_flags &= ~B_VIEW_HIGH_COLOR_BIT;
-		fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
-
-		fState->high_color = tint_color(ui_color(which), tint);
-	} else {
-		fState->valid_flags &= ~B_VIEW_HIGH_COLOR_BIT;
-		fState->archiving_flags &= ~B_VIEW_WHICH_HIGH_COLOR_BIT;
-	}
+  fState->archiving_flags |= B_VIEW_LOW_COLOR_BIT;
 }
 
+rgb_color BView::LowColor() const {
+  if (!fState->IsValid(B_VIEW_LOW_COLOR_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-color_which
-BView::HighUIColor(float* tint) const
-{
-	if (!fState->IsValid(B_VIEW_WHICH_HIGH_COLOR_BIT)
-		&& fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_GET_LOW_COLOR);
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_HIGH_UI_COLOR);
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->Read<rgb_color>(&fState->low_color);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			fOwner->fLink->Read<color_which>(&fState->which_high_color);
-			fOwner->fLink->Read<float>(&fState->which_high_color_tint);
-			fOwner->fLink->Read<rgb_color>(&fState->high_color);
+      fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
+    }
+  }
 
-			fState->valid_flags |= B_VIEW_WHICH_HIGH_COLOR_BIT;
-			fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
-		}
-	}
-
-	if (tint != NULL)
-		*tint = fState->which_high_color_tint;
-
-	return fState->which_high_color;
+  return fState->low_color;
 }
 
+void BView::SetLowUIColor(color_which which, float tint) {
+  if (fState->IsValid(B_VIEW_WHICH_LOW_COLOR_BIT) &&
+      fState->which_low_color == which && fState->which_low_color_tint == tint)
+    return;
 
-void
-BView::SetLowColor(rgb_color color)
-{
-	SetLowUIColor(B_NO_COLOR);
+  if (fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-	if (fState->IsValid(B_VIEW_LOW_COLOR_BIT)
-		&& fState->low_color == color)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_SET_LOW_UI_COLOR);
+    fOwner->fLink->Attach<color_which>(which);
+    fOwner->fLink->Attach<float>(tint);
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    fState->valid_flags |= B_VIEW_WHICH_LOW_COLOR_BIT;
+  }
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_LOW_COLOR);
-		fOwner->fLink->Attach<rgb_color>(color);
+  fState->which_low_color = which;
+  fState->which_low_color_tint = tint;
 
-		fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
-	}
+  if (which != B_NO_COLOR) {
+    fState->archiving_flags |= B_VIEW_WHICH_LOW_COLOR_BIT;
+    fState->archiving_flags &= ~B_VIEW_LOW_COLOR_BIT;
+    fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
 
-	fState->low_color = color;
-
-	fState->archiving_flags |= B_VIEW_LOW_COLOR_BIT;
+    fState->low_color = tint_color(ui_color(which), tint);
+  } else {
+    fState->valid_flags &= ~B_VIEW_LOW_COLOR_BIT;
+    fState->archiving_flags &= ~B_VIEW_WHICH_LOW_COLOR_BIT;
+  }
 }
 
+color_which BView::LowUIColor(float *tint) const {
+  if (!fState->IsValid(B_VIEW_WHICH_LOW_COLOR_BIT) && fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-rgb_color
-BView::LowColor() const
-{
-	if (!fState->IsValid(B_VIEW_LOW_COLOR_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_GET_LOW_UI_COLOR);
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_LOW_COLOR);
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->Read<color_which>(&fState->which_low_color);
+      fOwner->fLink->Read<float>(&fState->which_low_color_tint);
+      fOwner->fLink->Read<rgb_color>(&fState->low_color);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			fOwner->fLink->Read<rgb_color>(&fState->low_color);
+      fState->valid_flags |= B_VIEW_WHICH_LOW_COLOR_BIT;
+      fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
+    }
+  }
 
-			fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
-		}
-	}
+  if (tint != NULL)
+    *tint = fState->which_low_color_tint;
 
-	return fState->low_color;
+  return fState->which_low_color;
 }
 
+bool BView::HasDefaultColors() const {
+  // If we don't have any of these flags, then we have default colors
+  uint32 testMask = B_VIEW_VIEW_COLOR_BIT | B_VIEW_HIGH_COLOR_BIT |
+                    B_VIEW_LOW_COLOR_BIT | B_VIEW_WHICH_VIEW_COLOR_BIT |
+                    B_VIEW_WHICH_HIGH_COLOR_BIT | B_VIEW_WHICH_LOW_COLOR_BIT;
 
-void
-BView::SetLowUIColor(color_which which, float tint)
-{
-	if (fState->IsValid(B_VIEW_WHICH_LOW_COLOR_BIT)
-		&& fState->which_low_color == which
-		&& fState->which_low_color_tint == tint)
-		return;
-
-	if (fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
-
-		fOwner->fLink->StartMessage(AS_VIEW_SET_LOW_UI_COLOR);
-		fOwner->fLink->Attach<color_which>(which);
-		fOwner->fLink->Attach<float>(tint);
-
-		fState->valid_flags |= B_VIEW_WHICH_LOW_COLOR_BIT;
-	}
-
-	fState->which_low_color = which;
-	fState->which_low_color_tint = tint;
-
-	if (which != B_NO_COLOR) {
-		fState->archiving_flags |= B_VIEW_WHICH_LOW_COLOR_BIT;
-		fState->archiving_flags &= ~B_VIEW_LOW_COLOR_BIT;
-		fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
-
-		fState->low_color = tint_color(ui_color(which), tint);
-	} else {
-		fState->valid_flags &= ~B_VIEW_LOW_COLOR_BIT;
-		fState->archiving_flags &= ~B_VIEW_WHICH_LOW_COLOR_BIT;
-	}
+  return (fState->archiving_flags & testMask) == 0;
 }
 
-
-color_which
-BView::LowUIColor(float* tint) const
-{
-	if (!fState->IsValid(B_VIEW_WHICH_LOW_COLOR_BIT)
-		&& fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
-
-		fOwner->fLink->StartMessage(AS_VIEW_GET_LOW_UI_COLOR);
-
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			fOwner->fLink->Read<color_which>(&fState->which_low_color);
-			fOwner->fLink->Read<float>(&fState->which_low_color_tint);
-			fOwner->fLink->Read<rgb_color>(&fState->low_color);
-
-			fState->valid_flags |= B_VIEW_WHICH_LOW_COLOR_BIT;
-			fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
-		}
-	}
-
-	if (tint != NULL)
-		*tint = fState->which_low_color_tint;
-
-	return fState->which_low_color;
+bool BView::HasSystemColors() const {
+  return fState->which_view_color == B_PANEL_BACKGROUND_COLOR &&
+         fState->which_high_color == B_PANEL_TEXT_COLOR &&
+         fState->which_low_color == B_PANEL_BACKGROUND_COLOR &&
+         fState->which_view_color_tint == B_NO_TINT &&
+         fState->which_high_color_tint == B_NO_TINT &&
+         fState->which_low_color_tint == B_NO_TINT;
 }
 
+void BView::AdoptParentColors() { AdoptViewColors(Parent()); }
 
-bool
-BView::HasDefaultColors() const
-{
-	// If we don't have any of these flags, then we have default colors
-	uint32 testMask = B_VIEW_VIEW_COLOR_BIT | B_VIEW_HIGH_COLOR_BIT
-		| B_VIEW_LOW_COLOR_BIT | B_VIEW_WHICH_VIEW_COLOR_BIT
-		| B_VIEW_WHICH_HIGH_COLOR_BIT | B_VIEW_WHICH_LOW_COLOR_BIT;
-
-	return (fState->archiving_flags & testMask) == 0;
+void BView::AdoptSystemColors() {
+  SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
+  SetLowUIColor(B_PANEL_BACKGROUND_COLOR);
+  SetHighUIColor(B_PANEL_TEXT_COLOR);
 }
 
+void BView::AdoptViewColors(BView *view) {
+  if (view == NULL || (view->Window() != NULL && !view->LockLooper()))
+    return;
 
-bool
-BView::HasSystemColors() const
-{
-	return fState->which_view_color == B_PANEL_BACKGROUND_COLOR
-		&& fState->which_high_color == B_PANEL_TEXT_COLOR
-		&& fState->which_low_color == B_PANEL_BACKGROUND_COLOR
-		&& fState->which_view_color_tint == B_NO_TINT
-		&& fState->which_high_color_tint == B_NO_TINT
-		&& fState->which_low_color_tint == B_NO_TINT;
+  float tint = B_NO_TINT;
+  float viewTint = tint;
+  color_which viewWhich = view->ViewUIColor(&viewTint);
+
+  // View color
+  if (viewWhich != B_NO_COLOR)
+    SetViewUIColor(viewWhich, viewTint);
+  else
+    SetViewColor(view->ViewColor());
+
+  // Low color
+  color_which which = view->LowUIColor(&tint);
+  if (which != B_NO_COLOR)
+    SetLowUIColor(which, tint);
+  else if (viewWhich != B_NO_COLOR)
+    SetLowUIColor(viewWhich, viewTint);
+  else
+    SetLowColor(view->LowColor());
+
+  // High color
+  which = view->HighUIColor(&tint);
+  if (which != B_NO_COLOR)
+    SetHighUIColor(which, tint);
+  else
+    SetHighColor(view->HighColor());
+
+  if (view->Window() != NULL)
+    view->UnlockLooper();
 }
 
+void BView::SetViewColor(rgb_color color) {
+  SetViewUIColor(B_NO_COLOR);
 
-void
-BView::AdoptParentColors()
-{
-	AdoptViewColors(Parent());
+  if (fState->IsValid(B_VIEW_VIEW_COLOR_BIT) && fState->view_color == color)
+    return;
+
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
+
+    fOwner->fLink->StartMessage(AS_VIEW_SET_VIEW_COLOR);
+    fOwner->fLink->Attach<rgb_color>(color);
+    fOwner->fLink->Flush();
+
+    fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
+  }
+
+  fState->view_color = color;
+
+  fState->archiving_flags |= B_VIEW_VIEW_COLOR_BIT;
 }
 
+rgb_color BView::ViewColor() const {
+  if (!fState->IsValid(B_VIEW_VIEW_COLOR_BIT) && fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::AdoptSystemColors()
-{
-	SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
-	SetLowUIColor(B_PANEL_BACKGROUND_COLOR);
-	SetHighUIColor(B_PANEL_TEXT_COLOR);
+    fOwner->fLink->StartMessage(AS_VIEW_GET_VIEW_COLOR);
+
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->Read<rgb_color>(&fState->view_color);
+
+      fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
+    }
+  }
+
+  return fState->view_color;
 }
 
+void BView::SetViewUIColor(color_which which, float tint) {
+  if (fState->IsValid(B_VIEW_WHICH_VIEW_COLOR_BIT) &&
+      fState->which_view_color == which &&
+      fState->which_view_color_tint == tint)
+    return;
 
-void
-BView::AdoptViewColors(BView* view)
-{
-	if (view == NULL || (view->Window() != NULL && !view->LockLooper()))
-		return;
+  if (fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-	float tint = B_NO_TINT;
-	float viewTint = tint;
-	color_which viewWhich = view->ViewUIColor(&viewTint);
+    fOwner->fLink->StartMessage(AS_VIEW_SET_VIEW_UI_COLOR);
+    fOwner->fLink->Attach<color_which>(which);
+    fOwner->fLink->Attach<float>(tint);
 
-	// View color
-	if (viewWhich != B_NO_COLOR)
-		SetViewUIColor(viewWhich, viewTint);
-	else
-		SetViewColor(view->ViewColor());
+    fState->valid_flags |= B_VIEW_WHICH_VIEW_COLOR_BIT;
+  }
 
-	// Low color
-	color_which which = view->LowUIColor(&tint);
-	if (which != B_NO_COLOR)
-		SetLowUIColor(which, tint);
-	else if (viewWhich != B_NO_COLOR)
-		SetLowUIColor(viewWhich, viewTint);
-	else
-		SetLowColor(view->LowColor());
+  fState->which_view_color = which;
+  fState->which_view_color_tint = tint;
 
-	// High color
-	which = view->HighUIColor(&tint);
-	if (which != B_NO_COLOR)
-		SetHighUIColor(which, tint);
-	else
-		SetHighColor(view->HighColor());
+  if (which != B_NO_COLOR) {
+    fState->archiving_flags |= B_VIEW_WHICH_VIEW_COLOR_BIT;
+    fState->archiving_flags &= ~B_VIEW_VIEW_COLOR_BIT;
+    fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
 
-	if (view->Window() != NULL)
-		view->UnlockLooper();
+    fState->view_color = tint_color(ui_color(which), tint);
+  } else {
+    fState->valid_flags &= ~B_VIEW_VIEW_COLOR_BIT;
+    fState->archiving_flags &= ~B_VIEW_WHICH_VIEW_COLOR_BIT;
+  }
+
+  if (!fState->IsValid(B_VIEW_WHICH_LOW_COLOR_BIT))
+    SetLowUIColor(which, tint);
 }
 
+color_which BView::ViewUIColor(float *tint) const {
+  if (!fState->IsValid(B_VIEW_WHICH_VIEW_COLOR_BIT) && fOwner != NULL) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::SetViewColor(rgb_color color)
-{
-	SetViewUIColor(B_NO_COLOR);
+    fOwner->fLink->StartMessage(AS_VIEW_GET_VIEW_UI_COLOR);
 
-	if (fState->IsValid(B_VIEW_VIEW_COLOR_BIT)
-		&& fState->view_color == color)
-		return;
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->Read<color_which>(&fState->which_view_color);
+      fOwner->fLink->Read<float>(&fState->which_view_color_tint);
+      fOwner->fLink->Read<rgb_color>(&fState->view_color);
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+      fState->valid_flags |= B_VIEW_WHICH_VIEW_COLOR_BIT;
+      fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
+    }
+  }
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_VIEW_COLOR);
-		fOwner->fLink->Attach<rgb_color>(color);
-		fOwner->fLink->Flush();
+  if (tint != NULL)
+    *tint = fState->which_view_color_tint;
 
-		fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
-	}
-
-	fState->view_color = color;
-
-	fState->archiving_flags |= B_VIEW_VIEW_COLOR_BIT;
+  return fState->which_view_color;
 }
 
+void BView::ForceFontAliasing(bool enable) {
+  if (fState->IsValid(B_VIEW_FONT_ALIASING_BIT) &&
+      enable == fState->font_aliasing)
+    return;
 
-rgb_color
-BView::ViewColor() const
-{
-	if (!fState->IsValid(B_VIEW_VIEW_COLOR_BIT) && fOwner) {
-		_CheckLockAndSwitchCurrent();
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_VIEW_COLOR);
+    fOwner->fLink->StartMessage(AS_VIEW_PRINT_ALIASING);
+    fOwner->fLink->Attach<bool>(enable);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			fOwner->fLink->Read<rgb_color>(&fState->view_color);
+    fState->valid_flags |= B_VIEW_FONT_ALIASING_BIT;
+  }
 
-			fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
-		}
-	}
-
-	return fState->view_color;
+  fState->font_aliasing = enable;
+  fState->archiving_flags |= B_VIEW_FONT_ALIASING_BIT;
 }
 
+void BView::SetFont(const BFont *font, uint32 mask) {
+  if (!font || mask == 0)
+    return;
 
-void
-BView::SetViewUIColor(color_which which, float tint)
-{
-	if (fState->IsValid(B_VIEW_WHICH_VIEW_COLOR_BIT)
-		&& fState->which_view_color == which
-		&& fState->which_view_color_tint == tint)
-		return;
+  if (mask == B_FONT_ALL) {
+    fState->font = *font;
+  } else {
+    // TODO: move this into a BFont method
+    if (mask & B_FONT_FAMILY_AND_STYLE)
+      fState->font.SetFamilyAndStyle(font->FamilyAndStyle());
 
-	if (fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+    if (mask & B_FONT_SIZE)
+      fState->font.SetSize(font->Size());
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_VIEW_UI_COLOR);
-		fOwner->fLink->Attach<color_which>(which);
-		fOwner->fLink->Attach<float>(tint);
+    if (mask & B_FONT_SHEAR)
+      fState->font.SetShear(font->Shear());
 
-		fState->valid_flags |= B_VIEW_WHICH_VIEW_COLOR_BIT;
-	}
+    if (mask & B_FONT_ROTATION)
+      fState->font.SetRotation(font->Rotation());
 
-	fState->which_view_color = which;
-	fState->which_view_color_tint = tint;
+    if (mask & B_FONT_FALSE_BOLD_WIDTH)
+      fState->font.SetFalseBoldWidth(font->FalseBoldWidth());
 
-	if (which != B_NO_COLOR) {
-		fState->archiving_flags |= B_VIEW_WHICH_VIEW_COLOR_BIT;
-		fState->archiving_flags &= ~B_VIEW_VIEW_COLOR_BIT;
-		fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
+    if (mask & B_FONT_SPACING)
+      fState->font.SetSpacing(font->Spacing());
 
-		fState->view_color = tint_color(ui_color(which), tint);
-	} else {
-		fState->valid_flags &= ~B_VIEW_VIEW_COLOR_BIT;
-		fState->archiving_flags &= ~B_VIEW_WHICH_VIEW_COLOR_BIT;
-	}
+    if (mask & B_FONT_ENCODING)
+      fState->font.SetEncoding(font->Encoding());
 
-	if (!fState->IsValid(B_VIEW_WHICH_LOW_COLOR_BIT))
-		SetLowUIColor(which, tint);
+    if (mask & B_FONT_FACE)
+      fState->font.SetFace(font->Face());
+
+    if (mask & B_FONT_FLAGS)
+      fState->font.SetFlags(font->Flags());
+  }
+
+  fState->font_flags |= mask;
+
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
+
+    fState->UpdateServerFontState(*fOwner->fLink);
+    fState->valid_flags |= B_VIEW_FONT_BIT;
+  }
+
+  fState->archiving_flags |= B_VIEW_FONT_BIT;
+  // TODO: InvalidateLayout() here for convenience?
 }
 
+void BView::GetFont(BFont *font) const {
+  if (!fState->IsValid(B_VIEW_FONT_BIT)) {
+    // we don't keep graphics state information, therefor
+    // we need to ask the server for the origin after PopState()
+    _CheckOwnerLockAndSwitchCurrent();
 
-color_which
-BView::ViewUIColor(float* tint) const
-{
-	if (!fState->IsValid(B_VIEW_WHICH_VIEW_COLOR_BIT)
-		&& fOwner != NULL) {
-		_CheckLockAndSwitchCurrent();
+    // TODO: add a font getter!
+    fState->UpdateFrom(*fOwner->fLink);
+  }
 
-		fOwner->fLink->StartMessage(AS_VIEW_GET_VIEW_UI_COLOR);
-
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK) {
-			fOwner->fLink->Read<color_which>(&fState->which_view_color);
-			fOwner->fLink->Read<float>(&fState->which_view_color_tint);
-			fOwner->fLink->Read<rgb_color>(&fState->view_color);
-
-			fState->valid_flags |= B_VIEW_WHICH_VIEW_COLOR_BIT;
-			fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
-		}
-	}
-
-	if (tint != NULL)
-		*tint = fState->which_view_color_tint;
-
-	return fState->which_view_color;
+  *font = fState->font;
 }
 
-
-void
-BView::ForceFontAliasing(bool enable)
-{
-	if (fState->IsValid(B_VIEW_FONT_ALIASING_BIT)
-		&& enable == fState->font_aliasing)
-		return;
-
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
-
-		fOwner->fLink->StartMessage(AS_VIEW_PRINT_ALIASING);
-		fOwner->fLink->Attach<bool>(enable);
-
-		fState->valid_flags |= B_VIEW_FONT_ALIASING_BIT;
-	}
-
-	fState->font_aliasing = enable;
-	fState->archiving_flags |= B_VIEW_FONT_ALIASING_BIT;
+void BView::GetFontHeight(font_height *height) const {
+  fState->font.GetHeight(height);
 }
 
+void BView::SetFontSize(float size) {
+  BFont font;
+  font.SetSize(size);
 
-void
-BView::SetFont(const BFont* font, uint32 mask)
-{
-	if (!font || mask == 0)
-		return;
-
-	if (mask == B_FONT_ALL) {
-		fState->font = *font;
-	} else {
-		// TODO: move this into a BFont method
-		if (mask & B_FONT_FAMILY_AND_STYLE)
-			fState->font.SetFamilyAndStyle(font->FamilyAndStyle());
-
-		if (mask & B_FONT_SIZE)
-			fState->font.SetSize(font->Size());
-
-		if (mask & B_FONT_SHEAR)
-			fState->font.SetShear(font->Shear());
-
-		if (mask & B_FONT_ROTATION)
-			fState->font.SetRotation(font->Rotation());
-
-		if (mask & B_FONT_FALSE_BOLD_WIDTH)
-			fState->font.SetFalseBoldWidth(font->FalseBoldWidth());
-
-		if (mask & B_FONT_SPACING)
-			fState->font.SetSpacing(font->Spacing());
-
-		if (mask & B_FONT_ENCODING)
-			fState->font.SetEncoding(font->Encoding());
-
-		if (mask & B_FONT_FACE)
-			fState->font.SetFace(font->Face());
-
-		if (mask & B_FONT_FLAGS)
-			fState->font.SetFlags(font->Flags());
-	}
-
-	fState->font_flags |= mask;
-
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
-
-		fState->UpdateServerFontState(*fOwner->fLink);
-		fState->valid_flags |= B_VIEW_FONT_BIT;
-	}
-
-	fState->archiving_flags |= B_VIEW_FONT_BIT;
-	// TODO: InvalidateLayout() here for convenience?
+  SetFont(&font, B_FONT_SIZE);
 }
 
-
-void
-BView::GetFont(BFont* font) const
-{
-	if (!fState->IsValid(B_VIEW_FONT_BIT)) {
-		// we don't keep graphics state information, therefor
-		// we need to ask the server for the origin after PopState()
-		_CheckOwnerLockAndSwitchCurrent();
-
-		// TODO: add a font getter!
-		fState->UpdateFrom(*fOwner->fLink);
-	}
-
-	*font = fState->font;
+float BView::StringWidth(const char *string) const {
+  return fState->font.StringWidth(string);
 }
 
-
-void
-BView::GetFontHeight(font_height* height) const
-{
-	fState->font.GetHeight(height);
+float BView::StringWidth(const char *string, int32 length) const {
+  return fState->font.StringWidth(string, length);
 }
 
-
-void
-BView::SetFontSize(float size)
-{
-	BFont font;
-	font.SetSize(size);
-
-	SetFont(&font, B_FONT_SIZE);
+void BView::GetStringWidths(char *stringArray[], int32 lengthArray[],
+                            int32 numStrings, float widthArray[]) const {
+  fState->font.GetStringWidths(const_cast<const char **>(stringArray),
+                               const_cast<const int32 *>(lengthArray),
+                               numStrings, widthArray);
 }
 
-
-float
-BView::StringWidth(const char* string) const
-{
-	return fState->font.StringWidth(string);
+void BView::TruncateString(BString *string, uint32 mode, float width) const {
+  fState->font.TruncateString(string, mode, width);
 }
 
-
-float
-BView::StringWidth(const char* string, int32 length) const
-{
-	return fState->font.StringWidth(string, length);
+void BView::ClipToPicture(BPicture *picture, BPoint where, bool sync) {
+  _ClipToPicture(picture, where, false, sync);
 }
 
-
-void
-BView::GetStringWidths(char* stringArray[], int32 lengthArray[],
-	int32 numStrings, float widthArray[]) const
-{
-	fState->font.GetStringWidths(const_cast<const char**>(stringArray),
-		const_cast<const int32*>(lengthArray), numStrings, widthArray);
+void BView::ClipToInversePicture(BPicture *picture, BPoint where, bool sync) {
+  _ClipToPicture(picture, where, true, sync);
 }
 
+void BView::GetClippingRegion(BRegion *region) const {
+  if (!region)
+    return;
 
-void
-BView::TruncateString(BString* string, uint32 mode, float width) const
-{
-	fState->font.TruncateString(string, mode, width);
+  // NOTE: the client has no idea when the clipping in the server
+  // changed, so it is always read from the server
+  region->MakeEmpty();
+
+  if (fOwner) {
+    if (fIsPrinting && _CheckOwnerLock()) {
+      region->Set(fState->print_rect);
+      return;
+    }
+
+    _CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_GET_CLIP_REGION);
+
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK) {
+      fOwner->fLink->ReadRegion(region);
+      fState->valid_flags |= B_VIEW_CLIP_REGION_BIT;
+    }
+  }
 }
 
+void BView::ConstrainClippingRegion(BRegion *region) {
+  if (_CheckOwnerLockAndSwitchCurrent()) {
+    fOwner->fLink->StartMessage(AS_VIEW_SET_CLIP_REGION);
 
-void
-BView::ClipToPicture(BPicture* picture, BPoint where, bool sync)
-{
-	_ClipToPicture(picture, where, false, sync);
+    if (region) {
+      int32 count = region->CountRects();
+      fOwner->fLink->Attach<int32>(count);
+      if (count > 0)
+        fOwner->fLink->AttachRegion(*region);
+    } else {
+      fOwner->fLink->Attach<int32>(-1);
+      // '-1' means that in the app_server, there won't be any 'local'
+      // clipping region (it will be NULL)
+    }
+
+    _FlushIfNotInTransaction();
+
+    fState->valid_flags &= ~B_VIEW_CLIP_REGION_BIT;
+    fState->archiving_flags |= B_VIEW_CLIP_REGION_BIT;
+  }
 }
 
+void BView::ClipToRect(BRect rect) { _ClipToRect(rect, false); }
 
-void
-BView::ClipToInversePicture(BPicture* picture, BPoint where, bool sync)
-{
-	_ClipToPicture(picture, where, true, sync);
-}
+void BView::ClipToInverseRect(BRect rect) { _ClipToRect(rect, true); }
 
+void BView::ClipToShape(BShape *shape) { _ClipToShape(shape, false); }
 
-void
-BView::GetClippingRegion(BRegion* region) const
-{
-	if (!region)
-		return;
-
-	// NOTE: the client has no idea when the clipping in the server
-	// changed, so it is always read from the server
-	region->MakeEmpty();
-
-
-	if (fOwner) {
-		if (fIsPrinting && _CheckOwnerLock()) {
-			region->Set(fState->print_rect);
-			return;
-		}
-
-		_CheckLockAndSwitchCurrent();
-		fOwner->fLink->StartMessage(AS_VIEW_GET_CLIP_REGION);
-
- 		int32 code;
- 		if (fOwner->fLink->FlushWithReply(code) == B_OK
- 			&& code == B_OK) {
-			fOwner->fLink->ReadRegion(region);
-			fState->valid_flags |= B_VIEW_CLIP_REGION_BIT;
-		}
-	}
-}
-
-
-void
-BView::ConstrainClippingRegion(BRegion* region)
-{
-	if (_CheckOwnerLockAndSwitchCurrent()) {
-		fOwner->fLink->StartMessage(AS_VIEW_SET_CLIP_REGION);
-
-		if (region) {
-			int32 count = region->CountRects();
-			fOwner->fLink->Attach<int32>(count);
-			if (count > 0)
-				fOwner->fLink->AttachRegion(*region);
-		} else {
-			fOwner->fLink->Attach<int32>(-1);
-			// '-1' means that in the app_server, there won't be any 'local'
-			// clipping region (it will be NULL)
-		}
-
-		_FlushIfNotInTransaction();
-
-		fState->valid_flags &= ~B_VIEW_CLIP_REGION_BIT;
-		fState->archiving_flags |= B_VIEW_CLIP_REGION_BIT;
-	}
-}
-
-
-void
-BView::ClipToRect(BRect rect)
-{
-	_ClipToRect(rect, false);
-}
-
-
-void
-BView::ClipToInverseRect(BRect rect)
-{
-	_ClipToRect(rect, true);
-}
-
-
-void
-BView::ClipToShape(BShape* shape)
-{
-	_ClipToShape(shape, false);
-}
-
-
-void
-BView::ClipToInverseShape(BShape* shape)
-{
-	_ClipToShape(shape, true);
-}
-
+void BView::ClipToInverseShape(BShape *shape) { _ClipToShape(shape, true); }
 
 //	#pragma mark - Drawing Functions
 
+void BView::DrawBitmapAsync(const BBitmap *bitmap, BRect bitmapRect,
+                            BRect viewRect, uint32 options) {
+  if (bitmap == NULL || fOwner == NULL || !bitmapRect.IsValid() ||
+      !viewRect.IsValid())
+    return;
 
-void
-BView::DrawBitmapAsync(const BBitmap* bitmap, BRect bitmapRect, BRect viewRect,
-	uint32 options)
-{
-	if (bitmap == NULL || fOwner == NULL
-		|| !bitmapRect.IsValid() || !viewRect.IsValid())
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  ViewDrawBitmapInfo info;
+  info.bitmapToken = bitmap->_ServerToken();
+  info.options = options;
+  info.viewRect = viewRect;
+  info.bitmapRect = bitmapRect;
 
-	ViewDrawBitmapInfo info;
-	info.bitmapToken = bitmap->_ServerToken();
-	info.options = options;
-	info.viewRect = viewRect;
-	info.bitmapRect = bitmapRect;
+  fOwner->fLink->StartMessage(AS_VIEW_DRAW_BITMAP);
+  fOwner->fLink->Attach<ViewDrawBitmapInfo>(info);
 
-	fOwner->fLink->StartMessage(AS_VIEW_DRAW_BITMAP);
-	fOwner->fLink->Attach<ViewDrawBitmapInfo>(info);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::DrawBitmapAsync(const BBitmap* bitmap, BRect bitmapRect, BRect viewRect)
-{
-	DrawBitmapAsync(bitmap, bitmapRect, viewRect, 0);
+void BView::DrawBitmapAsync(const BBitmap *bitmap, BRect bitmapRect,
+                            BRect viewRect) {
+  DrawBitmapAsync(bitmap, bitmapRect, viewRect, 0);
 }
 
-
-void
-BView::DrawBitmapAsync(const BBitmap* bitmap, BRect viewRect)
-{
-	if (bitmap && fOwner) {
-		DrawBitmapAsync(bitmap, bitmap->Bounds().OffsetToCopy(B_ORIGIN),
-			viewRect, 0);
-	}
+void BView::DrawBitmapAsync(const BBitmap *bitmap, BRect viewRect) {
+  if (bitmap && fOwner) {
+    DrawBitmapAsync(bitmap, bitmap->Bounds().OffsetToCopy(B_ORIGIN), viewRect,
+                    0);
+  }
 }
-
-
-void
-BView::DrawBitmapAsync(const BBitmap* bitmap, BPoint where)
-{
-	if (bitmap == NULL || fOwner == NULL)
-		return;
 
-	_CheckLockAndSwitchCurrent();
+void BView::DrawBitmapAsync(const BBitmap *bitmap, BPoint where) {
+  if (bitmap == NULL || fOwner == NULL)
+    return;
 
-	ViewDrawBitmapInfo info;
-	info.bitmapToken = bitmap->_ServerToken();
-	info.options = 0;
-	info.bitmapRect = bitmap->Bounds().OffsetToCopy(B_ORIGIN);
-	info.viewRect = info.bitmapRect.OffsetToCopy(where);
+  _CheckLockAndSwitchCurrent();
 
-	fOwner->fLink->StartMessage(AS_VIEW_DRAW_BITMAP);
-	fOwner->fLink->Attach<ViewDrawBitmapInfo>(info);
+  ViewDrawBitmapInfo info;
+  info.bitmapToken = bitmap->_ServerToken();
+  info.options = 0;
+  info.bitmapRect = bitmap->Bounds().OffsetToCopy(B_ORIGIN);
+  info.viewRect = info.bitmapRect.OffsetToCopy(where);
 
-	_FlushIfNotInTransaction();
-}
+  fOwner->fLink->StartMessage(AS_VIEW_DRAW_BITMAP);
+  fOwner->fLink->Attach<ViewDrawBitmapInfo>(info);
 
-
-void
-BView::DrawBitmapAsync(const BBitmap* bitmap)
-{
-	DrawBitmapAsync(bitmap, PenLocation());
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::DrawBitmap(const BBitmap* bitmap, BRect bitmapRect, BRect viewRect,
-	uint32 options)
-{
-	if (fOwner) {
-		DrawBitmapAsync(bitmap, bitmapRect, viewRect, options);
-		Sync();
-	}
+void BView::DrawBitmapAsync(const BBitmap *bitmap) {
+  DrawBitmapAsync(bitmap, PenLocation());
 }
 
-
-void
-BView::DrawBitmap(const BBitmap* bitmap, BRect bitmapRect, BRect viewRect)
-{
-	if (fOwner) {
-		DrawBitmapAsync(bitmap, bitmapRect, viewRect, 0);
-		Sync();
-	}
+void BView::DrawBitmap(const BBitmap *bitmap, BRect bitmapRect, BRect viewRect,
+                       uint32 options) {
+  if (fOwner) {
+    DrawBitmapAsync(bitmap, bitmapRect, viewRect, options);
+    Sync();
+  }
 }
 
-
-void
-BView::DrawBitmap(const BBitmap* bitmap, BRect viewRect)
-{
-	if (bitmap && fOwner) {
-		DrawBitmap(bitmap, bitmap->Bounds().OffsetToCopy(B_ORIGIN), viewRect,
-			0);
-	}
+void BView::DrawBitmap(const BBitmap *bitmap, BRect bitmapRect,
+                       BRect viewRect) {
+  if (fOwner) {
+    DrawBitmapAsync(bitmap, bitmapRect, viewRect, 0);
+    Sync();
+  }
 }
-
 
-void
-BView::DrawBitmap(const BBitmap* bitmap, BPoint where)
-{
-	if (fOwner) {
-		DrawBitmapAsync(bitmap, where);
-		Sync();
-	}
+void BView::DrawBitmap(const BBitmap *bitmap, BRect viewRect) {
+  if (bitmap && fOwner) {
+    DrawBitmap(bitmap, bitmap->Bounds().OffsetToCopy(B_ORIGIN), viewRect, 0);
+  }
 }
 
-
-void
-BView::DrawBitmap(const BBitmap* bitmap)
-{
-	DrawBitmap(bitmap, PenLocation());
+void BView::DrawBitmap(const BBitmap *bitmap, BPoint where) {
+  if (fOwner) {
+    DrawBitmapAsync(bitmap, where);
+    Sync();
+  }
 }
-
 
-void
-BView::DrawChar(char c)
-{
-	DrawString(&c, 1, PenLocation());
+void BView::DrawBitmap(const BBitmap *bitmap) {
+  DrawBitmap(bitmap, PenLocation());
 }
 
+void BView::DrawChar(char c) { DrawString(&c, 1, PenLocation()); }
 
-void
-BView::DrawChar(char c, BPoint location)
-{
-	DrawString(&c, 1, location);
-}
+void BView::DrawChar(char c, BPoint location) { DrawString(&c, 1, location); }
 
+void BView::DrawString(const char *string, escapement_delta *delta) {
+  if (string == NULL)
+    return;
 
-void
-BView::DrawString(const char* string, escapement_delta* delta)
-{
-	if (string == NULL)
-		return;
-
-	DrawString(string, strlen(string), PenLocation(), delta);
+  DrawString(string, strlen(string), PenLocation(), delta);
 }
-
 
-void
-BView::DrawString(const char* string, BPoint location, escapement_delta* delta)
-{
-	if (string == NULL)
-		return;
+void BView::DrawString(const char *string, BPoint location,
+                       escapement_delta *delta) {
+  if (string == NULL)
+    return;
 
-	DrawString(string, strlen(string), location, delta);
+  DrawString(string, strlen(string), location, delta);
 }
 
-
-void
-BView::DrawString(const char* string, int32 length, escapement_delta* delta)
-{
-	DrawString(string, length, PenLocation(), delta);
+void BView::DrawString(const char *string, int32 length,
+                       escapement_delta *delta) {
+  DrawString(string, length, PenLocation(), delta);
 }
 
+void BView::DrawString(const char *string, int32 length, BPoint location,
+                       escapement_delta *delta) {
+  if (fOwner == NULL || string == NULL || length < 1)
+    return;
 
-void
-BView::DrawString(const char* string, int32 length, BPoint location,
-	escapement_delta* delta)
-{
-	if (fOwner == NULL || string == NULL || length < 1)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  ViewDrawStringInfo info;
+  info.stringLength = length;
+  info.location = location;
+  if (delta != NULL)
+    info.delta = *delta;
 
-	ViewDrawStringInfo info;
-	info.stringLength = length;
-	info.location = location;
-	if (delta != NULL)
-		info.delta = *delta;
+  // quite often delta will be NULL
+  if (delta)
+    fOwner->fLink->StartMessage(AS_DRAW_STRING_WITH_DELTA);
+  else
+    fOwner->fLink->StartMessage(AS_DRAW_STRING);
 
-	// quite often delta will be NULL
-	if (delta)
-		fOwner->fLink->StartMessage(AS_DRAW_STRING_WITH_DELTA);
-	else
-		fOwner->fLink->StartMessage(AS_DRAW_STRING);
+  fOwner->fLink->Attach<ViewDrawStringInfo>(info);
+  fOwner->fLink->Attach(string, length);
 
-	fOwner->fLink->Attach<ViewDrawStringInfo>(info);
-	fOwner->fLink->Attach(string, length);
+  _FlushIfNotInTransaction();
 
-	_FlushIfNotInTransaction();
-
-	// this modifies our pen location, so we invalidate the flag.
-	fState->valid_flags &= ~B_VIEW_PEN_LOCATION_BIT;
+  // this modifies our pen location, so we invalidate the flag.
+  fState->valid_flags &= ~B_VIEW_PEN_LOCATION_BIT;
 }
-
 
-void
-BView::DrawString(const char* string, const BPoint* locations,
-	int32 locationCount)
-{
-	if (string == NULL)
-		return;
+void BView::DrawString(const char *string, const BPoint *locations,
+                       int32 locationCount) {
+  if (string == NULL)
+    return;
 
-	DrawString(string, strlen(string), locations, locationCount);
+  DrawString(string, strlen(string), locations, locationCount);
 }
 
+void BView::DrawString(const char *string, int32 length,
+                       const BPoint *locations, int32 locationCount) {
+  if (fOwner == NULL || string == NULL || length < 1 || locations == NULL)
+    return;
 
-void
-BView::DrawString(const char* string, int32 length, const BPoint* locations,
-	int32 locationCount)
-{
-	if (fOwner == NULL || string == NULL || length < 1 || locations == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  fOwner->fLink->StartMessage(AS_DRAW_STRING_WITH_OFFSETS);
 
-	fOwner->fLink->StartMessage(AS_DRAW_STRING_WITH_OFFSETS);
+  fOwner->fLink->Attach<int32>(length);
+  fOwner->fLink->Attach<int32>(locationCount);
+  fOwner->fLink->Attach(string, length);
+  fOwner->fLink->Attach(locations, locationCount * sizeof(BPoint));
 
-	fOwner->fLink->Attach<int32>(length);
-	fOwner->fLink->Attach<int32>(locationCount);
-	fOwner->fLink->Attach(string, length);
-	fOwner->fLink->Attach(locations, locationCount * sizeof(BPoint));
+  _FlushIfNotInTransaction();
 
-	_FlushIfNotInTransaction();
-
-	// this modifies our pen location, so we invalidate the flag.
-	fState->valid_flags &= ~B_VIEW_PEN_LOCATION_BIT;
+  // this modifies our pen location, so we invalidate the flag.
+  fState->valid_flags &= ~B_VIEW_PEN_LOCATION_BIT;
 }
 
-
-void
-BView::StrokeEllipse(BPoint center, float xRadius, float yRadius,
-	::pattern pattern)
-{
-	StrokeEllipse(BRect(center.x - xRadius, center.y - yRadius,
-		center.x + xRadius, center.y + yRadius), pattern);
+void BView::StrokeEllipse(BPoint center, float xRadius, float yRadius,
+                          ::pattern pattern) {
+  StrokeEllipse(BRect(center.x - xRadius, center.y - yRadius,
+                      center.x + xRadius, center.y + yRadius),
+                pattern);
 }
-
 
-void
-BView::StrokeEllipse(BRect rect, ::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+void BView::StrokeEllipse(BRect rect, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	fOwner->fLink->StartMessage(AS_STROKE_ELLIPSE);
-	fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->StartMessage(AS_STROKE_ELLIPSE);
+  fOwner->fLink->Attach<BRect>(rect);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
-
-void
-BView::FillEllipse(BPoint center, float xRadius, float yRadius,
-	::pattern pattern)
-{
-	FillEllipse(BRect(center.x - xRadius, center.y - yRadius,
-		center.x + xRadius, center.y + yRadius), pattern);
+void BView::FillEllipse(BPoint center, float xRadius, float yRadius,
+                        ::pattern pattern) {
+  FillEllipse(BRect(center.x - xRadius, center.y - yRadius, center.x + xRadius,
+                    center.y + yRadius),
+              pattern);
 }
-
 
-void
-BView::FillEllipse(BPoint center, float xRadius, float yRadius,
-	const BGradient& gradient)
-{
-	FillEllipse(BRect(center.x - xRadius, center.y - yRadius,
-		center.x + xRadius, center.y + yRadius), gradient);
+void BView::FillEllipse(BPoint center, float xRadius, float yRadius,
+                        const BGradient &gradient) {
+  FillEllipse(BRect(center.x - xRadius, center.y - yRadius, center.x + xRadius,
+                    center.y + yRadius),
+              gradient);
 }
 
+void BView::FillEllipse(BRect rect, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::FillEllipse(BRect rect, ::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_FILL_ELLIPSE);
+  fOwner->fLink->Attach<BRect>(rect);
 
-	fOwner->fLink->StartMessage(AS_FILL_ELLIPSE);
-	fOwner->fLink->Attach<BRect>(rect);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::FillEllipse(BRect rect, const BGradient &gradient) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::FillEllipse(BRect rect, const BGradient& gradient)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  fOwner->fLink->StartMessage(AS_FILL_ELLIPSE_GRADIENT);
+  fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->AttachGradient(gradient);
 
-	fOwner->fLink->StartMessage(AS_FILL_ELLIPSE_GRADIENT);
-	fOwner->fLink->Attach<BRect>(rect);
-	fOwner->fLink->AttachGradient(gradient);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::StrokeArc(BPoint center, float xRadius, float yRadius, float startAngle,
-	float arcAngle, ::pattern pattern)
-{
-	StrokeArc(BRect(center.x - xRadius, center.y - yRadius, center.x + xRadius,
-		center.y + yRadius), startAngle, arcAngle, pattern);
+void BView::StrokeArc(BPoint center, float xRadius, float yRadius,
+                      float startAngle, float arcAngle, ::pattern pattern) {
+  StrokeArc(BRect(center.x - xRadius, center.y - yRadius, center.x + xRadius,
+                  center.y + yRadius),
+            startAngle, arcAngle, pattern);
 }
 
+void BView::StrokeArc(BRect rect, float startAngle, float arcAngle,
+                      ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::StrokeArc(BRect rect, float startAngle, float arcAngle,
-	::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_STROKE_ARC);
+  fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->Attach<float>(startAngle);
+  fOwner->fLink->Attach<float>(arcAngle);
 
-	fOwner->fLink->StartMessage(AS_STROKE_ARC);
-	fOwner->fLink->Attach<BRect>(rect);
-	fOwner->fLink->Attach<float>(startAngle);
-	fOwner->fLink->Attach<float>(arcAngle);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
-
-void
-BView::FillArc(BPoint center,float xRadius, float yRadius, float startAngle,
-	float arcAngle, ::pattern pattern)
-{
-	FillArc(BRect(center.x - xRadius, center.y - yRadius, center.x + xRadius,
-		center.y + yRadius), startAngle, arcAngle, pattern);
+void BView::FillArc(BPoint center, float xRadius, float yRadius,
+                    float startAngle, float arcAngle, ::pattern pattern) {
+  FillArc(BRect(center.x - xRadius, center.y - yRadius, center.x + xRadius,
+                center.y + yRadius),
+          startAngle, arcAngle, pattern);
 }
-
 
-void
-BView::FillArc(BPoint center,float xRadius, float yRadius, float startAngle,
-	float arcAngle, const BGradient& gradient)
-{
-	FillArc(BRect(center.x - xRadius, center.y - yRadius, center.x + xRadius,
-		center.y + yRadius), startAngle, arcAngle, gradient);
+void BView::FillArc(BPoint center, float xRadius, float yRadius,
+                    float startAngle, float arcAngle,
+                    const BGradient &gradient) {
+  FillArc(BRect(center.x - xRadius, center.y - yRadius, center.x + xRadius,
+                center.y + yRadius),
+          startAngle, arcAngle, gradient);
 }
 
+void BView::FillArc(BRect rect, float startAngle, float arcAngle,
+                    ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::FillArc(BRect rect, float startAngle, float arcAngle,
-	::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_FILL_ARC);
+  fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->Attach<float>(startAngle);
+  fOwner->fLink->Attach<float>(arcAngle);
 
-	fOwner->fLink->StartMessage(AS_FILL_ARC);
-	fOwner->fLink->Attach<BRect>(rect);
-	fOwner->fLink->Attach<float>(startAngle);
-	fOwner->fLink->Attach<float>(arcAngle);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::FillArc(BRect rect, float startAngle, float arcAngle,
+                    const BGradient &gradient) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::FillArc(BRect rect, float startAngle, float arcAngle,
-	const BGradient& gradient)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  fOwner->fLink->StartMessage(AS_FILL_ARC_GRADIENT);
+  fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->Attach<float>(startAngle);
+  fOwner->fLink->Attach<float>(arcAngle);
+  fOwner->fLink->AttachGradient(gradient);
 
-	fOwner->fLink->StartMessage(AS_FILL_ARC_GRADIENT);
-	fOwner->fLink->Attach<BRect>(rect);
-	fOwner->fLink->Attach<float>(startAngle);
-	fOwner->fLink->Attach<float>(arcAngle);
-	fOwner->fLink->AttachGradient(gradient);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::StrokeBezier(BPoint* controlPoints, ::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+void BView::StrokeBezier(BPoint *controlPoints, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	fOwner->fLink->StartMessage(AS_STROKE_BEZIER);
-	fOwner->fLink->Attach<BPoint>(controlPoints[0]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[1]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[2]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[3]);
+  fOwner->fLink->StartMessage(AS_STROKE_BEZIER);
+  fOwner->fLink->Attach<BPoint>(controlPoints[0]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[1]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[2]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[3]);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::FillBezier(BPoint *controlPoints, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::FillBezier(BPoint* controlPoints, ::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_FILL_BEZIER);
+  fOwner->fLink->Attach<BPoint>(controlPoints[0]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[1]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[2]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[3]);
 
-	fOwner->fLink->StartMessage(AS_FILL_BEZIER);
-	fOwner->fLink->Attach<BPoint>(controlPoints[0]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[1]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[2]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[3]);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::FillBezier(BPoint* controlPoints, const BGradient& gradient)
-{
-	if (fOwner == NULL)
-		return;
+void BView::FillBezier(BPoint *controlPoints, const BGradient &gradient) {
+  if (fOwner == NULL)
+    return;
 
-	_CheckLockAndSwitchCurrent();
+  _CheckLockAndSwitchCurrent();
 
-	fOwner->fLink->StartMessage(AS_FILL_BEZIER_GRADIENT);
-	fOwner->fLink->Attach<BPoint>(controlPoints[0]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[1]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[2]);
-	fOwner->fLink->Attach<BPoint>(controlPoints[3]);
-	fOwner->fLink->AttachGradient(gradient);
+  fOwner->fLink->StartMessage(AS_FILL_BEZIER_GRADIENT);
+  fOwner->fLink->Attach<BPoint>(controlPoints[0]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[1]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[2]);
+  fOwner->fLink->Attach<BPoint>(controlPoints[3]);
+  fOwner->fLink->AttachGradient(gradient);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::StrokePolygon(const BPolygon *polygon, bool closed,
+                          ::pattern pattern) {
+  if (polygon == NULL)
+    return;
 
-void
-BView::StrokePolygon(const BPolygon* polygon, bool closed, ::pattern pattern)
-{
-	if (polygon == NULL)
-		return;
-
-	StrokePolygon(polygon->fPoints, polygon->fCount, polygon->Frame(), closed,
-		pattern);
+  StrokePolygon(polygon->fPoints, polygon->fCount, polygon->Frame(), closed,
+                pattern);
 }
 
+void BView::StrokePolygon(const BPoint *pointArray, int32 numPoints,
+                          bool closed, ::pattern pattern) {
+  BPolygon polygon(pointArray, numPoints);
 
-void
-BView::StrokePolygon(const BPoint* pointArray, int32 numPoints, bool closed,
-	::pattern pattern)
-{
-	BPolygon polygon(pointArray, numPoints);
-
-	StrokePolygon(polygon.fPoints, polygon.fCount, polygon.Frame(), closed,
-		pattern);
+  StrokePolygon(polygon.fPoints, polygon.fCount, polygon.Frame(), closed,
+                pattern);
 }
-
 
-void
-BView::StrokePolygon(const BPoint* pointArray, int32 numPoints, BRect bounds,
-	bool closed, ::pattern pattern)
-{
-	if (pointArray == NULL
-		|| numPoints <= 1
-		|| fOwner == NULL)
-		return;
+void BView::StrokePolygon(const BPoint *pointArray, int32 numPoints,
+                          BRect bounds, bool closed, ::pattern pattern) {
+  if (pointArray == NULL || numPoints <= 1 || fOwner == NULL)
+    return;
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	BPolygon polygon(pointArray, numPoints);
-	polygon.MapTo(polygon.Frame(), bounds);
+  BPolygon polygon(pointArray, numPoints);
+  polygon.MapTo(polygon.Frame(), bounds);
 
-	if (fOwner->fLink->StartMessage(AS_STROKE_POLYGON,
-			polygon.fCount * sizeof(BPoint) + sizeof(BRect) + sizeof(bool)
-				+ sizeof(int32)) == B_OK) {
-		fOwner->fLink->Attach<BRect>(polygon.Frame());
-		fOwner->fLink->Attach<bool>(closed);
-		fOwner->fLink->Attach<int32>(polygon.fCount);
-		fOwner->fLink->Attach(polygon.fPoints, polygon.fCount * sizeof(BPoint));
+  if (fOwner->fLink->StartMessage(
+          AS_STROKE_POLYGON, polygon.fCount * sizeof(BPoint) + sizeof(BRect) +
+                                 sizeof(bool) + sizeof(int32)) == B_OK) {
+    fOwner->fLink->Attach<BRect>(polygon.Frame());
+    fOwner->fLink->Attach<bool>(closed);
+    fOwner->fLink->Attach<int32>(polygon.fCount);
+    fOwner->fLink->Attach(polygon.fPoints, polygon.fCount * sizeof(BPoint));
 
-		_FlushIfNotInTransaction();
-	} else {
-		fprintf(stderr, "ERROR: Can't send polygon to app_server!\n");
-	}
+    _FlushIfNotInTransaction();
+  } else {
+    fprintf(stderr, "ERROR: Can't send polygon to app_server!\n");
+  }
 }
 
+void BView::FillPolygon(const BPolygon *polygon, ::pattern pattern) {
+  if (polygon == NULL || polygon->fCount <= 2 || fOwner == NULL)
+    return;
 
-void
-BView::FillPolygon(const BPolygon* polygon, ::pattern pattern)
-{
-	if (polygon == NULL
-		|| polygon->fCount <= 2
-		|| fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  if (fOwner->fLink->StartMessage(AS_FILL_POLYGON,
+                                  polygon->fCount * sizeof(BPoint) +
+                                      sizeof(BRect) + sizeof(int32)) == B_OK) {
+    fOwner->fLink->Attach<BRect>(polygon->Frame());
+    fOwner->fLink->Attach<int32>(polygon->fCount);
+    fOwner->fLink->Attach(polygon->fPoints, polygon->fCount * sizeof(BPoint));
 
-	if (fOwner->fLink->StartMessage(AS_FILL_POLYGON,
-			polygon->fCount * sizeof(BPoint) + sizeof(BRect) + sizeof(int32))
-				== B_OK) {
-		fOwner->fLink->Attach<BRect>(polygon->Frame());
-		fOwner->fLink->Attach<int32>(polygon->fCount);
-		fOwner->fLink->Attach(polygon->fPoints,
-			polygon->fCount * sizeof(BPoint));
-
-		_FlushIfNotInTransaction();
-	} else {
-		fprintf(stderr, "ERROR: Can't send polygon to app_server!\n");
-	}
+    _FlushIfNotInTransaction();
+  } else {
+    fprintf(stderr, "ERROR: Can't send polygon to app_server!\n");
+  }
 }
 
+void BView::FillPolygon(const BPolygon *polygon, const BGradient &gradient) {
+  if (polygon == NULL || polygon->fCount <= 2 || fOwner == NULL)
+    return;
 
-void
-BView::FillPolygon(const BPolygon* polygon, const BGradient& gradient)
-{
-	if (polygon == NULL
-		|| polygon->fCount <= 2
-		|| fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  if (fOwner->fLink->StartMessage(AS_FILL_POLYGON_GRADIENT,
+                                  polygon->fCount * sizeof(BPoint) +
+                                      sizeof(BRect) + sizeof(int32)) == B_OK) {
+    fOwner->fLink->Attach<BRect>(polygon->Frame());
+    fOwner->fLink->Attach<int32>(polygon->fCount);
+    fOwner->fLink->Attach(polygon->fPoints, polygon->fCount * sizeof(BPoint));
+    fOwner->fLink->AttachGradient(gradient);
 
-	if (fOwner->fLink->StartMessage(AS_FILL_POLYGON_GRADIENT,
-			polygon->fCount * sizeof(BPoint) + sizeof(BRect) + sizeof(int32))
-				== B_OK) {
-		fOwner->fLink->Attach<BRect>(polygon->Frame());
-		fOwner->fLink->Attach<int32>(polygon->fCount);
-		fOwner->fLink->Attach(polygon->fPoints,
-			polygon->fCount * sizeof(BPoint));
-		fOwner->fLink->AttachGradient(gradient);
-
-		_FlushIfNotInTransaction();
-	} else {
-		fprintf(stderr, "ERROR: Can't send polygon to app_server!\n");
-	}
+    _FlushIfNotInTransaction();
+  } else {
+    fprintf(stderr, "ERROR: Can't send polygon to app_server!\n");
+  }
 }
-
 
-void
-BView::FillPolygon(const BPoint* pointArray, int32 numPoints, ::pattern pattern)
-{
-	if (pointArray == NULL)
-		return;
+void BView::FillPolygon(const BPoint *pointArray, int32 numPoints,
+                        ::pattern pattern) {
+  if (pointArray == NULL)
+    return;
 
-	BPolygon polygon(pointArray, numPoints);
-	FillPolygon(&polygon, pattern);
+  BPolygon polygon(pointArray, numPoints);
+  FillPolygon(&polygon, pattern);
 }
 
+void BView::FillPolygon(const BPoint *pointArray, int32 numPoints,
+                        const BGradient &gradient) {
+  if (pointArray == NULL)
+    return;
 
-void
-BView::FillPolygon(const BPoint* pointArray, int32 numPoints,
-	const BGradient& gradient)
-{
-	if (pointArray == NULL)
-		return;
-
-	BPolygon polygon(pointArray, numPoints);
-	FillPolygon(&polygon, gradient);
+  BPolygon polygon(pointArray, numPoints);
+  FillPolygon(&polygon, gradient);
 }
 
+void BView::FillPolygon(const BPoint *pointArray, int32 numPoints, BRect bounds,
+                        ::pattern pattern) {
+  if (pointArray == NULL)
+    return;
 
-void
-BView::FillPolygon(const BPoint* pointArray, int32 numPoints, BRect bounds,
-	::pattern pattern)
-{
-	if (pointArray == NULL)
-		return;
+  BPolygon polygon(pointArray, numPoints);
 
-	BPolygon polygon(pointArray, numPoints);
-
-	polygon.MapTo(polygon.Frame(), bounds);
-	FillPolygon(&polygon, pattern);
+  polygon.MapTo(polygon.Frame(), bounds);
+  FillPolygon(&polygon, pattern);
 }
-
 
-void
-BView::FillPolygon(const BPoint* pointArray, int32 numPoints, BRect bounds,
-	const BGradient& gradient)
-{
-	if (pointArray == NULL)
-		return;
+void BView::FillPolygon(const BPoint *pointArray, int32 numPoints, BRect bounds,
+                        const BGradient &gradient) {
+  if (pointArray == NULL)
+    return;
 
-	BPolygon polygon(pointArray, numPoints);
+  BPolygon polygon(pointArray, numPoints);
 
-	polygon.MapTo(polygon.Frame(), bounds);
-	FillPolygon(&polygon, gradient);
+  polygon.MapTo(polygon.Frame(), bounds);
+  FillPolygon(&polygon, gradient);
 }
 
+void BView::StrokeRect(BRect rect, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::StrokeRect(BRect rect, ::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_STROKE_RECT);
+  fOwner->fLink->Attach<BRect>(rect);
 
-	fOwner->fLink->StartMessage(AS_STROKE_RECT);
-	fOwner->fLink->Attach<BRect>(rect);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::FillRect(BRect rect, ::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+void BView::FillRect(BRect rect, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-	// NOTE: ensuring compatibility with R5,
-	// invalid rects are not filled, they are stroked though!
-	if (!rect.IsValid())
-		return;
+  // NOTE: ensuring compatibility with R5,
+  // invalid rects are not filled, they are stroked though!
+  if (!rect.IsValid())
+    return;
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	fOwner->fLink->StartMessage(AS_FILL_RECT);
-	fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->StartMessage(AS_FILL_RECT);
+  fOwner->fLink->Attach<BRect>(rect);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::FillRect(BRect rect, const BGradient &gradient) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::FillRect(BRect rect, const BGradient& gradient)
-{
-	if (fOwner == NULL)
-		return;
+  // NOTE: ensuring compatibility with R5,
+  // invalid rects are not filled, they are stroked though!
+  if (!rect.IsValid())
+    return;
 
-	// NOTE: ensuring compatibility with R5,
-	// invalid rects are not filled, they are stroked though!
-	if (!rect.IsValid())
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  fOwner->fLink->StartMessage(AS_FILL_RECT_GRADIENT);
+  fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->AttachGradient(gradient);
 
-	fOwner->fLink->StartMessage(AS_FILL_RECT_GRADIENT);
-	fOwner->fLink->Attach<BRect>(rect);
-	fOwner->fLink->AttachGradient(gradient);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::StrokeRoundRect(BRect rect, float xRadius, float yRadius,
+                            ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::StrokeRoundRect(BRect rect, float xRadius, float yRadius,
-	::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_STROKE_ROUNDRECT);
+  fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->Attach<float>(xRadius);
+  fOwner->fLink->Attach<float>(yRadius);
 
-	fOwner->fLink->StartMessage(AS_STROKE_ROUNDRECT);
-	fOwner->fLink->Attach<BRect>(rect);
-	fOwner->fLink->Attach<float>(xRadius);
-	fOwner->fLink->Attach<float>(yRadius);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::FillRoundRect(BRect rect, float xRadius, float yRadius,
-	::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+void BView::FillRoundRect(BRect rect, float xRadius, float yRadius,
+                          ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-	_CheckLockAndSwitchCurrent();
+  _CheckLockAndSwitchCurrent();
 
-	_UpdatePattern(pattern);
+  _UpdatePattern(pattern);
 
-	fOwner->fLink->StartMessage(AS_FILL_ROUNDRECT);
-	fOwner->fLink->Attach<BRect>(rect);
-	fOwner->fLink->Attach<float>(xRadius);
-	fOwner->fLink->Attach<float>(yRadius);
+  fOwner->fLink->StartMessage(AS_FILL_ROUNDRECT);
+  fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->Attach<float>(xRadius);
+  fOwner->fLink->Attach<float>(yRadius);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::FillRoundRect(BRect rect, float xRadius, float yRadius,
+                          const BGradient &gradient) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::FillRoundRect(BRect rect, float xRadius, float yRadius,
-	const BGradient& gradient)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  fOwner->fLink->StartMessage(AS_FILL_ROUNDRECT_GRADIENT);
+  fOwner->fLink->Attach<BRect>(rect);
+  fOwner->fLink->Attach<float>(xRadius);
+  fOwner->fLink->Attach<float>(yRadius);
+  fOwner->fLink->AttachGradient(gradient);
 
-	fOwner->fLink->StartMessage(AS_FILL_ROUNDRECT_GRADIENT);
-	fOwner->fLink->Attach<BRect>(rect);
-	fOwner->fLink->Attach<float>(xRadius);
-	fOwner->fLink->Attach<float>(yRadius);
-	fOwner->fLink->AttachGradient(gradient);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::FillRegion(BRegion *region, ::pattern pattern) {
+  if (region == NULL || fOwner == NULL)
+    return;
 
-void
-BView::FillRegion(BRegion* region, ::pattern pattern)
-{
-	if (region == NULL || fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_FILL_REGION);
+  fOwner->fLink->AttachRegion(*region);
 
-	fOwner->fLink->StartMessage(AS_FILL_REGION);
-	fOwner->fLink->AttachRegion(*region);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::FillRegion(BRegion* region, const BGradient& gradient)
-{
-	if (region == NULL || fOwner == NULL)
-		return;
+void BView::FillRegion(BRegion *region, const BGradient &gradient) {
+  if (region == NULL || fOwner == NULL)
+    return;
 
-	_CheckLockAndSwitchCurrent();
+  _CheckLockAndSwitchCurrent();
 
-	fOwner->fLink->StartMessage(AS_FILL_REGION_GRADIENT);
-	fOwner->fLink->AttachRegion(*region);
-	fOwner->fLink->AttachGradient(gradient);
+  fOwner->fLink->StartMessage(AS_FILL_REGION_GRADIENT);
+  fOwner->fLink->AttachRegion(*region);
+  fOwner->fLink->AttachGradient(gradient);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::StrokeTriangle(BPoint point1, BPoint point2, BPoint point3,
+                           BRect bounds, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::StrokeTriangle(BPoint point1, BPoint point2, BPoint point3, BRect bounds,
-	::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_STROKE_TRIANGLE);
+  fOwner->fLink->Attach<BPoint>(point1);
+  fOwner->fLink->Attach<BPoint>(point2);
+  fOwner->fLink->Attach<BPoint>(point3);
+  fOwner->fLink->Attach<BRect>(bounds);
 
-	fOwner->fLink->StartMessage(AS_STROKE_TRIANGLE);
-	fOwner->fLink->Attach<BPoint>(point1);
-	fOwner->fLink->Attach<BPoint>(point2);
-	fOwner->fLink->Attach<BPoint>(point3);
-	fOwner->fLink->Attach<BRect>(bounds);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::StrokeTriangle(BPoint point1, BPoint point2, BPoint point3,
+                           ::pattern pattern) {
+  if (fOwner) {
+    // we construct the smallest rectangle that contains the 3 points
+    // for the 1st point
+    BRect bounds(point1, point1);
 
-void
-BView::StrokeTriangle(BPoint point1, BPoint point2, BPoint point3,
-	::pattern pattern)
-{
-	if (fOwner) {
-		// we construct the smallest rectangle that contains the 3 points
-		// for the 1st point
-		BRect bounds(point1, point1);
+    // for the 2nd point
+    if (point2.x < bounds.left)
+      bounds.left = point2.x;
 
-		// for the 2nd point
-		if (point2.x < bounds.left)
-			bounds.left = point2.x;
+    if (point2.y < bounds.top)
+      bounds.top = point2.y;
 
-		if (point2.y < bounds.top)
-			bounds.top = point2.y;
+    if (point2.x > bounds.right)
+      bounds.right = point2.x;
 
-		if (point2.x > bounds.right)
-			bounds.right = point2.x;
+    if (point2.y > bounds.bottom)
+      bounds.bottom = point2.y;
 
-		if (point2.y > bounds.bottom)
-			bounds.bottom = point2.y;
+    // for the 3rd point
+    if (point3.x < bounds.left)
+      bounds.left = point3.x;
 
-		// for the 3rd point
-		if (point3.x < bounds.left)
-			bounds.left = point3.x;
+    if (point3.y < bounds.top)
+      bounds.top = point3.y;
 
-		if (point3.y < bounds.top)
-			bounds.top = point3.y;
+    if (point3.x > bounds.right)
+      bounds.right = point3.x;
 
-		if (point3.x > bounds.right)
-			bounds.right = point3.x;
+    if (point3.y > bounds.bottom)
+      bounds.bottom = point3.y;
 
-		if (point3.y > bounds.bottom)
-			bounds.bottom = point3.y;
-
-		StrokeTriangle(point1, point2, point3, bounds, pattern);
-	}
+    StrokeTriangle(point1, point2, point3, bounds, pattern);
+  }
 }
-
 
-void
-BView::FillTriangle(BPoint point1, BPoint point2, BPoint point3,
-	::pattern pattern)
-{
-	if (fOwner) {
-		// we construct the smallest rectangle that contains the 3 points
-		// for the 1st point
-		BRect bounds(point1, point1);
+void BView::FillTriangle(BPoint point1, BPoint point2, BPoint point3,
+                         ::pattern pattern) {
+  if (fOwner) {
+    // we construct the smallest rectangle that contains the 3 points
+    // for the 1st point
+    BRect bounds(point1, point1);
 
-		// for the 2nd point
-		if (point2.x < bounds.left)
-			bounds.left = point2.x;
+    // for the 2nd point
+    if (point2.x < bounds.left)
+      bounds.left = point2.x;
 
-		if (point2.y < bounds.top)
-			bounds.top = point2.y;
+    if (point2.y < bounds.top)
+      bounds.top = point2.y;
 
-		if (point2.x > bounds.right)
-			bounds.right = point2.x;
+    if (point2.x > bounds.right)
+      bounds.right = point2.x;
 
-		if (point2.y > bounds.bottom)
-			bounds.bottom = point2.y;
+    if (point2.y > bounds.bottom)
+      bounds.bottom = point2.y;
 
-		// for the 3rd point
-		if (point3.x < bounds.left)
-			bounds.left = point3.x;
+    // for the 3rd point
+    if (point3.x < bounds.left)
+      bounds.left = point3.x;
 
-		if (point3.y < bounds.top)
-			bounds.top = point3.y;
+    if (point3.y < bounds.top)
+      bounds.top = point3.y;
 
-		if (point3.x > bounds.right)
-			bounds.right = point3.x;
+    if (point3.x > bounds.right)
+      bounds.right = point3.x;
 
-		if (point3.y > bounds.bottom)
-			bounds.bottom = point3.y;
+    if (point3.y > bounds.bottom)
+      bounds.bottom = point3.y;
 
-		FillTriangle(point1, point2, point3, bounds, pattern);
-	}
+    FillTriangle(point1, point2, point3, bounds, pattern);
+  }
 }
 
+void BView::FillTriangle(BPoint point1, BPoint point2, BPoint point3,
+                         const BGradient &gradient) {
+  if (fOwner) {
+    // we construct the smallest rectangle that contains the 3 points
+    // for the 1st point
+    BRect bounds(point1, point1);
 
-void
-BView::FillTriangle(BPoint point1, BPoint point2, BPoint point3,
-	const BGradient& gradient)
-{
-	if (fOwner) {
-		// we construct the smallest rectangle that contains the 3 points
-		// for the 1st point
-		BRect bounds(point1, point1);
+    // for the 2nd point
+    if (point2.x < bounds.left)
+      bounds.left = point2.x;
 
-		// for the 2nd point
-		if (point2.x < bounds.left)
-			bounds.left = point2.x;
+    if (point2.y < bounds.top)
+      bounds.top = point2.y;
 
-		if (point2.y < bounds.top)
-			bounds.top = point2.y;
+    if (point2.x > bounds.right)
+      bounds.right = point2.x;
 
-		if (point2.x > bounds.right)
-			bounds.right = point2.x;
+    if (point2.y > bounds.bottom)
+      bounds.bottom = point2.y;
 
-		if (point2.y > bounds.bottom)
-			bounds.bottom = point2.y;
+    // for the 3rd point
+    if (point3.x < bounds.left)
+      bounds.left = point3.x;
 
-		// for the 3rd point
-		if (point3.x < bounds.left)
-			bounds.left = point3.x;
+    if (point3.y < bounds.top)
+      bounds.top = point3.y;
 
-		if (point3.y < bounds.top)
-			bounds.top = point3.y;
+    if (point3.x > bounds.right)
+      bounds.right = point3.x;
 
-		if (point3.x > bounds.right)
-			bounds.right = point3.x;
+    if (point3.y > bounds.bottom)
+      bounds.bottom = point3.y;
 
-		if (point3.y > bounds.bottom)
-			bounds.bottom = point3.y;
-
-		FillTriangle(point1, point2, point3, bounds, gradient);
-	}
+    FillTriangle(point1, point2, point3, bounds, gradient);
+  }
 }
-
 
-void
-BView::FillTriangle(BPoint point1, BPoint point2, BPoint point3,
-	BRect bounds, ::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+void BView::FillTriangle(BPoint point1, BPoint point2, BPoint point3,
+                         BRect bounds, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	fOwner->fLink->StartMessage(AS_FILL_TRIANGLE);
-	fOwner->fLink->Attach<BPoint>(point1);
-	fOwner->fLink->Attach<BPoint>(point2);
-	fOwner->fLink->Attach<BPoint>(point3);
-	fOwner->fLink->Attach<BRect>(bounds);
+  fOwner->fLink->StartMessage(AS_FILL_TRIANGLE);
+  fOwner->fLink->Attach<BPoint>(point1);
+  fOwner->fLink->Attach<BPoint>(point2);
+  fOwner->fLink->Attach<BPoint>(point3);
+  fOwner->fLink->Attach<BRect>(bounds);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::FillTriangle(BPoint point1, BPoint point2, BPoint point3,
+                         BRect bounds, const BGradient &gradient) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::FillTriangle(BPoint point1, BPoint point2, BPoint point3, BRect bounds,
-	const BGradient& gradient)
-{
-	if (fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
+  fOwner->fLink->StartMessage(AS_FILL_TRIANGLE_GRADIENT);
+  fOwner->fLink->Attach<BPoint>(point1);
+  fOwner->fLink->Attach<BPoint>(point2);
+  fOwner->fLink->Attach<BPoint>(point3);
+  fOwner->fLink->Attach<BRect>(bounds);
+  fOwner->fLink->AttachGradient(gradient);
 
-	_CheckLockAndSwitchCurrent();
-	fOwner->fLink->StartMessage(AS_FILL_TRIANGLE_GRADIENT);
-	fOwner->fLink->Attach<BPoint>(point1);
-	fOwner->fLink->Attach<BPoint>(point2);
-	fOwner->fLink->Attach<BPoint>(point3);
-	fOwner->fLink->Attach<BRect>(bounds);
-	fOwner->fLink->AttachGradient(gradient);
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
-
-void
-BView::StrokeLine(BPoint toPoint, ::pattern pattern)
-{
-	StrokeLine(PenLocation(), toPoint, pattern);
+void BView::StrokeLine(BPoint toPoint, ::pattern pattern) {
+  StrokeLine(PenLocation(), toPoint, pattern);
 }
-
 
-void
-BView::StrokeLine(BPoint start, BPoint end, ::pattern pattern)
-{
-	if (fOwner == NULL)
-		return;
+void BView::StrokeLine(BPoint start, BPoint end, ::pattern pattern) {
+  if (fOwner == NULL)
+    return;
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	ViewStrokeLineInfo info;
-	info.startPoint = start;
-	info.endPoint = end;
+  ViewStrokeLineInfo info;
+  info.startPoint = start;
+  info.endPoint = end;
 
-	fOwner->fLink->StartMessage(AS_STROKE_LINE);
-	fOwner->fLink->Attach<ViewStrokeLineInfo>(info);
+  fOwner->fLink->StartMessage(AS_STROKE_LINE);
+  fOwner->fLink->Attach<ViewStrokeLineInfo>(info);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 
-	// this modifies our pen location, so we invalidate the flag.
-	fState->valid_flags &= ~B_VIEW_PEN_LOCATION_BIT;
+  // this modifies our pen location, so we invalidate the flag.
+  fState->valid_flags &= ~B_VIEW_PEN_LOCATION_BIT;
 }
 
+void BView::StrokeShape(BShape *shape, ::pattern pattern) {
+  if (shape == NULL || fOwner == NULL)
+    return;
 
-void
-BView::StrokeShape(BShape* shape, ::pattern pattern)
-{
-	if (shape == NULL || fOwner == NULL)
-		return;
+  shape_data *sd = (shape_data *)shape->fPrivateData;
+  if (sd->opCount == 0 || sd->ptCount == 0)
+    return;
 
-	shape_data* sd = (shape_data*)shape->fPrivateData;
-	if (sd->opCount == 0 || sd->ptCount == 0)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_STROKE_SHAPE);
+  fOwner->fLink->Attach<BRect>(shape->Bounds());
+  fOwner->fLink->Attach<int32>(sd->opCount);
+  fOwner->fLink->Attach<int32>(sd->ptCount);
+  fOwner->fLink->Attach(sd->opList, sd->opCount * sizeof(uint32));
+  fOwner->fLink->Attach(sd->ptList, sd->ptCount * sizeof(BPoint));
 
-	fOwner->fLink->StartMessage(AS_STROKE_SHAPE);
-	fOwner->fLink->Attach<BRect>(shape->Bounds());
-	fOwner->fLink->Attach<int32>(sd->opCount);
-	fOwner->fLink->Attach<int32>(sd->ptCount);
-	fOwner->fLink->Attach(sd->opList, sd->opCount * sizeof(uint32));
-	fOwner->fLink->Attach(sd->ptList, sd->ptCount * sizeof(BPoint));
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::FillShape(BShape *shape, ::pattern pattern) {
+  if (shape == NULL || fOwner == NULL)
+    return;
 
-void
-BView::FillShape(BShape* shape, ::pattern pattern)
-{
-	if (shape == NULL || fOwner == NULL)
-		return;
+  shape_data *sd = (shape_data *)(shape->fPrivateData);
+  if (sd->opCount == 0 || sd->ptCount == 0)
+    return;
 
-	shape_data* sd = (shape_data*)(shape->fPrivateData);
-	if (sd->opCount == 0 || sd->ptCount == 0)
-		return;
+  _CheckLockAndSwitchCurrent();
+  _UpdatePattern(pattern);
 
-	_CheckLockAndSwitchCurrent();
-	_UpdatePattern(pattern);
+  fOwner->fLink->StartMessage(AS_FILL_SHAPE);
+  fOwner->fLink->Attach<BRect>(shape->Bounds());
+  fOwner->fLink->Attach<int32>(sd->opCount);
+  fOwner->fLink->Attach<int32>(sd->ptCount);
+  fOwner->fLink->Attach(sd->opList, sd->opCount * sizeof(int32));
+  fOwner->fLink->Attach(sd->ptList, sd->ptCount * sizeof(BPoint));
 
-	fOwner->fLink->StartMessage(AS_FILL_SHAPE);
-	fOwner->fLink->Attach<BRect>(shape->Bounds());
-	fOwner->fLink->Attach<int32>(sd->opCount);
-	fOwner->fLink->Attach<int32>(sd->ptCount);
-	fOwner->fLink->Attach(sd->opList, sd->opCount * sizeof(int32));
-	fOwner->fLink->Attach(sd->ptList, sd->ptCount * sizeof(BPoint));
-
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
-
 
-void
-BView::FillShape(BShape* shape, const BGradient& gradient)
-{
-	if (shape == NULL || fOwner == NULL)
-		return;
+void BView::FillShape(BShape *shape, const BGradient &gradient) {
+  if (shape == NULL || fOwner == NULL)
+    return;
 
-	shape_data* sd = (shape_data*)(shape->fPrivateData);
-	if (sd->opCount == 0 || sd->ptCount == 0)
-		return;
+  shape_data *sd = (shape_data *)(shape->fPrivateData);
+  if (sd->opCount == 0 || sd->ptCount == 0)
+    return;
 
-	_CheckLockAndSwitchCurrent();
+  _CheckLockAndSwitchCurrent();
 
-	fOwner->fLink->StartMessage(AS_FILL_SHAPE_GRADIENT);
-	fOwner->fLink->Attach<BRect>(shape->Bounds());
-	fOwner->fLink->Attach<int32>(sd->opCount);
-	fOwner->fLink->Attach<int32>(sd->ptCount);
-	fOwner->fLink->Attach(sd->opList, sd->opCount * sizeof(int32));
-	fOwner->fLink->Attach(sd->ptList, sd->ptCount * sizeof(BPoint));
-	fOwner->fLink->AttachGradient(gradient);
+  fOwner->fLink->StartMessage(AS_FILL_SHAPE_GRADIENT);
+  fOwner->fLink->Attach<BRect>(shape->Bounds());
+  fOwner->fLink->Attach<int32>(sd->opCount);
+  fOwner->fLink->Attach<int32>(sd->ptCount);
+  fOwner->fLink->Attach(sd->opList, sd->opCount * sizeof(int32));
+  fOwner->fLink->Attach(sd->ptList, sd->ptCount * sizeof(BPoint));
+  fOwner->fLink->AttachGradient(gradient);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::BeginLineArray(int32 count) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::BeginLineArray(int32 count)
-{
-	if (fOwner == NULL)
-		return;
+  if (count <= 0)
+    debugger("Calling BeginLineArray with a count <= 0");
 
-	if (count <= 0)
-		debugger("Calling BeginLineArray with a count <= 0");
+  _CheckLock();
 
-	_CheckLock();
+  if (fCommArray) {
+    debugger("Can't nest BeginLineArray calls");
+    // not fatal, but it helps during
+    // development of your app and is in
+    // line with R5...
+    delete[] fCommArray->array;
+    delete fCommArray;
+  }
 
-	if (fCommArray) {
-		debugger("Can't nest BeginLineArray calls");
-			// not fatal, but it helps during
-			// development of your app and is in
-			// line with R5...
-		delete[] fCommArray->array;
-		delete fCommArray;
-	}
+  // TODO: since this method cannot return failure, and further AddLine()
+  //	calls with a NULL fCommArray would drop into the debugger anyway,
+  //	we allow the possible std::bad_alloc exceptions here...
+  fCommArray = new _array_data_;
+  fCommArray->count = 0;
 
-	// TODO: since this method cannot return failure, and further AddLine()
-	//	calls with a NULL fCommArray would drop into the debugger anyway,
-	//	we allow the possible std::bad_alloc exceptions here...
-	fCommArray = new _array_data_;
-	fCommArray->count = 0;
+  // Make sure the fCommArray is initialized to reasonable values in cases of
+  // bad_alloc. At least the exception can be caught and EndLineArray won't
+  // crash.
+  fCommArray->array = NULL;
+  fCommArray->maxCount = 0;
 
-	// Make sure the fCommArray is initialized to reasonable values in cases of
-	// bad_alloc. At least the exception can be caught and EndLineArray won't
-	// crash.
-	fCommArray->array = NULL;
-	fCommArray->maxCount = 0;
-
-	fCommArray->array = new ViewLineArrayInfo[count];
-	fCommArray->maxCount = count;
+  fCommArray->array = new ViewLineArrayInfo[count];
+  fCommArray->maxCount = count;
 }
 
+void BView::AddLine(BPoint start, BPoint end, rgb_color color) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::AddLine(BPoint start, BPoint end, rgb_color color)
-{
-	if (fOwner == NULL)
-		return;
+  if (!fCommArray)
+    debugger("BeginLineArray must be called before using AddLine");
 
-	if (!fCommArray)
-		debugger("BeginLineArray must be called before using AddLine");
+  _CheckLock();
 
-	_CheckLock();
+  const uint32 &arrayCount = fCommArray->count;
+  if (arrayCount < fCommArray->maxCount) {
+    fCommArray->array[arrayCount].startPoint = start;
+    fCommArray->array[arrayCount].endPoint = end;
+    fCommArray->array[arrayCount].color = color;
 
-	const uint32 &arrayCount = fCommArray->count;
-	if (arrayCount < fCommArray->maxCount) {
-		fCommArray->array[arrayCount].startPoint = start;
-		fCommArray->array[arrayCount].endPoint = end;
-		fCommArray->array[arrayCount].color = color;
-
-		fCommArray->count++;
-	}
+    fCommArray->count++;
+  }
 }
-
 
-void
-BView::EndLineArray()
-{
-	if (fOwner == NULL)
-		return;
+void BView::EndLineArray() {
+  if (fOwner == NULL)
+    return;
 
-	if (fCommArray == NULL)
-		debugger("Can't call EndLineArray before BeginLineArray");
+  if (fCommArray == NULL)
+    debugger("Can't call EndLineArray before BeginLineArray");
 
-	_CheckLockAndSwitchCurrent();
+  _CheckLockAndSwitchCurrent();
 
-	fOwner->fLink->StartMessage(AS_STROKE_LINEARRAY);
-	fOwner->fLink->Attach<int32>(fCommArray->count);
-	fOwner->fLink->Attach(fCommArray->array,
-		fCommArray->count * sizeof(ViewLineArrayInfo));
+  fOwner->fLink->StartMessage(AS_STROKE_LINEARRAY);
+  fOwner->fLink->Attach<int32>(fCommArray->count);
+  fOwner->fLink->Attach(fCommArray->array,
+                        fCommArray->count * sizeof(ViewLineArrayInfo));
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 
-	_RemoveCommArray();
+  _RemoveCommArray();
 }
 
-
-void
-BView::SetDiskMode(char* filename, long offset)
-{
-	// TODO: implement
-	// One BeBook version has this to say about SetDiskMode():
-	//
-	// "Begins recording a picture to the file with the given filename
-	// at the given offset. Subsequent drawing commands sent to the view
-	// will be written to the file until EndPicture() is called. The
-	// stored commands may be played from the file with DrawPicture()."
+void BView::SetDiskMode(char *filename, long offset) {
+  // TODO: implement
+  // One BeBook version has this to say about SetDiskMode():
+  //
+  // "Begins recording a picture to the file with the given filename
+  // at the given offset. Subsequent drawing commands sent to the view
+  // will be written to the file until EndPicture() is called. The
+  // stored commands may be played from the file with DrawPicture()."
 }
-
 
-void
-BView::BeginPicture(BPicture* picture)
-{
-	if (_CheckOwnerLockAndSwitchCurrent()
-		&& picture && picture->fUsurped == NULL) {
-		picture->Usurp(fCurrentPicture);
-		fCurrentPicture = picture;
+void BView::BeginPicture(BPicture *picture) {
+  if (_CheckOwnerLockAndSwitchCurrent() && picture &&
+      picture->fUsurped == NULL) {
+    picture->Usurp(fCurrentPicture);
+    fCurrentPicture = picture;
 
-		fOwner->fLink->StartMessage(AS_VIEW_BEGIN_PICTURE);
-	}
+    fOwner->fLink->StartMessage(AS_VIEW_BEGIN_PICTURE);
+  }
 }
 
+void BView::AppendToPicture(BPicture *picture) {
+  _CheckLockAndSwitchCurrent();
 
-void
-BView::AppendToPicture(BPicture* picture)
-{
-	_CheckLockAndSwitchCurrent();
+  if (picture && picture->fUsurped == NULL) {
+    int32 token = picture->Token();
 
-	if (picture && picture->fUsurped == NULL) {
-		int32 token = picture->Token();
-
-		if (token == -1) {
-			BeginPicture(picture);
-		} else {
-			picture->SetToken(-1);
-			picture->Usurp(fCurrentPicture);
-			fCurrentPicture = picture;
-			fOwner->fLink->StartMessage(AS_VIEW_APPEND_TO_PICTURE);
-			fOwner->fLink->Attach<int32>(token);
-		}
-	}
+    if (token == -1) {
+      BeginPicture(picture);
+    } else {
+      picture->SetToken(-1);
+      picture->Usurp(fCurrentPicture);
+      fCurrentPicture = picture;
+      fOwner->fLink->StartMessage(AS_VIEW_APPEND_TO_PICTURE);
+      fOwner->fLink->Attach<int32>(token);
+    }
+  }
 }
 
+BPicture *BView::EndPicture() {
+  if (_CheckOwnerLockAndSwitchCurrent() && fCurrentPicture) {
+    int32 token;
 
-BPicture*
-BView::EndPicture()
-{
-	if (_CheckOwnerLockAndSwitchCurrent() && fCurrentPicture) {
-		int32 token;
+    fOwner->fLink->StartMessage(AS_VIEW_END_PICTURE);
 
-		fOwner->fLink->StartMessage(AS_VIEW_END_PICTURE);
+    int32 code;
+    if (fOwner->fLink->FlushWithReply(code) == B_OK && code == B_OK &&
+        fOwner->fLink->Read<int32>(&token) == B_OK) {
+      BPicture *picture = fCurrentPicture;
+      fCurrentPicture = picture->StepDown();
+      picture->SetToken(token);
 
-		int32 code;
-		if (fOwner->fLink->FlushWithReply(code) == B_OK
-			&& code == B_OK
-			&& fOwner->fLink->Read<int32>(&token) == B_OK) {
-			BPicture* picture = fCurrentPicture;
-			fCurrentPicture = picture->StepDown();
-			picture->SetToken(token);
+      // TODO do this more efficient e.g. use a shared area and let the
+      // client write into it
+      picture->_Download();
+      return picture;
+    }
+  }
 
-			// TODO do this more efficient e.g. use a shared area and let the
-			// client write into it
-			picture->_Download();
-			return picture;
-		}
-	}
-
-	return NULL;
+  return NULL;
 }
-
 
-void
-BView::SetViewBitmap(const BBitmap* bitmap, BRect srcRect, BRect dstRect,
-	uint32 followFlags, uint32 options)
-{
-	_SetViewBitmap(bitmap, srcRect, dstRect, followFlags, options);
+void BView::SetViewBitmap(const BBitmap *bitmap, BRect srcRect, BRect dstRect,
+                          uint32 followFlags, uint32 options) {
+  _SetViewBitmap(bitmap, srcRect, dstRect, followFlags, options);
 }
 
+void BView::SetViewBitmap(const BBitmap *bitmap, uint32 followFlags,
+                          uint32 options) {
+  BRect rect;
+  if (bitmap)
+    rect = bitmap->Bounds();
 
-void
-BView::SetViewBitmap(const BBitmap* bitmap, uint32 followFlags, uint32 options)
-{
-	BRect rect;
- 	if (bitmap)
-		rect = bitmap->Bounds();
+  rect.OffsetTo(B_ORIGIN);
 
- 	rect.OffsetTo(B_ORIGIN);
-
-	_SetViewBitmap(bitmap, rect, rect, followFlags, options);
-}
-
-
-void
-BView::ClearViewBitmap()
-{
-	_SetViewBitmap(NULL, BRect(), BRect(), 0, 0);
+  _SetViewBitmap(bitmap, rect, rect, followFlags, options);
 }
 
+void BView::ClearViewBitmap() { _SetViewBitmap(NULL, BRect(), BRect(), 0, 0); }
 
-status_t
-BView::SetViewOverlay(const BBitmap* overlay, BRect srcRect, BRect dstRect,
-	rgb_color* colorKey, uint32 followFlags, uint32 options)
-{
-	if (overlay == NULL || (overlay->fFlags & B_BITMAP_WILL_OVERLAY) == 0)
-		return B_BAD_VALUE;
+status_t BView::SetViewOverlay(const BBitmap *overlay, BRect srcRect,
+                               BRect dstRect, rgb_color *colorKey,
+                               uint32 followFlags, uint32 options) {
+  if (overlay == NULL || (overlay->fFlags & B_BITMAP_WILL_OVERLAY) == 0)
+    return B_BAD_VALUE;
 
-	status_t status = _SetViewBitmap(overlay, srcRect, dstRect, followFlags,
-		options | AS_REQUEST_COLOR_KEY);
-	if (status == B_OK) {
-		// read the color that will be treated as transparent
-		fOwner->fLink->Read<rgb_color>(colorKey);
-	}
+  status_t status = _SetViewBitmap(overlay, srcRect, dstRect, followFlags,
+                                   options | AS_REQUEST_COLOR_KEY);
+  if (status == B_OK) {
+    // read the color that will be treated as transparent
+    fOwner->fLink->Read<rgb_color>(colorKey);
+  }
 
-	return status;
+  return status;
 }
-
-
-status_t
-BView::SetViewOverlay(const BBitmap* overlay, rgb_color* colorKey,
-	uint32 followFlags, uint32 options)
-{
-	if (overlay == NULL)
-		return B_BAD_VALUE;
 
-	BRect rect = overlay->Bounds();
- 	rect.OffsetTo(B_ORIGIN);
+status_t BView::SetViewOverlay(const BBitmap *overlay, rgb_color *colorKey,
+                               uint32 followFlags, uint32 options) {
+  if (overlay == NULL)
+    return B_BAD_VALUE;
 
-	return SetViewOverlay(overlay, rect, rect, colorKey, followFlags, options);
-}
-
+  BRect rect = overlay->Bounds();
+  rect.OffsetTo(B_ORIGIN);
 
-void
-BView::ClearViewOverlay()
-{
-	_SetViewBitmap(NULL, BRect(), BRect(), 0, 0);
+  return SetViewOverlay(overlay, rect, rect, colorKey, followFlags, options);
 }
 
+void BView::ClearViewOverlay() { _SetViewBitmap(NULL, BRect(), BRect(), 0, 0); }
 
-void
-BView::CopyBits(BRect src, BRect dst)
-{
-	if (fOwner == NULL)
-		return;
+void BView::CopyBits(BRect src, BRect dst) {
+  if (fOwner == NULL)
+    return;
 
-	if (!src.IsValid() || !dst.IsValid())
-		return;
+  if (!src.IsValid() || !dst.IsValid())
+    return;
 
-	_CheckLockAndSwitchCurrent();
+  _CheckLockAndSwitchCurrent();
 
-	fOwner->fLink->StartMessage(AS_VIEW_COPY_BITS);
-	fOwner->fLink->Attach<BRect>(src);
-	fOwner->fLink->Attach<BRect>(dst);
+  fOwner->fLink->StartMessage(AS_VIEW_COPY_BITS);
+  fOwner->fLink->Attach<BRect>(src);
+  fOwner->fLink->Attach<BRect>(dst);
 
-	_FlushIfNotInTransaction();
+  _FlushIfNotInTransaction();
 }
 
+void BView::DrawPicture(const BPicture *picture) {
+  if (picture == NULL)
+    return;
 
-void
-BView::DrawPicture(const BPicture* picture)
-{
-	if (picture == NULL)
-		return;
-
-	DrawPictureAsync(picture, PenLocation());
-	Sync();
+  DrawPictureAsync(picture, PenLocation());
+  Sync();
 }
 
+void BView::DrawPicture(const BPicture *picture, BPoint where) {
+  if (picture == NULL)
+    return;
 
-void
-BView::DrawPicture(const BPicture* picture, BPoint where)
-{
-	if (picture == NULL)
-		return;
-
-	DrawPictureAsync(picture, where);
-	Sync();
+  DrawPictureAsync(picture, where);
+  Sync();
 }
-
 
-void
-BView::DrawPicture(const char* filename, long offset, BPoint where)
-{
-	if (!filename)
-		return;
+void BView::DrawPicture(const char *filename, long offset, BPoint where) {
+  if (!filename)
+    return;
 
-	DrawPictureAsync(filename, offset, where);
-	Sync();
+  DrawPictureAsync(filename, offset, where);
+  Sync();
 }
 
+void BView::DrawPictureAsync(const BPicture *picture) {
+  if (picture == NULL)
+    return;
 
-void
-BView::DrawPictureAsync(const BPicture* picture)
-{
-	if (picture == NULL)
-		return;
-
-	DrawPictureAsync(picture, PenLocation());
+  DrawPictureAsync(picture, PenLocation());
 }
 
+void BView::DrawPictureAsync(const BPicture *picture, BPoint where) {
+  if (picture == NULL)
+    return;
 
-void
-BView::DrawPictureAsync(const BPicture* picture, BPoint where)
-{
-	if (picture == NULL)
-		return;
+  if (_CheckOwnerLockAndSwitchCurrent() && picture->Token() > 0) {
+    fOwner->fLink->StartMessage(AS_VIEW_DRAW_PICTURE);
+    fOwner->fLink->Attach<int32>(picture->Token());
+    fOwner->fLink->Attach<BPoint>(where);
 
-	if (_CheckOwnerLockAndSwitchCurrent() && picture->Token() > 0) {
-		fOwner->fLink->StartMessage(AS_VIEW_DRAW_PICTURE);
-		fOwner->fLink->Attach<int32>(picture->Token());
-		fOwner->fLink->Attach<BPoint>(where);
-
-		_FlushIfNotInTransaction();
-	}
+    _FlushIfNotInTransaction();
+  }
 }
-
 
-void
-BView::DrawPictureAsync(const char* filename, long offset, BPoint where)
-{
-	if (!filename)
-		return;
+void BView::DrawPictureAsync(const char *filename, long offset, BPoint where) {
+  if (!filename)
+    return;
 
-	// TODO: Test
-	BFile file(filename, B_READ_ONLY);
-	if (file.InitCheck() < B_OK)
-		return;
+  // TODO: Test
+  BFile file(filename, B_READ_ONLY);
+  if (file.InitCheck() < B_OK)
+    return;
 
-	file.Seek(offset, SEEK_SET);
+  file.Seek(offset, SEEK_SET);
 
-	BPicture picture;
-	if (picture.Unflatten(&file) < B_OK)
-		return;
+  BPicture picture;
+  if (picture.Unflatten(&file) < B_OK)
+    return;
 
-	DrawPictureAsync(&picture, where);
+  DrawPictureAsync(&picture, where);
 }
 
-
-void
-BView::BeginLayer(uint8 opacity)
-{
-	if (_CheckOwnerLockAndSwitchCurrent()) {
-		fOwner->fLink->StartMessage(AS_VIEW_BEGIN_LAYER);
-		fOwner->fLink->Attach<uint8>(opacity);
-		_FlushIfNotInTransaction();
-	}
+void BView::BeginLayer(uint8 opacity) {
+  if (_CheckOwnerLockAndSwitchCurrent()) {
+    fOwner->fLink->StartMessage(AS_VIEW_BEGIN_LAYER);
+    fOwner->fLink->Attach<uint8>(opacity);
+    _FlushIfNotInTransaction();
+  }
 }
 
-
-void
-BView::EndLayer()
-{
-	if (_CheckOwnerLockAndSwitchCurrent()) {
-		fOwner->fLink->StartMessage(AS_VIEW_END_LAYER);
-		_FlushIfNotInTransaction();
-	}
+void BView::EndLayer() {
+  if (_CheckOwnerLockAndSwitchCurrent()) {
+    fOwner->fLink->StartMessage(AS_VIEW_END_LAYER);
+    _FlushIfNotInTransaction();
+  }
 }
-
 
-void
-BView::Invalidate(BRect invalRect)
-{
-	if (fOwner == NULL)
-		return;
+void BView::Invalidate(BRect invalRect) {
+  if (fOwner == NULL)
+    return;
 
-	// NOTE: This rounding of the invalid rect is to stay compatible with BeOS.
-	// On the server side, the invalid rect will be converted to a BRegion,
-	// which rounds in a different manner, so that it really includes the
-	// fractional coordinates of a BRect (ie ceilf(rect.right) &
-	// ceilf(rect.bottom)), which is also what BeOS does. So we have to do the
-	// different rounding here to stay compatible in both ways.
-	invalRect.left = (int)invalRect.left;
-	invalRect.top = (int)invalRect.top;
-	invalRect.right = (int)invalRect.right;
-	invalRect.bottom = (int)invalRect.bottom;
-	if (!invalRect.IsValid())
-		return;
+  // NOTE: This rounding of the invalid rect is to stay compatible with BeOS.
+  // On the server side, the invalid rect will be converted to a BRegion,
+  // which rounds in a different manner, so that it really includes the
+  // fractional coordinates of a BRect (ie ceilf(rect.right) &
+  // ceilf(rect.bottom)), which is also what BeOS does. So we have to do the
+  // different rounding here to stay compatible in both ways.
+  invalRect.left = (int)invalRect.left;
+  invalRect.top = (int)invalRect.top;
+  invalRect.right = (int)invalRect.right;
+  invalRect.bottom = (int)invalRect.bottom;
+  if (!invalRect.IsValid())
+    return;
 
-	_CheckLockAndSwitchCurrent();
+  _CheckLockAndSwitchCurrent();
 
-	fOwner->fLink->StartMessage(AS_VIEW_INVALIDATE_RECT);
-	fOwner->fLink->Attach<BRect>(invalRect);
+  fOwner->fLink->StartMessage(AS_VIEW_INVALIDATE_RECT);
+  fOwner->fLink->Attach<BRect>(invalRect);
 
 // TODO: determine why this check isn't working correctly.
 #if 0
@@ -4389,21 +3639,18 @@ BView::Invalidate(BRect invalRect)
 		fOwner->fUpdateRequested = true;
 	}
 #else
-	fOwner->fLink->Flush();
+  fOwner->fLink->Flush();
 #endif
 }
 
+void BView::Invalidate(const BRegion *region) {
+  if (region == NULL || fOwner == NULL)
+    return;
 
-void
-BView::Invalidate(const BRegion* region)
-{
-	if (region == NULL || fOwner == NULL)
-		return;
+  _CheckLockAndSwitchCurrent();
 
-	_CheckLockAndSwitchCurrent();
-
-	fOwner->fLink->StartMessage(AS_VIEW_INVALIDATE_REGION);
-	fOwner->fLink->AttachRegion(*region);
+  fOwner->fLink->StartMessage(AS_VIEW_INVALIDATE_REGION);
+  fOwner->fLink->AttachRegion(*region);
 
 // TODO: See above.
 #if 0
@@ -4412,2205 +3659,1806 @@ BView::Invalidate(const BRegion* region)
 		fOwner->fUpdateRequested = true;
 	}
 #else
-	fOwner->fLink->Flush();
+  fOwner->fLink->Flush();
 #endif
 }
 
+void BView::Invalidate() { Invalidate(Bounds()); }
 
-void
-BView::Invalidate()
-{
-	Invalidate(Bounds());
+void BView::DelayedInvalidate(bigtime_t delay) {
+  DelayedInvalidate(delay, Bounds());
 }
 
+void BView::DelayedInvalidate(bigtime_t delay, BRect invalRect) {
+  if (fOwner == NULL)
+    return;
 
-void
-BView::DelayedInvalidate(bigtime_t delay)
-{
-	DelayedInvalidate(delay, Bounds());
+  invalRect.left = (int)invalRect.left;
+  invalRect.top = (int)invalRect.top;
+  invalRect.right = (int)invalRect.right;
+  invalRect.bottom = (int)invalRect.bottom;
+  if (!invalRect.IsValid())
+    return;
+
+  _CheckLockAndSwitchCurrent();
+
+  fOwner->fLink->StartMessage(AS_VIEW_DELAYED_INVALIDATE_RECT);
+  fOwner->fLink->Attach<bigtime_t>(system_time() + delay);
+  fOwner->fLink->Attach<BRect>(invalRect);
+  fOwner->fLink->Flush();
 }
 
+void BView::InvertRect(BRect rect) {
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-void
-BView::DelayedInvalidate(bigtime_t delay, BRect invalRect)
-{
-	if (fOwner == NULL)
-		return;
+    fOwner->fLink->StartMessage(AS_VIEW_INVERT_RECT);
+    fOwner->fLink->Attach<BRect>(rect);
 
-	invalRect.left = (int)invalRect.left;
-	invalRect.top = (int)invalRect.top;
-	invalRect.right = (int)invalRect.right;
-	invalRect.bottom = (int)invalRect.bottom;
-	if (!invalRect.IsValid())
-		return;
-
-	_CheckLockAndSwitchCurrent();
-
-	fOwner->fLink->StartMessage(AS_VIEW_DELAYED_INVALIDATE_RECT);
-	fOwner->fLink->Attach<bigtime_t>(system_time() + delay);
-	fOwner->fLink->Attach<BRect>(invalRect);
-	fOwner->fLink->Flush();
+    _FlushIfNotInTransaction();
+  }
 }
-
-
-void
-BView::InvertRect(BRect rect)
-{
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
-
-		fOwner->fLink->StartMessage(AS_VIEW_INVERT_RECT);
-		fOwner->fLink->Attach<BRect>(rect);
-
-		_FlushIfNotInTransaction();
-	}
-}
-
 
 //	#pragma mark - View Hierarchy Functions
 
+void BView::AddChild(BView *child, BView *before) {
+  STRACE(("BView(%s)::AddChild(child '%s', before '%s')\n", this->Name(),
+          child != NULL && child->Name() ? child->Name() : "NULL",
+          before != NULL && before->Name() ? before->Name() : "NULL"));
 
-void
-BView::AddChild(BView* child, BView* before)
-{
-	STRACE(("BView(%s)::AddChild(child '%s', before '%s')\n",
-		this->Name(),
-		child != NULL && child->Name() ? child->Name() : "NULL",
-		before != NULL && before->Name() ? before->Name() : "NULL"));
+  if (!_AddChild(child, before))
+    return;
 
-	if (!_AddChild(child, before))
-		return;
-
-	if (fLayoutData->fLayout)
-		fLayoutData->fLayout->AddView(child);
+  if (fLayoutData->fLayout)
+    fLayoutData->fLayout->AddView(child);
 }
 
-
-bool
-BView::AddChild(BLayoutItem* child)
-{
-	if (!fLayoutData->fLayout)
-		return false;
-	return fLayoutData->fLayout->AddItem(child);
+bool BView::AddChild(BLayoutItem *child) {
+  if (!fLayoutData->fLayout)
+    return false;
+  return fLayoutData->fLayout->AddItem(child);
 }
 
+bool BView::_AddChild(BView *child, BView *before) {
+  if (!child)
+    return false;
 
-bool
-BView::_AddChild(BView* child, BView* before)
-{
-	if (!child)
-		return false;
+  if (child->fParent != NULL) {
+    debugger("AddChild failed - the view already has a parent.");
+    return false;
+  }
 
-	if (child->fParent != NULL) {
-		debugger("AddChild failed - the view already has a parent.");
-		return false;
-	}
+  if (child == this) {
+    debugger("AddChild failed - cannot add a view to itself.");
+    return false;
+  }
 
-	if (child == this) {
-		debugger("AddChild failed - cannot add a view to itself.");
-		return false;
-	}
+  bool lockedOwner = false;
+  if (fOwner && !fOwner->IsLocked()) {
+    fOwner->Lock();
+    lockedOwner = true;
+  }
 
-	bool lockedOwner = false;
-	if (fOwner && !fOwner->IsLocked()) {
-		fOwner->Lock();
-		lockedOwner = true;
-	}
+  if (!_AddChildToList(child, before)) {
+    debugger("AddChild failed!");
+    if (lockedOwner)
+      fOwner->Unlock();
+    return false;
+  }
 
-	if (!_AddChildToList(child, before)) {
-		debugger("AddChild failed!");
-		if (lockedOwner)
-			fOwner->Unlock();
-		return false;
-	}
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    child->_SetOwner(fOwner);
+    child->_CreateSelf();
+    child->_Attach();
 
-		child->_SetOwner(fOwner);
-		child->_CreateSelf();
-		child->_Attach();
+    if (lockedOwner)
+      fOwner->Unlock();
+  }
 
-		if (lockedOwner)
-			fOwner->Unlock();
-	}
+  InvalidateLayout();
 
-	InvalidateLayout();
-
-	return true;
+  return true;
 }
 
+bool BView::RemoveChild(BView *child) {
+  STRACE(("BView(%s)::RemoveChild(%s)\n", Name(), child->Name()));
 
-bool
-BView::RemoveChild(BView* child)
-{
-	STRACE(("BView(%s)::RemoveChild(%s)\n", Name(), child->Name()));
+  if (!child)
+    return false;
 
-	if (!child)
-		return false;
+  if (child->fParent != this)
+    return false;
 
-	if (child->fParent != this)
-		return false;
-
-	return child->RemoveSelf();
+  return child->RemoveSelf();
 }
 
+int32 BView::CountChildren() const {
+  _CheckLock();
 
-int32
-BView::CountChildren() const
-{
-	_CheckLock();
+  uint32 count = 0;
+  BView *child = fFirstChild;
 
-	uint32 count = 0;
-	BView* child = fFirstChild;
+  while (child != NULL) {
+    count++;
+    child = child->fNextSibling;
+  }
 
-	while (child != NULL) {
-		count++;
-		child = child->fNextSibling;
-	}
-
-	return count;
+  return count;
 }
 
+BView *BView::ChildAt(int32 index) const {
+  _CheckLock();
 
-BView*
-BView::ChildAt(int32 index) const
-{
-	_CheckLock();
+  BView *child = fFirstChild;
+  while (child != NULL && index-- > 0) {
+    child = child->fNextSibling;
+  }
 
-	BView* child = fFirstChild;
-	while (child != NULL && index-- > 0) {
-		child = child->fNextSibling;
-	}
-
-	return child;
+  return child;
 }
 
+BView *BView::NextSibling() const { return fNextSibling; }
 
-BView*
-BView::NextSibling() const
-{
-	return fNextSibling;
+BView *BView::PreviousSibling() const { return fPreviousSibling; }
+
+bool BView::RemoveSelf() {
+  _RemoveLayoutItemsFromLayout(false);
+
+  return _RemoveSelf();
 }
 
+bool BView::_RemoveSelf() {
+  STRACE(("BView(%s)::_RemoveSelf()\n", Name()));
 
-BView*
-BView::PreviousSibling() const
-{
-	return fPreviousSibling;
+  // Remove this child from its parent
+
+  BWindow *owner = fOwner;
+  _CheckLock();
+
+  if (owner != NULL) {
+    _UpdateStateForRemove();
+    _Detach();
+  }
+
+  BView *parent = fParent;
+  if (!parent || !parent->_RemoveChildFromList(this))
+    return false;
+
+  if (owner != NULL && !fTopLevelView) {
+    // the top level view is deleted by the app_server automatically
+    owner->fLink->StartMessage(AS_VIEW_DELETE);
+    owner->fLink->Attach<int32>(_get_object_token_(this));
+  }
+
+  parent->InvalidateLayout();
+
+  STRACE(("DONE: BView(%s)::_RemoveSelf()\n", Name()));
+
+  return true;
 }
 
+void BView::_RemoveLayoutItemsFromLayout(bool deleteItems) {
+  if (fParent == NULL || fParent->fLayoutData->fLayout == NULL)
+    return;
 
-bool
-BView::RemoveSelf()
-{
-	_RemoveLayoutItemsFromLayout(false);
-
-	return _RemoveSelf();
+  int32 index = fLayoutData->fLayoutItems.CountItems();
+  while (index-- > 0) {
+    BLayoutItem *item = fLayoutData->fLayoutItems.ItemAt(index);
+    item->RemoveSelf();
+    // Removes item from fLayoutItems list
+    if (deleteItems)
+      delete item;
+  }
 }
 
+BView *BView::Parent() const {
+  if (fParent && fParent->fTopLevelView)
+    return NULL;
 
-bool
-BView::_RemoveSelf()
-{
-	STRACE(("BView(%s)::_RemoveSelf()\n", Name()));
-
-	// Remove this child from its parent
-
-	BWindow* owner = fOwner;
-	_CheckLock();
-
-	if (owner != NULL) {
-		_UpdateStateForRemove();
-		_Detach();
-	}
-
-	BView* parent = fParent;
-	if (!parent || !parent->_RemoveChildFromList(this))
-		return false;
-
-	if (owner != NULL && !fTopLevelView) {
-		// the top level view is deleted by the app_server automatically
-		owner->fLink->StartMessage(AS_VIEW_DELETE);
-		owner->fLink->Attach<int32>(_get_object_token_(this));
-	}
-
-	parent->InvalidateLayout();
-
-	STRACE(("DONE: BView(%s)::_RemoveSelf()\n", Name()));
-
-	return true;
+  return fParent;
 }
 
+BView *BView::FindView(const char *name) const {
+  if (name == NULL)
+    return NULL;
 
-void
-BView::_RemoveLayoutItemsFromLayout(bool deleteItems)
-{
-	if (fParent == NULL || fParent->fLayoutData->fLayout == NULL)
-		return;
+  if (Name() != NULL && !strcmp(Name(), name))
+    return const_cast<BView *>(this);
 
-	int32 index = fLayoutData->fLayoutItems.CountItems();
-	while (index-- > 0) {
-		BLayoutItem* item = fLayoutData->fLayoutItems.ItemAt(index);
-		item->RemoveSelf();
-			// Removes item from fLayoutItems list
-		if (deleteItems)
-			delete item;
-	}
+  BView *child = fFirstChild;
+  while (child != NULL) {
+    BView *view = child->FindView(name);
+    if (view != NULL)
+      return view;
+
+    child = child->fNextSibling;
+  }
+
+  return NULL;
 }
 
-
-BView*
-BView::Parent() const
-{
-	if (fParent && fParent->fTopLevelView)
-		return NULL;
-
-	return fParent;
+void BView::MoveBy(float deltaX, float deltaY) {
+  MoveTo(fParentOffset.x + roundf(deltaX), fParentOffset.y + roundf(deltaY));
 }
 
+void BView::MoveTo(BPoint where) { MoveTo(where.x, where.y); }
 
-BView*
-BView::FindView(const char* name) const
-{
-	if (name == NULL)
-		return NULL;
+void BView::MoveTo(float x, float y) {
+  if (x == fParentOffset.x && y == fParentOffset.y)
+    return;
 
-	if (Name() != NULL && !strcmp(Name(), name))
-		return const_cast<BView*>(this);
+  // BeBook says we should do this. And it makes sense.
+  x = roundf(x);
+  y = roundf(y);
 
-	BView* child = fFirstChild;
-	while (child != NULL) {
-		BView* view = child->FindView(name);
-		if (view != NULL)
-			return view;
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_MOVE_TO);
+    fOwner->fLink->Attach<float>(x);
+    fOwner->fLink->Attach<float>(y);
 
-		child = child->fNextSibling;
-	}
+    //		fState->valid_flags |= B_VIEW_FRAME_BIT;
 
-	return NULL;
+    _FlushIfNotInTransaction();
+  }
+
+  _MoveTo((int32)x, (int32)y);
 }
 
+void BView::ResizeBy(float deltaWidth, float deltaHeight) {
+  // BeBook says we should do this. And it makes sense.
+  deltaWidth = roundf(deltaWidth);
+  deltaHeight = roundf(deltaHeight);
 
-void
-BView::MoveBy(float deltaX, float deltaY)
-{
-	MoveTo(fParentOffset.x + roundf(deltaX), fParentOffset.y + roundf(deltaY));
+  if (deltaWidth == 0 && deltaHeight == 0)
+    return;
+
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_RESIZE_TO);
+
+    fOwner->fLink->Attach<float>(fBounds.Width() + deltaWidth);
+    fOwner->fLink->Attach<float>(fBounds.Height() + deltaHeight);
+
+    //		fState->valid_flags |= B_VIEW_FRAME_BIT;
+
+    _FlushIfNotInTransaction();
+  }
+
+  _ResizeBy((int32)deltaWidth, (int32)deltaHeight);
 }
 
-
-void
-BView::MoveTo(BPoint where)
-{
-	MoveTo(where.x, where.y);
+void BView::ResizeTo(float width, float height) {
+  ResizeBy(width - fBounds.Width(), height - fBounds.Height());
 }
 
-
-void
-BView::MoveTo(float x, float y)
-{
-	if (x == fParentOffset.x && y == fParentOffset.y)
-		return;
-
-	// BeBook says we should do this. And it makes sense.
-	x = roundf(x);
-	y = roundf(y);
-
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
-		fOwner->fLink->StartMessage(AS_VIEW_MOVE_TO);
-		fOwner->fLink->Attach<float>(x);
-		fOwner->fLink->Attach<float>(y);
-
-//		fState->valid_flags |= B_VIEW_FRAME_BIT;
-
-		_FlushIfNotInTransaction();
-	}
-
-	_MoveTo((int32)x, (int32)y);
+void BView::ResizeTo(BSize size) {
+  ResizeBy(size.width - fBounds.Width(), size.height - fBounds.Height());
 }
-
-
-void
-BView::ResizeBy(float deltaWidth, float deltaHeight)
-{
-	// BeBook says we should do this. And it makes sense.
-	deltaWidth = roundf(deltaWidth);
-	deltaHeight = roundf(deltaHeight);
-
-	if (deltaWidth == 0 && deltaHeight == 0)
-		return;
-
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
-		fOwner->fLink->StartMessage(AS_VIEW_RESIZE_TO);
-
-		fOwner->fLink->Attach<float>(fBounds.Width() + deltaWidth);
-		fOwner->fLink->Attach<float>(fBounds.Height() + deltaHeight);
-
-//		fState->valid_flags |= B_VIEW_FRAME_BIT;
-
-		_FlushIfNotInTransaction();
-	}
-
-	_ResizeBy((int32)deltaWidth, (int32)deltaHeight);
-}
-
-
-void
-BView::ResizeTo(float width, float height)
-{
-	ResizeBy(width - fBounds.Width(), height - fBounds.Height());
-}
-
-
-void
-BView::ResizeTo(BSize size)
-{
-	ResizeBy(size.width - fBounds.Width(), size.height - fBounds.Height());
-}
-
 
 //	#pragma mark - Inherited Methods (from BHandler)
 
+status_t BView::GetSupportedSuites(BMessage *data) {
+  if (data == NULL)
+    return B_BAD_VALUE;
 
-status_t
-BView::GetSupportedSuites(BMessage* data)
-{
-	if (data == NULL)
-		return B_BAD_VALUE;
-
-	status_t status = data->AddString("suites", "suite/vnd.Be-view");
-	BPropertyInfo propertyInfo(sViewPropInfo);
-	if (status == B_OK)
-		status = data->AddFlat("messages", &propertyInfo);
-	if (status == B_OK)
-		return BHandler::GetSupportedSuites(data);
-	return status;
+  status_t status = data->AddString("suites", "suite/vnd.Be-view");
+  BPropertyInfo propertyInfo(sViewPropInfo);
+  if (status == B_OK)
+    status = data->AddFlat("messages", &propertyInfo);
+  if (status == B_OK)
+    return BHandler::GetSupportedSuites(data);
+  return status;
 }
 
+BHandler *BView::ResolveSpecifier(BMessage *message, int32 index,
+                                  BMessage *specifier, int32 what,
+                                  const char *property) {
+  if (message->what == B_WINDOW_MOVE_BY || message->what == B_WINDOW_MOVE_TO) {
+    return this;
+  }
 
-BHandler*
-BView::ResolveSpecifier(BMessage* message, int32 index, BMessage* specifier,
-	int32 what, const char* property)
-{
-	if (message->what == B_WINDOW_MOVE_BY
-		|| message->what == B_WINDOW_MOVE_TO) {
-		return this;
-	}
+  BPropertyInfo propertyInfo(sViewPropInfo);
+  status_t err = B_BAD_SCRIPT_SYNTAX;
+  BMessage replyMsg(B_REPLY);
 
-	BPropertyInfo propertyInfo(sViewPropInfo);
-	status_t err = B_BAD_SCRIPT_SYNTAX;
-	BMessage replyMsg(B_REPLY);
+  switch (propertyInfo.FindMatch(message, index, specifier, what, property)) {
+  case 0:
+  case 1:
+  case 3:
+    return this;
 
-	switch (propertyInfo.FindMatch(message, index, specifier, what, property)) {
-		case 0:
-		case 1:
-		case 3:
-			return this;
+  case 2:
+    if (fShelf) {
+      message->PopSpecifier();
+      return fShelf;
+    }
 
-		case 2:
-			if (fShelf) {
-				message->PopSpecifier();
-				return fShelf;
-			}
+    err = B_NAME_NOT_FOUND;
+    replyMsg.AddString("message", "This window doesn't have a shelf");
+    break;
 
-			err = B_NAME_NOT_FOUND;
-			replyMsg.AddString("message", "This window doesn't have a shelf");
-			break;
+  case 4: {
+    if (!fFirstChild) {
+      err = B_NAME_NOT_FOUND;
+      replyMsg.AddString("message", "This window doesn't have "
+                                    "children.");
+      break;
+    }
+    BView *child = NULL;
+    switch (what) {
+    case B_INDEX_SPECIFIER: {
+      int32 index;
+      err = specifier->FindInt32("index", &index);
+      if (err == B_OK)
+        child = ChildAt(index);
+      break;
+    }
+    case B_REVERSE_INDEX_SPECIFIER: {
+      int32 rindex;
+      err = specifier->FindInt32("index", &rindex);
+      if (err == B_OK)
+        child = ChildAt(CountChildren() - rindex);
+      break;
+    }
+    case B_NAME_SPECIFIER: {
+      const char *name;
+      err = specifier->FindString("name", &name);
+      if (err == B_OK)
+        child = FindView(name);
+      break;
+    }
+    }
 
-		case 4:
-		{
-			if (!fFirstChild) {
-				err = B_NAME_NOT_FOUND;
-				replyMsg.AddString("message", "This window doesn't have "
-					"children.");
-				break;
-			}
-			BView* child = NULL;
-			switch (what) {
-				case B_INDEX_SPECIFIER:
-				{
-					int32 index;
-					err = specifier->FindInt32("index", &index);
-					if (err == B_OK)
-						child = ChildAt(index);
-					break;
-				}
-				case B_REVERSE_INDEX_SPECIFIER:
-				{
-					int32 rindex;
-					err = specifier->FindInt32("index", &rindex);
-					if (err == B_OK)
-						child = ChildAt(CountChildren() - rindex);
-					break;
-				}
-				case B_NAME_SPECIFIER:
-				{
-					const char* name;
-					err = specifier->FindString("name", &name);
-					if (err == B_OK)
-						child = FindView(name);
-					break;
-				}
-			}
+    if (child != NULL) {
+      message->PopSpecifier();
+      return child;
+    }
 
-			if (child != NULL) {
-				message->PopSpecifier();
-				return child;
-			}
+    if (err == B_OK)
+      err = B_BAD_INDEX;
 
-			if (err == B_OK)
-				err = B_BAD_INDEX;
+    replyMsg.AddString("message",
+                       "Cannot find view at/with specified index/name.");
+    break;
+  }
 
-			replyMsg.AddString("message",
-				"Cannot find view at/with specified index/name.");
-			break;
-		}
+  default:
+    return BHandler::ResolveSpecifier(message, index, specifier, what,
+                                      property);
+  }
 
-		default:
-			return BHandler::ResolveSpecifier(message, index, specifier, what,
-				property);
-	}
+  if (err < B_OK) {
+    replyMsg.what = B_MESSAGE_NOT_UNDERSTOOD;
 
-	if (err < B_OK) {
-		replyMsg.what = B_MESSAGE_NOT_UNDERSTOOD;
+    if (err == B_BAD_SCRIPT_SYNTAX)
+      replyMsg.AddString("message", "Didn't understand the specifier(s)");
+    else
+      replyMsg.AddString("message", strerror(err));
+  }
 
-		if (err == B_BAD_SCRIPT_SYNTAX)
-			replyMsg.AddString("message", "Didn't understand the specifier(s)");
-		else
-			replyMsg.AddString("message", strerror(err));
-	}
-
-	replyMsg.AddInt32("error", err);
-	message->SendReply(&replyMsg);
-	return NULL;
+  replyMsg.AddInt32("error", err);
+  message->SendReply(&replyMsg);
+  return NULL;
 }
 
+void BView::MessageReceived(BMessage *message) {
+  if (!message->HasSpecifiers()) {
+    switch (message->what) {
+    case B_VIEW_RESIZED:
+      // By the time the message arrives, the bounds may have
+      // changed already, that's why we don't use the values
+      // in the message itself.
+      FrameResized(fBounds.Width(), fBounds.Height());
+      break;
 
-void
-BView::MessageReceived(BMessage* message)
-{
-	if (!message->HasSpecifiers()) {
-		switch (message->what) {
-			case B_VIEW_RESIZED:
-				// By the time the message arrives, the bounds may have
-				// changed already, that's why we don't use the values
-				// in the message itself.
-				FrameResized(fBounds.Width(), fBounds.Height());
-				break;
+    case B_VIEW_MOVED:
+      FrameMoved(fParentOffset);
+      break;
 
-			case B_VIEW_MOVED:
-				FrameMoved(fParentOffset);
-				break;
+    case B_MOUSE_IDLE: {
+      BPoint where;
+      if (message->FindPoint("be:view_where", &where) != B_OK)
+        break;
 
-			case B_MOUSE_IDLE:
-			{
-				BPoint where;
-				if (message->FindPoint("be:view_where", &where) != B_OK)
-					break;
+      BToolTip *tip;
+      if (GetToolTipAt(where, &tip))
+        ShowToolTip(tip);
+      else
+        BHandler::MessageReceived(message);
+      break;
+    }
 
-				BToolTip* tip;
-				if (GetToolTipAt(where, &tip))
-					ShowToolTip(tip);
-				else
-					BHandler::MessageReceived(message);
-				break;
-			}
+    case B_MOUSE_WHEEL_CHANGED: {
+      BScrollBar *horizontal = ScrollBar(B_HORIZONTAL);
+      BScrollBar *vertical = ScrollBar(B_VERTICAL);
+      if (horizontal == NULL && vertical == NULL) {
+        // Pass the message to the next handler
+        BHandler::MessageReceived(message);
+        break;
+      }
 
-			case B_MOUSE_WHEEL_CHANGED:
-			{
-				BScrollBar* horizontal = ScrollBar(B_HORIZONTAL);
-				BScrollBar* vertical = ScrollBar(B_VERTICAL);
-				if (horizontal == NULL && vertical == NULL) {
-					// Pass the message to the next handler
-					BHandler::MessageReceived(message);
-					break;
-				}
+      float deltaX = 0.0f;
+      float deltaY = 0.0f;
 
-				float deltaX = 0.0f;
-				float deltaY = 0.0f;
+      if (horizontal != NULL)
+        message->FindFloat("be:wheel_delta_x", &deltaX);
 
-				if (horizontal != NULL)
-					message->FindFloat("be:wheel_delta_x", &deltaX);
+      if (vertical != NULL)
+        message->FindFloat("be:wheel_delta_y", &deltaY);
 
-				if (vertical != NULL)
-					message->FindFloat("be:wheel_delta_y", &deltaY);
+      if (deltaX == 0.0f && deltaY == 0.0f)
+        break;
 
-				if (deltaX == 0.0f && deltaY == 0.0f)
-					break;
+      if ((modifiers() & B_CONTROL_KEY) != 0)
+        std::swap(horizontal, vertical);
 
-				if ((modifiers() & B_CONTROL_KEY) != 0)
-					std::swap(horizontal, vertical);
+      if (horizontal != NULL && deltaX != 0.0f)
+        ScrollWithMouseWheelDelta(horizontal, deltaX);
 
-				if (horizontal != NULL && deltaX != 0.0f)
-					ScrollWithMouseWheelDelta(horizontal, deltaX);
+      if (vertical != NULL && deltaY != 0.0f)
+        ScrollWithMouseWheelDelta(vertical, deltaY);
 
-				if (vertical != NULL && deltaY != 0.0f)
-					ScrollWithMouseWheelDelta(vertical, deltaY);
+      break;
+    }
 
-				break;
-			}
+    // prevent message repeats
+    case B_COLORS_UPDATED:
+    case B_FONTS_UPDATED:
+      break;
 
-			// prevent message repeats
-			case B_COLORS_UPDATED:
-			case B_FONTS_UPDATED:
-				break;
+    case B_SCREEN_CHANGED: {
+      // propegate message to child views
+      int32 childCount = CountChildren();
+      for (int32 i = 0; i < childCount; i++) {
+        BView *view = ChildAt(i);
+        if (view != NULL)
+          view->MessageReceived(message);
+      }
+      break;
+    }
 
-			case B_SCREEN_CHANGED:
-			{
-				// propegate message to child views
-				int32 childCount = CountChildren();
-				for (int32 i = 0; i < childCount; i++) {
-					BView* view = ChildAt(i);
-					if (view != NULL)
-						view->MessageReceived(message);
-				}
-				break;
-			}
+    default:
+      BHandler::MessageReceived(message);
+      break;
+    }
 
-			default:
-				BHandler::MessageReceived(message);
-				break;
-		}
+    return;
+  }
 
-		return;
-	}
+  // Scripting message
 
-	// Scripting message
+  BMessage replyMsg(B_REPLY);
+  status_t err = B_BAD_SCRIPT_SYNTAX;
+  int32 index;
+  BMessage specifier;
+  int32 what;
+  const char *property;
 
-	BMessage replyMsg(B_REPLY);
-	status_t err = B_BAD_SCRIPT_SYNTAX;
-	int32 index;
-	BMessage specifier;
-	int32 what;
-	const char* property;
+  if (message->GetCurrentSpecifier(&index, &specifier, &what, &property) !=
+      B_OK) {
+    return BHandler::MessageReceived(message);
+  }
 
-	if (message->GetCurrentSpecifier(&index, &specifier, &what, &property)
-			!= B_OK) {
-		return BHandler::MessageReceived(message);
-	}
+  BPropertyInfo propertyInfo(sViewPropInfo);
+  switch (propertyInfo.FindMatch(message, index, &specifier, what, property)) {
+  case 0:
+    if (message->what == B_GET_PROPERTY) {
+      err = replyMsg.AddRect("result", Frame());
+    } else if (message->what == B_SET_PROPERTY) {
+      BRect newFrame;
+      err = message->FindRect("data", &newFrame);
+      if (err == B_OK) {
+        MoveTo(newFrame.LeftTop());
+        ResizeTo(newFrame.Width(), newFrame.Height());
+      }
+    }
+    break;
+  case 1:
+    if (message->what == B_GET_PROPERTY) {
+      err = replyMsg.AddBool("result", IsHidden());
+    } else if (message->what == B_SET_PROPERTY) {
+      bool newHiddenState;
+      err = message->FindBool("data", &newHiddenState);
+      if (err == B_OK) {
+        if (newHiddenState == true)
+          Hide();
+        else
+          Show();
+      }
+    }
+    break;
+  case 3:
+    err = replyMsg.AddInt32("result", CountChildren());
+    break;
+  default:
+    return BHandler::MessageReceived(message);
+  }
 
-	BPropertyInfo propertyInfo(sViewPropInfo);
-	switch (propertyInfo.FindMatch(message, index, &specifier, what,
-			property)) {
-		case 0:
-			if (message->what == B_GET_PROPERTY) {
-				err = replyMsg.AddRect("result", Frame());
-			} else if (message->what == B_SET_PROPERTY) {
-				BRect newFrame;
-				err = message->FindRect("data", &newFrame);
-				if (err == B_OK) {
-					MoveTo(newFrame.LeftTop());
-					ResizeTo(newFrame.Width(), newFrame.Height());
-				}
-			}
-			break;
-		case 1:
-			if (message->what == B_GET_PROPERTY) {
-				err = replyMsg.AddBool("result", IsHidden());
-			} else if (message->what == B_SET_PROPERTY) {
-				bool newHiddenState;
-				err = message->FindBool("data", &newHiddenState);
-				if (err == B_OK) {
-					if (newHiddenState == true)
-						Hide();
-					else
-						Show();
-				}
-			}
-			break;
-		case 3:
-			err = replyMsg.AddInt32("result", CountChildren());
-			break;
-		default:
-			return BHandler::MessageReceived(message);
-	}
+  if (err != B_OK) {
+    replyMsg.what = B_MESSAGE_NOT_UNDERSTOOD;
 
-	if (err != B_OK) {
-		replyMsg.what = B_MESSAGE_NOT_UNDERSTOOD;
+    if (err == B_BAD_SCRIPT_SYNTAX)
+      replyMsg.AddString("message", "Didn't understand the specifier(s)");
+    else
+      replyMsg.AddString("message", strerror(err));
 
-		if (err == B_BAD_SCRIPT_SYNTAX)
-			replyMsg.AddString("message", "Didn't understand the specifier(s)");
-		else
-			replyMsg.AddString("message", strerror(err));
+    replyMsg.AddInt32("error", err);
+  }
 
-		replyMsg.AddInt32("error", err);
-	}
-
-	message->SendReply(&replyMsg);
+  message->SendReply(&replyMsg);
 }
 
+status_t BView::Perform(perform_code code, void *_data) {
+  switch (code) {
+  case PERFORM_CODE_MIN_SIZE:
+    ((perform_data_min_size *)_data)->return_value = BView::MinSize();
+    return B_OK;
+  case PERFORM_CODE_MAX_SIZE:
+    ((perform_data_max_size *)_data)->return_value = BView::MaxSize();
+    return B_OK;
+  case PERFORM_CODE_PREFERRED_SIZE:
+    ((perform_data_preferred_size *)_data)->return_value =
+        BView::PreferredSize();
+    return B_OK;
+  case PERFORM_CODE_LAYOUT_ALIGNMENT:
+    ((perform_data_layout_alignment *)_data)->return_value =
+        BView::LayoutAlignment();
+    return B_OK;
+  case PERFORM_CODE_HAS_HEIGHT_FOR_WIDTH:
+    ((perform_data_has_height_for_width *)_data)->return_value =
+        BView::HasHeightForWidth();
+    return B_OK;
+  case PERFORM_CODE_GET_HEIGHT_FOR_WIDTH: {
+    perform_data_get_height_for_width *data =
+        (perform_data_get_height_for_width *)_data;
+    BView::GetHeightForWidth(data->width, &data->min, &data->max,
+                             &data->preferred);
+    return B_OK;
+  }
+  case PERFORM_CODE_SET_LAYOUT: {
+    perform_data_set_layout *data = (perform_data_set_layout *)_data;
+    BView::SetLayout(data->layout);
+    return B_OK;
+  }
+  case PERFORM_CODE_LAYOUT_INVALIDATED: {
+    perform_data_layout_invalidated *data =
+        (perform_data_layout_invalidated *)_data;
+    BView::LayoutInvalidated(data->descendants);
+    return B_OK;
+  }
+  case PERFORM_CODE_DO_LAYOUT: {
+    BView::DoLayout();
+    return B_OK;
+  }
+  case PERFORM_CODE_LAYOUT_CHANGED: {
+    BView::LayoutChanged();
+    return B_OK;
+  }
+  case PERFORM_CODE_GET_TOOL_TIP_AT: {
+    perform_data_get_tool_tip_at *data = (perform_data_get_tool_tip_at *)_data;
+    data->return_value = BView::GetToolTipAt(data->point, data->tool_tip);
+    return B_OK;
+  }
+  case PERFORM_CODE_ALL_UNARCHIVED: {
+    perform_data_all_unarchived *data = (perform_data_all_unarchived *)_data;
 
-status_t
-BView::Perform(perform_code code, void* _data)
-{
-	switch (code) {
-		case PERFORM_CODE_MIN_SIZE:
-			((perform_data_min_size*)_data)->return_value
-				= BView::MinSize();
-			return B_OK;
-		case PERFORM_CODE_MAX_SIZE:
-			((perform_data_max_size*)_data)->return_value
-				= BView::MaxSize();
-			return B_OK;
-		case PERFORM_CODE_PREFERRED_SIZE:
-			((perform_data_preferred_size*)_data)->return_value
-				= BView::PreferredSize();
-			return B_OK;
-		case PERFORM_CODE_LAYOUT_ALIGNMENT:
-			((perform_data_layout_alignment*)_data)->return_value
-				= BView::LayoutAlignment();
-			return B_OK;
-		case PERFORM_CODE_HAS_HEIGHT_FOR_WIDTH:
-			((perform_data_has_height_for_width*)_data)->return_value
-				= BView::HasHeightForWidth();
-			return B_OK;
-		case PERFORM_CODE_GET_HEIGHT_FOR_WIDTH:
-		{
-			perform_data_get_height_for_width* data
-				= (perform_data_get_height_for_width*)_data;
-			BView::GetHeightForWidth(data->width, &data->min, &data->max,
-				&data->preferred);
-			return B_OK;
-		}
-		case PERFORM_CODE_SET_LAYOUT:
-		{
-			perform_data_set_layout* data = (perform_data_set_layout*)_data;
-			BView::SetLayout(data->layout);
-			return B_OK;
-		}
-		case PERFORM_CODE_LAYOUT_INVALIDATED:
-		{
-			perform_data_layout_invalidated* data
-				= (perform_data_layout_invalidated*)_data;
-			BView::LayoutInvalidated(data->descendants);
-			return B_OK;
-		}
-		case PERFORM_CODE_DO_LAYOUT:
-		{
-			BView::DoLayout();
-			return B_OK;
-		}
-		case PERFORM_CODE_LAYOUT_CHANGED:
-		{
-			BView::LayoutChanged();
-			return B_OK;
-		}
-		case PERFORM_CODE_GET_TOOL_TIP_AT:
-		{
-			perform_data_get_tool_tip_at* data
-				= (perform_data_get_tool_tip_at*)_data;
-			data->return_value
-				= BView::GetToolTipAt(data->point, data->tool_tip);
-			return B_OK;
-		}
-		case PERFORM_CODE_ALL_UNARCHIVED:
-		{
-			perform_data_all_unarchived* data =
-				(perform_data_all_unarchived*)_data;
+    data->return_value = BView::AllUnarchived(data->archive);
+    return B_OK;
+  }
+  case PERFORM_CODE_ALL_ARCHIVED: {
+    perform_data_all_archived *data = (perform_data_all_archived *)_data;
 
-			data->return_value = BView::AllUnarchived(data->archive);
-			return B_OK;
-		}
-		case PERFORM_CODE_ALL_ARCHIVED:
-		{
-			perform_data_all_archived* data =
-				(perform_data_all_archived*)_data;
+    data->return_value = BView::AllArchived(data->archive);
+    return B_OK;
+  }
+  }
 
-			data->return_value = BView::AllArchived(data->archive);
-			return B_OK;
-		}
-	}
-
-	return BHandler::Perform(code, _data);
+  return BHandler::Perform(code, _data);
 }
-
 
 // #pragma mark - Layout Functions
 
+BSize BView::MinSize() {
+  // TODO: make sure this works correctly when some methods are overridden
+  float width, height;
+  GetPreferredSize(&width, &height);
 
-BSize
-BView::MinSize()
-{
-	// TODO: make sure this works correctly when some methods are overridden
-	float width, height;
-	GetPreferredSize(&width, &height);
-
-	return BLayoutUtils::ComposeSize(fLayoutData->fMinSize,
-		(fLayoutData->fLayout ? fLayoutData->fLayout->MinSize()
-			: BSize(width, height)));
+  return BLayoutUtils::ComposeSize(fLayoutData->fMinSize,
+                                   (fLayoutData->fLayout
+                                        ? fLayoutData->fLayout->MinSize()
+                                        : BSize(width, height)));
 }
 
-
-BSize
-BView::MaxSize()
-{
-	return BLayoutUtils::ComposeSize(fLayoutData->fMaxSize,
-		(fLayoutData->fLayout ? fLayoutData->fLayout->MaxSize()
-			: BSize(B_SIZE_UNLIMITED, B_SIZE_UNLIMITED)));
+BSize BView::MaxSize() {
+  return BLayoutUtils::ComposeSize(
+      fLayoutData->fMaxSize,
+      (fLayoutData->fLayout ? fLayoutData->fLayout->MaxSize()
+                            : BSize(B_SIZE_UNLIMITED, B_SIZE_UNLIMITED)));
 }
 
+BSize BView::PreferredSize() {
+  // TODO: make sure this works correctly when some methods are overridden
+  float width, height;
+  GetPreferredSize(&width, &height);
 
-BSize
-BView::PreferredSize()
-{
-	// TODO: make sure this works correctly when some methods are overridden
-	float width, height;
-	GetPreferredSize(&width, &height);
-
-	return BLayoutUtils::ComposeSize(fLayoutData->fPreferredSize,
-		(fLayoutData->fLayout ? fLayoutData->fLayout->PreferredSize()
-			: BSize(width, height)));
+  return BLayoutUtils::ComposeSize(fLayoutData->fPreferredSize,
+                                   (fLayoutData->fLayout
+                                        ? fLayoutData->fLayout->PreferredSize()
+                                        : BSize(width, height)));
 }
 
-
-BAlignment
-BView::LayoutAlignment()
-{
-	return BLayoutUtils::ComposeAlignment(fLayoutData->fAlignment,
-		(fLayoutData->fLayout ? fLayoutData->fLayout->Alignment()
-			: BAlignment(B_ALIGN_HORIZONTAL_CENTER, B_ALIGN_VERTICAL_CENTER)));
+BAlignment BView::LayoutAlignment() {
+  return BLayoutUtils::ComposeAlignment(
+      fLayoutData->fAlignment,
+      (fLayoutData->fLayout
+           ? fLayoutData->fLayout->Alignment()
+           : BAlignment(B_ALIGN_HORIZONTAL_CENTER, B_ALIGN_VERTICAL_CENTER)));
 }
 
-
-void
-BView::SetExplicitMinSize(BSize size)
-{
-	fLayoutData->fMinSize = size;
-	InvalidateLayout();
+void BView::SetExplicitMinSize(BSize size) {
+  fLayoutData->fMinSize = size;
+  InvalidateLayout();
 }
 
-
-void
-BView::SetExplicitMaxSize(BSize size)
-{
-	fLayoutData->fMaxSize = size;
-	InvalidateLayout();
+void BView::SetExplicitMaxSize(BSize size) {
+  fLayoutData->fMaxSize = size;
+  InvalidateLayout();
 }
 
-
-void
-BView::SetExplicitPreferredSize(BSize size)
-{
-	fLayoutData->fPreferredSize = size;
-	InvalidateLayout();
+void BView::SetExplicitPreferredSize(BSize size) {
+  fLayoutData->fPreferredSize = size;
+  InvalidateLayout();
 }
 
-
-void
-BView::SetExplicitSize(BSize size)
-{
-	fLayoutData->fMinSize = size;
-	fLayoutData->fMaxSize = size;
-	fLayoutData->fPreferredSize = size;
-	InvalidateLayout();
+void BView::SetExplicitSize(BSize size) {
+  fLayoutData->fMinSize = size;
+  fLayoutData->fMaxSize = size;
+  fLayoutData->fPreferredSize = size;
+  InvalidateLayout();
 }
 
-
-void
-BView::SetExplicitAlignment(BAlignment alignment)
-{
-	fLayoutData->fAlignment = alignment;
-	InvalidateLayout();
+void BView::SetExplicitAlignment(BAlignment alignment) {
+  fLayoutData->fAlignment = alignment;
+  InvalidateLayout();
 }
 
+BSize BView::ExplicitMinSize() const { return fLayoutData->fMinSize; }
 
-BSize
-BView::ExplicitMinSize() const
-{
-	return fLayoutData->fMinSize;
+BSize BView::ExplicitMaxSize() const { return fLayoutData->fMaxSize; }
+
+BSize BView::ExplicitPreferredSize() const {
+  return fLayoutData->fPreferredSize;
 }
 
+BAlignment BView::ExplicitAlignment() const { return fLayoutData->fAlignment; }
 
-BSize
-BView::ExplicitMaxSize() const
-{
-	return fLayoutData->fMaxSize;
+bool BView::HasHeightForWidth() {
+  return (fLayoutData->fLayout ? fLayoutData->fLayout->HasHeightForWidth()
+                               : false);
 }
 
-
-BSize
-BView::ExplicitPreferredSize() const
-{
-	return fLayoutData->fPreferredSize;
+void BView::GetHeightForWidth(float width, float *min, float *max,
+                              float *preferred) {
+  if (fLayoutData->fLayout)
+    fLayoutData->fLayout->GetHeightForWidth(width, min, max, preferred);
 }
 
+void BView::SetLayout(BLayout *layout) {
+  if (layout == fLayoutData->fLayout)
+    return;
 
-BAlignment
-BView::ExplicitAlignment() const
-{
-	return fLayoutData->fAlignment;
+  if (layout && layout->Layout())
+    debugger("BView::SetLayout() failed, layout is already in use.");
+
+  fFlags |= B_SUPPORTS_LAYOUT;
+
+  // unset and delete the old layout
+  if (fLayoutData->fLayout) {
+    fLayoutData->fLayout->RemoveSelf();
+    fLayoutData->fLayout->SetOwner(NULL);
+    delete fLayoutData->fLayout;
+  }
+
+  fLayoutData->fLayout = layout;
+
+  if (fLayoutData->fLayout) {
+    fLayoutData->fLayout->SetOwner(this);
+
+    // add all children
+    int count = CountChildren();
+    for (int i = 0; i < count; i++)
+      fLayoutData->fLayout->AddView(ChildAt(i));
+  }
+
+  InvalidateLayout();
 }
 
+BLayout *BView::GetLayout() const { return fLayoutData->fLayout; }
 
-bool
-BView::HasHeightForWidth()
-{
-	return (fLayoutData->fLayout
-		? fLayoutData->fLayout->HasHeightForWidth() : false);
+void BView::InvalidateLayout(bool descendants) {
+  // printf("BView(%p)::InvalidateLayout(%i), valid: %i, inProgress: %i\n",
+  //	this, descendants, fLayoutData->fLayoutValid,
+  //	fLayoutData->fLayoutInProgress);
+
+  if (!fLayoutData->fMinMaxValid || fLayoutData->fLayoutInProgress ||
+      fLayoutData->fLayoutInvalidationDisabled > 0) {
+    return;
+  }
+  fLayoutData->fLayoutValid = false;
+  fLayoutData->fMinMaxValid = false;
+  LayoutInvalidated(descendants);
+
+  if (descendants) {
+    for (BView *child = fFirstChild; child; child = child->fNextSibling) {
+      child->InvalidateLayout(descendants);
+    }
+  }
+
+  if (fLayoutData->fLayout)
+    fLayoutData->fLayout->InvalidateLayout(descendants);
+  else
+    _InvalidateParentLayout();
+
+  if (fTopLevelView && fOwner != NULL)
+    fOwner->PostMessage(B_LAYOUT_WINDOW);
 }
 
-
-void
-BView::GetHeightForWidth(float width, float* min, float* max, float* preferred)
-{
-	if (fLayoutData->fLayout)
-		fLayoutData->fLayout->GetHeightForWidth(width, min, max, preferred);
+void BView::EnableLayoutInvalidation() {
+  if (fLayoutData->fLayoutInvalidationDisabled > 0)
+    fLayoutData->fLayoutInvalidationDisabled--;
 }
 
-
-void
-BView::SetLayout(BLayout* layout)
-{
-	if (layout == fLayoutData->fLayout)
-		return;
-
-	if (layout && layout->Layout())
-		debugger("BView::SetLayout() failed, layout is already in use.");
-
-	fFlags |= B_SUPPORTS_LAYOUT;
-
-	// unset and delete the old layout
-	if (fLayoutData->fLayout) {
-		fLayoutData->fLayout->RemoveSelf();
-		fLayoutData->fLayout->SetOwner(NULL);
-		delete fLayoutData->fLayout;
-	}
-
-	fLayoutData->fLayout = layout;
-
-	if (fLayoutData->fLayout) {
-		fLayoutData->fLayout->SetOwner(this);
-
-		// add all children
-		int count = CountChildren();
-		for (int i = 0; i < count; i++)
-			fLayoutData->fLayout->AddView(ChildAt(i));
-	}
-
-	InvalidateLayout();
+void BView::DisableLayoutInvalidation() {
+  fLayoutData->fLayoutInvalidationDisabled++;
 }
 
-
-BLayout*
-BView::GetLayout() const
-{
-	return fLayoutData->fLayout;
+bool BView::IsLayoutInvalidationDisabled() {
+  if (fLayoutData->fLayoutInvalidationDisabled > 0)
+    return true;
+  return false;
 }
 
+bool BView::IsLayoutValid() const { return fLayoutData->fLayoutValid; }
 
-void
-BView::InvalidateLayout(bool descendants)
-{
-	// printf("BView(%p)::InvalidateLayout(%i), valid: %i, inProgress: %i\n",
-	//	this, descendants, fLayoutData->fLayoutValid,
-	//	fLayoutData->fLayoutInProgress);
+void BView::ResetLayoutInvalidation() { fLayoutData->fMinMaxValid = true; }
 
-	if (!fLayoutData->fMinMaxValid || fLayoutData->fLayoutInProgress
- 			|| fLayoutData->fLayoutInvalidationDisabled > 0) {
-		return;
-	}
-	fLayoutData->fLayoutValid = false;
-	fLayoutData->fMinMaxValid = false;
-	LayoutInvalidated(descendants);
-
-	if (descendants) {
-		for (BView* child = fFirstChild;
-			child; child = child->fNextSibling) {
-			child->InvalidateLayout(descendants);
-		}
-	}
-
-	if (fLayoutData->fLayout)
-		fLayoutData->fLayout->InvalidateLayout(descendants);
-	else
-		_InvalidateParentLayout();
-
-	if (fTopLevelView
-		&& fOwner != NULL)
-		fOwner->PostMessage(B_LAYOUT_WINDOW);
+BLayoutContext *BView::LayoutContext() const {
+  return fLayoutData->fLayoutContext;
 }
 
-
-void
-BView::EnableLayoutInvalidation()
-{
-	if (fLayoutData->fLayoutInvalidationDisabled > 0)
-		fLayoutData->fLayoutInvalidationDisabled--;
+void BView::Layout(bool force) {
+  BLayoutContext context;
+  _Layout(force, &context);
 }
 
+void BView::Relayout() {
+  if (fLayoutData->fLayoutValid && !fLayoutData->fLayoutInProgress) {
+    fLayoutData->fNeedsRelayout = true;
+    if (fLayoutData->fLayout)
+      fLayoutData->fLayout->RequireLayout();
 
-void
-BView::DisableLayoutInvalidation()
-{
-	fLayoutData->fLayoutInvalidationDisabled++;
+    // Layout() is recursive, that is if the parent view is currently laid
+    // out, we don't call layout() on this view, but wait for the parent's
+    // Layout() to do that for us.
+    if (!fParent || !fParent->fLayoutData->fLayoutInProgress)
+      Layout(false);
+  }
 }
 
-
-bool
-BView::IsLayoutInvalidationDisabled()
-{
-	if (fLayoutData->fLayoutInvalidationDisabled > 0)
-		return true;
-	return false;
+void BView::LayoutInvalidated(bool descendants) {
+  // hook method
 }
 
-
-bool
-BView::IsLayoutValid() const
-{
-	return fLayoutData->fLayoutValid;
+void BView::DoLayout() {
+  if (fLayoutData->fLayout)
+    fLayoutData->fLayout->_LayoutWithinContext(false, LayoutContext());
 }
 
+void BView::SetToolTip(const char *text) {
+  if (text == NULL || text[0] == '\0') {
+    SetToolTip((BToolTip *)NULL);
+    return;
+  }
 
-void
-BView::ResetLayoutInvalidation()
-{
-	fLayoutData->fMinMaxValid = true;
+  if (BTextToolTip *tip = dynamic_cast<BTextToolTip *>(fToolTip))
+    tip->SetText(text);
+  else
+    SetToolTip(new BTextToolTip(text));
 }
 
+void BView::SetToolTip(BToolTip *tip) {
+  if (fToolTip == tip)
+    return;
+  else if (tip == NULL)
+    HideToolTip();
 
-BLayoutContext*
-BView::LayoutContext() const
-{
-	return fLayoutData->fLayoutContext;
+  if (fToolTip != NULL)
+    fToolTip->ReleaseReference();
+
+  fToolTip = tip;
+
+  if (fToolTip != NULL)
+    fToolTip->AcquireReference();
 }
 
+BToolTip *BView::ToolTip() const { return fToolTip; }
 
-void
-BView::Layout(bool force)
-{
-	BLayoutContext context;
-	_Layout(force, &context);
+void BView::ShowToolTip(BToolTip *tip) {
+  if (tip == NULL)
+    return;
+
+  BPoint where;
+  GetMouse(&where, NULL, false);
+
+  BToolTipManager::Manager()->ShowTip(tip, ConvertToScreen(where), this);
 }
 
+void BView::HideToolTip() { BToolTipManager::Manager()->HideTip(); }
 
-void
-BView::Relayout()
-{
-	if (fLayoutData->fLayoutValid && !fLayoutData->fLayoutInProgress) {
-		fLayoutData->fNeedsRelayout = true;
-		if (fLayoutData->fLayout)
-			fLayoutData->fLayout->RequireLayout();
+bool BView::GetToolTipAt(BPoint point, BToolTip **_tip) {
+  if (fToolTip != NULL) {
+    *_tip = fToolTip;
+    return true;
+  }
 
-		// Layout() is recursive, that is if the parent view is currently laid
-		// out, we don't call layout() on this view, but wait for the parent's
-		// Layout() to do that for us.
-		if (!fParent || !fParent->fLayoutData->fLayoutInProgress)
-			Layout(false);
-	}
+  *_tip = NULL;
+  return false;
 }
 
-
-void
-BView::LayoutInvalidated(bool descendants)
-{
-	// hook method
+void BView::LayoutChanged() {
+  // hook method
 }
 
+void BView::_Layout(bool force, BLayoutContext *context) {
+  // printf("%p->BView::_Layout(%d, %p)\n", this, force, context);
+  // printf("  fNeedsRelayout: %d, fLayoutValid: %d, fLayoutInProgress: %d\n",
+  // fLayoutData->fNeedsRelayout, fLayoutData->fLayoutValid,
+  // fLayoutData->fLayoutInProgress);
+  if (fLayoutData->fNeedsRelayout || !fLayoutData->fLayoutValid || force) {
+    fLayoutData->fLayoutValid = false;
 
-void
-BView::DoLayout()
-{
-	if (fLayoutData->fLayout)
-		fLayoutData->fLayout->_LayoutWithinContext(false, LayoutContext());
+    if (fLayoutData->fLayoutInProgress)
+      return;
+
+    BLayoutContext *oldContext = fLayoutData->fLayoutContext;
+    fLayoutData->fLayoutContext = context;
+
+    fLayoutData->fLayoutInProgress = true;
+    DoLayout();
+    fLayoutData->fLayoutInProgress = false;
+
+    fLayoutData->fLayoutValid = true;
+    fLayoutData->fMinMaxValid = true;
+    fLayoutData->fNeedsRelayout = false;
+
+    // layout children
+    for (BView *child = fFirstChild; child; child = child->fNextSibling) {
+      if (!child->IsHidden(child))
+        child->_Layout(force, context);
+    }
+
+    LayoutChanged();
+
+    fLayoutData->fLayoutContext = oldContext;
+
+    // invalidate the drawn content, if requested
+    if (fFlags & B_INVALIDATE_AFTER_LAYOUT)
+      Invalidate();
+  }
 }
 
-
-void
-BView::SetToolTip(const char* text)
-{
-	if (text == NULL || text[0] == '\0') {
-		SetToolTip((BToolTip*)NULL);
-		return;
-	}
-
-	if (BTextToolTip* tip = dynamic_cast<BTextToolTip*>(fToolTip))
-		tip->SetText(text);
-	else
-		SetToolTip(new BTextToolTip(text));
+void BView::_LayoutLeft(BLayout *deleted) {
+  // If our layout is added to another layout (via BLayout::AddItem())
+  // then we share ownership of our layout. In the event that our layout gets
+  // deleted by the layout it has been added to, this method is called so
+  // that we don't double-delete our layout.
+  if (fLayoutData->fLayout == deleted)
+    fLayoutData->fLayout = NULL;
+  InvalidateLayout();
 }
 
+void BView::_InvalidateParentLayout() {
+  if (!fParent)
+    return;
 
-void
-BView::SetToolTip(BToolTip* tip)
-{
-	if (fToolTip == tip)
-		return;
-	else if (tip == NULL)
-		HideToolTip();
-
-	if (fToolTip != NULL)
-		fToolTip->ReleaseReference();
-
-	fToolTip = tip;
-
-	if (fToolTip != NULL)
-		fToolTip->AcquireReference();
+  BLayout *layout = fLayoutData->fLayout;
+  BLayout *layoutParent = layout ? layout->Layout() : NULL;
+  if (layoutParent) {
+    layoutParent->InvalidateLayout();
+  } else if (fLayoutData->fLayoutItems.CountItems() > 0) {
+    int32 count = fLayoutData->fLayoutItems.CountItems();
+    for (int32 i = 0; i < count; i++) {
+      fLayoutData->fLayoutItems.ItemAt(i)->Layout()->InvalidateLayout();
+    }
+  } else {
+    fParent->InvalidateLayout();
+  }
 }
-
-
-BToolTip*
-BView::ToolTip() const
-{
-	return fToolTip;
-}
-
-
-void
-BView::ShowToolTip(BToolTip* tip)
-{
-	if (tip == NULL)
-		return;
-
-	BPoint where;
-	GetMouse(&where, NULL, false);
-
-	BToolTipManager::Manager()->ShowTip(tip, ConvertToScreen(where), this);
-}
-
-
-void
-BView::HideToolTip()
-{
-	BToolTipManager::Manager()->HideTip();
-}
-
-
-bool
-BView::GetToolTipAt(BPoint point, BToolTip** _tip)
-{
-	if (fToolTip != NULL) {
-		*_tip = fToolTip;
-		return true;
-	}
-
-	*_tip = NULL;
-	return false;
-}
-
-
-void
-BView::LayoutChanged()
-{
-	// hook method
-}
-
-
-void
-BView::_Layout(bool force, BLayoutContext* context)
-{
-//printf("%p->BView::_Layout(%d, %p)\n", this, force, context);
-//printf("  fNeedsRelayout: %d, fLayoutValid: %d, fLayoutInProgress: %d\n",
-//fLayoutData->fNeedsRelayout, fLayoutData->fLayoutValid,
-//fLayoutData->fLayoutInProgress);
-	if (fLayoutData->fNeedsRelayout || !fLayoutData->fLayoutValid || force) {
-		fLayoutData->fLayoutValid = false;
-
-		if (fLayoutData->fLayoutInProgress)
-			return;
-
-		BLayoutContext* oldContext = fLayoutData->fLayoutContext;
-		fLayoutData->fLayoutContext = context;
-
-		fLayoutData->fLayoutInProgress = true;
-		DoLayout();
-		fLayoutData->fLayoutInProgress = false;
-
-		fLayoutData->fLayoutValid = true;
-		fLayoutData->fMinMaxValid = true;
-		fLayoutData->fNeedsRelayout = false;
-
-		// layout children
-		for(BView* child = fFirstChild; child; child = child->fNextSibling) {
-			if (!child->IsHidden(child))
-				child->_Layout(force, context);
-		}
-
-		LayoutChanged();
-
-		fLayoutData->fLayoutContext = oldContext;
-
-		// invalidate the drawn content, if requested
-		if (fFlags & B_INVALIDATE_AFTER_LAYOUT)
-			Invalidate();
-	}
-}
-
-
-void
-BView::_LayoutLeft(BLayout* deleted)
-{
-	// If our layout is added to another layout (via BLayout::AddItem())
-	// then we share ownership of our layout. In the event that our layout gets
-	// deleted by the layout it has been added to, this method is called so
-	// that we don't double-delete our layout.
-	if (fLayoutData->fLayout == deleted)
-		fLayoutData->fLayout = NULL;
-	InvalidateLayout();
-}
-
-
-void
-BView::_InvalidateParentLayout()
-{
-	if (!fParent)
-		return;
-
-	BLayout* layout = fLayoutData->fLayout;
-	BLayout* layoutParent = layout ? layout->Layout() : NULL;
-	if (layoutParent) {
-		layoutParent->InvalidateLayout();
-	} else if (fLayoutData->fLayoutItems.CountItems() > 0) {
-		int32 count = fLayoutData->fLayoutItems.CountItems();
-		for (int32 i = 0; i < count; i++) {
-			fLayoutData->fLayoutItems.ItemAt(i)->Layout()->InvalidateLayout();
-		}
-	} else {
-		fParent->InvalidateLayout();
-	}
-}
-
 
 //	#pragma mark - Private Functions
 
+void BView::_InitData(BRect frame, const char *name, uint32 resizingMode,
+                      uint32 flags) {
+  // Info: The name of the view is set by BHandler constructor
 
-void
-BView::_InitData(BRect frame, const char* name, uint32 resizingMode,
-	uint32 flags)
-{
-	// Info: The name of the view is set by BHandler constructor
+  STRACE(("BView::_InitData: enter\n"));
 
-	STRACE(("BView::_InitData: enter\n"));
+  // initialize members
+  if ((resizingMode & ~_RESIZE_MASK_) || (flags & _RESIZE_MASK_))
+    printf("%s BView::_InitData(): resizing mode or flags swapped\n", name);
 
-	// initialize members
-	if ((resizingMode & ~_RESIZE_MASK_) || (flags & _RESIZE_MASK_))
-		printf("%s BView::_InitData(): resizing mode or flags swapped\n", name);
+  // There are applications that swap the resize mask and the flags in the
+  // BView constructor. This does not cause problems under BeOS as it just
+  // ors the two fields to one 32bit flag.
+  // For now we do the same but print the above warning message.
+  // TODO: this should be removed at some point and the original
+  // version restored:
+  // fFlags = (resizingMode & _RESIZE_MASK_) | (flags & ~_RESIZE_MASK_);
+  fFlags = resizingMode | flags;
 
-	// There are applications that swap the resize mask and the flags in the
-	// BView constructor. This does not cause problems under BeOS as it just
-	// ors the two fields to one 32bit flag.
-	// For now we do the same but print the above warning message.
-	// TODO: this should be removed at some point and the original
-	// version restored:
-	// fFlags = (resizingMode & _RESIZE_MASK_) | (flags & ~_RESIZE_MASK_);
-	fFlags = resizingMode | flags;
+  // handle rounding
+  frame.left = roundf(frame.left);
+  frame.top = roundf(frame.top);
+  frame.right = roundf(frame.right);
+  frame.bottom = roundf(frame.bottom);
 
-	// handle rounding
-	frame.left = roundf(frame.left);
-	frame.top = roundf(frame.top);
-	frame.right = roundf(frame.right);
-	frame.bottom = roundf(frame.bottom);
+  fParentOffset.Set(frame.left, frame.top);
 
-	fParentOffset.Set(frame.left, frame.top);
+  fOwner = NULL;
+  fParent = NULL;
+  fNextSibling = NULL;
+  fPreviousSibling = NULL;
+  fFirstChild = NULL;
 
-	fOwner = NULL;
-	fParent = NULL;
-	fNextSibling = NULL;
-	fPreviousSibling = NULL;
-	fFirstChild = NULL;
+  fShowLevel = 0;
+  fTopLevelView = false;
 
-	fShowLevel = 0;
-	fTopLevelView = false;
+  fCurrentPicture = NULL;
+  fCommArray = NULL;
 
-	fCurrentPicture = NULL;
-	fCommArray = NULL;
+  fVerScroller = NULL;
+  fHorScroller = NULL;
 
-	fVerScroller = NULL;
-	fHorScroller = NULL;
+  fIsPrinting = false;
+  fAttached = false;
 
-	fIsPrinting = false;
-	fAttached = false;
+  // TODO: Since we cannot communicate failure, we don't use std::nothrow here
+  // TODO: Maybe we could auto-delete those views on AddChild() instead?
+  fState = new BPrivate::ViewState;
 
-	// TODO: Since we cannot communicate failure, we don't use std::nothrow here
-	// TODO: Maybe we could auto-delete those views on AddChild() instead?
-	fState = new BPrivate::ViewState;
+  fBounds = frame.OffsetToCopy(B_ORIGIN);
+  fShelf = NULL;
 
-	fBounds = frame.OffsetToCopy(B_ORIGIN);
-	fShelf = NULL;
+  fEventMask = 0;
+  fEventOptions = 0;
+  fMouseEventOptions = 0;
 
-	fEventMask = 0;
-	fEventOptions = 0;
-	fMouseEventOptions = 0;
+  fLayoutData = new LayoutData;
 
-	fLayoutData = new LayoutData;
+  fToolTip = NULL;
 
-	fToolTip = NULL;
-
-	if ((flags & B_SUPPORTS_LAYOUT) != 0) {
-		SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
-		SetLowUIColor(ViewUIColor());
-		SetHighUIColor(B_PANEL_TEXT_COLOR);
-	}
+  if ((flags & B_SUPPORTS_LAYOUT) != 0) {
+    SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
+    SetLowUIColor(ViewUIColor());
+    SetHighUIColor(B_PANEL_TEXT_COLOR);
+  }
 }
 
-
-void
-BView::_RemoveCommArray()
-{
-	if (fCommArray) {
-		delete [] fCommArray->array;
-		delete fCommArray;
-		fCommArray = NULL;
-	}
+void BView::_RemoveCommArray() {
+  if (fCommArray) {
+    delete[] fCommArray->array;
+    delete fCommArray;
+    fCommArray = NULL;
+  }
 }
 
+void BView::_SetOwner(BWindow *newOwner) {
+  if (!newOwner)
+    _RemoveCommArray();
 
-void
-BView::_SetOwner(BWindow* newOwner)
-{
-	if (!newOwner)
-		_RemoveCommArray();
+  if (fOwner != newOwner && fOwner) {
+    if (fOwner->fFocus == this)
+      MakeFocus(false);
 
-	if (fOwner != newOwner && fOwner) {
-		if (fOwner->fFocus == this)
-			MakeFocus(false);
+    if (fOwner->fLastMouseMovedView == this)
+      fOwner->fLastMouseMovedView = NULL;
 
-		if (fOwner->fLastMouseMovedView == this)
-			fOwner->fLastMouseMovedView = NULL;
+    fOwner->RemoveHandler(this);
+    if (fShelf)
+      fOwner->RemoveHandler(fShelf);
+  }
 
-		fOwner->RemoveHandler(this);
-		if (fShelf)
-			fOwner->RemoveHandler(fShelf);
-	}
+  if (newOwner && newOwner != fOwner) {
+    newOwner->AddHandler(this);
+    if (fShelf)
+      newOwner->AddHandler(fShelf);
 
-	if (newOwner && newOwner != fOwner) {
-		newOwner->AddHandler(this);
-		if (fShelf)
-			newOwner->AddHandler(fShelf);
+    if (fTopLevelView)
+      SetNextHandler(newOwner);
+    else
+      SetNextHandler(fParent);
+  }
 
-		if (fTopLevelView)
-			SetNextHandler(newOwner);
-		else
-			SetNextHandler(fParent);
-	}
+  fOwner = newOwner;
 
-	fOwner = newOwner;
-
-	for (BView* child = fFirstChild; child != NULL; child = child->fNextSibling)
-		child->_SetOwner(newOwner);
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling)
+    child->_SetOwner(newOwner);
 }
 
+void BView::_ClipToPicture(BPicture *picture, BPoint where, bool invert,
+                           bool sync) {
+  if (!_CheckOwnerLockAndSwitchCurrent())
+    return;
 
-void
-BView::_ClipToPicture(BPicture* picture, BPoint where, bool invert, bool sync)
-{
-	if (!_CheckOwnerLockAndSwitchCurrent())
-		return;
+  if (picture == NULL) {
+    fOwner->fLink->StartMessage(AS_VIEW_CLIP_TO_PICTURE);
+    fOwner->fLink->Attach<int32>(-1);
 
-	if (picture == NULL) {
-		fOwner->fLink->StartMessage(AS_VIEW_CLIP_TO_PICTURE);
-		fOwner->fLink->Attach<int32>(-1);
+    // NOTE: No need to sync here, since the -1 token cannot
+    // become invalid on the server.
+  } else {
+    fOwner->fLink->StartMessage(AS_VIEW_CLIP_TO_PICTURE);
+    fOwner->fLink->Attach<int32>(picture->Token());
+    fOwner->fLink->Attach<BPoint>(where);
+    fOwner->fLink->Attach<bool>(invert);
 
-		// NOTE: No need to sync here, since the -1 token cannot
-		// become invalid on the server.
-	} else {
-		fOwner->fLink->StartMessage(AS_VIEW_CLIP_TO_PICTURE);
-		fOwner->fLink->Attach<int32>(picture->Token());
-		fOwner->fLink->Attach<BPoint>(where);
-		fOwner->fLink->Attach<bool>(invert);
-
-		// NOTE: "sync" defaults to true in public methods. If you know what
-		// you are doing, i.e. if you know your BPicture stays valid, you
-		// can avoid the performance impact of syncing. In a use-case where
-		// the client creates BPictures on the stack, these BPictures may
-		// have issued a AS_DELETE_PICTURE command to the ServerApp when Draw()
-		// goes out of scope, and the command is processed earlier in the
-		// ServerApp thread than the AS_VIEW_CLIP_TO_PICTURE command in the
-		// ServerWindow thread, which will then have the result that no
-		// ServerPicture is found of the token.
-		if (sync)
-			Sync();
-	}
+    // NOTE: "sync" defaults to true in public methods. If you know what
+    // you are doing, i.e. if you know your BPicture stays valid, you
+    // can avoid the performance impact of syncing. In a use-case where
+    // the client creates BPictures on the stack, these BPictures may
+    // have issued a AS_DELETE_PICTURE command to the ServerApp when Draw()
+    // goes out of scope, and the command is processed earlier in the
+    // ServerApp thread than the AS_VIEW_CLIP_TO_PICTURE command in the
+    // ServerWindow thread, which will then have the result that no
+    // ServerPicture is found of the token.
+    if (sync)
+      Sync();
+  }
 }
 
-
-void
-BView::_ClipToRect(BRect rect, bool inverse)
-{
-	if (_CheckOwnerLockAndSwitchCurrent()) {
-		fOwner->fLink->StartMessage(AS_VIEW_CLIP_TO_RECT);
-		fOwner->fLink->Attach<bool>(inverse);
-		fOwner->fLink->Attach<BRect>(rect);
-		_FlushIfNotInTransaction();
-	}
+void BView::_ClipToRect(BRect rect, bool inverse) {
+  if (_CheckOwnerLockAndSwitchCurrent()) {
+    fOwner->fLink->StartMessage(AS_VIEW_CLIP_TO_RECT);
+    fOwner->fLink->Attach<bool>(inverse);
+    fOwner->fLink->Attach<BRect>(rect);
+    _FlushIfNotInTransaction();
+  }
 }
 
+void BView::_ClipToShape(BShape *shape, bool inverse) {
+  if (shape == NULL)
+    return;
 
-void
-BView::_ClipToShape(BShape* shape, bool inverse)
-{
-	if (shape == NULL)
-		return;
+  shape_data *sd = (shape_data *)shape->fPrivateData;
+  if (sd->opCount == 0 || sd->ptCount == 0)
+    return;
 
-	shape_data* sd = (shape_data*)shape->fPrivateData;
-	if (sd->opCount == 0 || sd->ptCount == 0)
-		return;
-
-	if (_CheckOwnerLockAndSwitchCurrent()) {
-		fOwner->fLink->StartMessage(AS_VIEW_CLIP_TO_SHAPE);
-		fOwner->fLink->Attach<bool>(inverse);
-		fOwner->fLink->Attach<int32>(sd->opCount);
-		fOwner->fLink->Attach<int32>(sd->ptCount);
-		fOwner->fLink->Attach(sd->opList, sd->opCount * sizeof(uint32));
-		fOwner->fLink->Attach(sd->ptList, sd->ptCount * sizeof(BPoint));
-		_FlushIfNotInTransaction();
-	}
+  if (_CheckOwnerLockAndSwitchCurrent()) {
+    fOwner->fLink->StartMessage(AS_VIEW_CLIP_TO_SHAPE);
+    fOwner->fLink->Attach<bool>(inverse);
+    fOwner->fLink->Attach<int32>(sd->opCount);
+    fOwner->fLink->Attach<int32>(sd->ptCount);
+    fOwner->fLink->Attach(sd->opList, sd->opCount * sizeof(uint32));
+    fOwner->fLink->Attach(sd->ptList, sd->ptCount * sizeof(BPoint));
+    _FlushIfNotInTransaction();
+  }
 }
 
+bool BView::_RemoveChildFromList(BView *child) {
+  if (child->fParent != this)
+    return false;
 
-bool
-BView::_RemoveChildFromList(BView* child)
-{
-	if (child->fParent != this)
-		return false;
+  if (fFirstChild == child) {
+    // it's the first view in the list
+    fFirstChild = child->fNextSibling;
+  } else {
+    // there must be a previous sibling
+    child->fPreviousSibling->fNextSibling = child->fNextSibling;
+  }
 
-	if (fFirstChild == child) {
-		// it's the first view in the list
-		fFirstChild = child->fNextSibling;
-	} else {
-		// there must be a previous sibling
-		child->fPreviousSibling->fNextSibling = child->fNextSibling;
-	}
+  if (child->fNextSibling)
+    child->fNextSibling->fPreviousSibling = child->fPreviousSibling;
 
-	if (child->fNextSibling)
-		child->fNextSibling->fPreviousSibling = child->fPreviousSibling;
+  child->fParent = NULL;
+  child->fNextSibling = NULL;
+  child->fPreviousSibling = NULL;
 
-	child->fParent = NULL;
-	child->fNextSibling = NULL;
-	child->fPreviousSibling = NULL;
-
-	return true;
+  return true;
 }
 
+bool BView::_AddChildToList(BView *child, BView *before) {
+  if (!child)
+    return false;
+  if (child->fParent != NULL) {
+    debugger("View already belongs to someone else");
+    return false;
+  }
+  if (before != NULL && before->fParent != this) {
+    debugger("Invalid before view");
+    return false;
+  }
 
-bool
-BView::_AddChildToList(BView* child, BView* before)
-{
-	if (!child)
-		return false;
-	if (child->fParent != NULL) {
-		debugger("View already belongs to someone else");
-		return false;
-	}
-	if (before != NULL && before->fParent != this) {
-		debugger("Invalid before view");
-		return false;
-	}
+  if (before != NULL) {
+    // add view before this one
+    child->fNextSibling = before;
+    child->fPreviousSibling = before->fPreviousSibling;
+    if (child->fPreviousSibling != NULL)
+      child->fPreviousSibling->fNextSibling = child;
 
-	if (before != NULL) {
-		// add view before this one
-		child->fNextSibling = before;
-		child->fPreviousSibling = before->fPreviousSibling;
-		if (child->fPreviousSibling != NULL)
-			child->fPreviousSibling->fNextSibling = child;
+    before->fPreviousSibling = child;
+    if (fFirstChild == before)
+      fFirstChild = child;
+  } else {
+    // add view to the end of the list
+    BView *last = fFirstChild;
+    while (last != NULL && last->fNextSibling != NULL) {
+      last = last->fNextSibling;
+    }
 
-		before->fPreviousSibling = child;
-		if (fFirstChild == before)
-			fFirstChild = child;
-	} else {
-		// add view to the end of the list
-		BView* last = fFirstChild;
-		while (last != NULL && last->fNextSibling != NULL) {
-			last = last->fNextSibling;
-		}
+    if (last != NULL) {
+      last->fNextSibling = child;
+      child->fPreviousSibling = last;
+    } else {
+      fFirstChild = child;
+      child->fPreviousSibling = NULL;
+    }
 
-		if (last != NULL) {
-			last->fNextSibling = child;
-			child->fPreviousSibling = last;
-		} else {
-			fFirstChild = child;
-			child->fPreviousSibling = NULL;
-		}
+    child->fNextSibling = NULL;
+  }
 
-		child->fNextSibling = NULL;
-	}
-
-	child->fParent = this;
-	return true;
+  child->fParent = this;
+  return true;
 }
-
 
 /*!	\brief Creates the server counterpart of this view.
-	This is only done for views that are part of the view hierarchy, ie. when
-	they are attached to a window.
-	RemoveSelf() deletes the server object again.
+        This is only done for views that are part of the view hierarchy, ie.
+   when they are attached to a window. RemoveSelf() deletes the server object
+   again.
 */
-bool
-BView::_CreateSelf()
-{
-	// AS_VIEW_CREATE & AS_VIEW_CREATE_ROOT do not use the
-	// current view mechanism via _CheckLockAndSwitchCurrent() - the token
-	// of the view and its parent are both send to the server.
+bool BView::_CreateSelf() {
+  // AS_VIEW_CREATE & AS_VIEW_CREATE_ROOT do not use the
+  // current view mechanism via _CheckLockAndSwitchCurrent() - the token
+  // of the view and its parent are both send to the server.
 
-	if (fTopLevelView)
-		fOwner->fLink->StartMessage(AS_VIEW_CREATE_ROOT);
-	else
- 		fOwner->fLink->StartMessage(AS_VIEW_CREATE);
+  if (fTopLevelView)
+    fOwner->fLink->StartMessage(AS_VIEW_CREATE_ROOT);
+  else
+    fOwner->fLink->StartMessage(AS_VIEW_CREATE);
 
-	fOwner->fLink->Attach<int32>(_get_object_token_(this));
-	fOwner->fLink->AttachString(Name());
-	fOwner->fLink->Attach<BRect>(Frame());
-	fOwner->fLink->Attach<BPoint>(LeftTop());
-	fOwner->fLink->Attach<uint32>(ResizingMode());
-	fOwner->fLink->Attach<uint32>(fEventMask);
-	fOwner->fLink->Attach<uint32>(fEventOptions);
-	fOwner->fLink->Attach<uint32>(Flags());
-	fOwner->fLink->Attach<bool>(IsHidden(this));
-	fOwner->fLink->Attach<rgb_color>(fState->view_color);
-	if (fTopLevelView)
-		fOwner->fLink->Attach<int32>(B_NULL_TOKEN);
-	else
-		fOwner->fLink->Attach<int32>(_get_object_token_(fParent));
-	fOwner->fLink->Flush();
+  fOwner->fLink->Attach<int32>(_get_object_token_(this));
+  fOwner->fLink->AttachString(Name());
+  fOwner->fLink->Attach<BRect>(Frame());
+  fOwner->fLink->Attach<BPoint>(LeftTop());
+  fOwner->fLink->Attach<uint32>(ResizingMode());
+  fOwner->fLink->Attach<uint32>(fEventMask);
+  fOwner->fLink->Attach<uint32>(fEventOptions);
+  fOwner->fLink->Attach<uint32>(Flags());
+  fOwner->fLink->Attach<bool>(IsHidden(this));
+  fOwner->fLink->Attach<rgb_color>(fState->view_color);
+  if (fTopLevelView)
+    fOwner->fLink->Attach<int32>(B_NULL_TOKEN);
+  else
+    fOwner->fLink->Attach<int32>(_get_object_token_(fParent));
+  fOwner->fLink->Flush();
 
-	_CheckOwnerLockAndSwitchCurrent();
-	fState->UpdateServerState(*fOwner->fLink);
+  _CheckOwnerLockAndSwitchCurrent();
+  fState->UpdateServerState(*fOwner->fLink);
 
-	// we create all its children, too
+  // we create all its children, too
 
-	for (BView* child = fFirstChild; child != NULL;
-			child = child->fNextSibling) {
-		child->_CreateSelf();
-	}
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling) {
+    child->_CreateSelf();
+  }
 
-	fOwner->fLink->Flush();
-	return true;
+  fOwner->fLink->Flush();
+  return true;
 }
-
 
 /*!	Sets the new view position.
-	It doesn't contact the server, though - the only case where this
-	is called outside of MoveTo() is as reaction of moving a view
-	in the server (a.k.a. B_WINDOW_RESIZED).
-	It also calls the BView's FrameMoved() hook.
+        It doesn't contact the server, though - the only case where this
+        is called outside of MoveTo() is as reaction of moving a view
+        in the server (a.k.a. B_WINDOW_RESIZED).
+        It also calls the BView's FrameMoved() hook.
 */
-void
-BView::_MoveTo(int32 x, int32 y)
-{
-	fParentOffset.Set(x, y);
+void BView::_MoveTo(int32 x, int32 y) {
+  fParentOffset.Set(x, y);
 
-	if (Window() != NULL && fFlags & B_FRAME_EVENTS) {
-		BMessage moved(B_VIEW_MOVED);
-		moved.AddInt64("when", system_time());
-		moved.AddPoint("where", BPoint(x, y));
+  if (Window() != NULL && fFlags & B_FRAME_EVENTS) {
+    BMessage moved(B_VIEW_MOVED);
+    moved.AddInt64("when", system_time());
+    moved.AddPoint("where", BPoint(x, y));
 
-		BMessenger target(this);
-		target.SendMessage(&moved);
-	}
+    BMessenger target(this);
+    target.SendMessage(&moved);
+  }
 }
-
 
 /*!	Computes the actual new frame size and recalculates the size of
-	the children as well.
-	It doesn't contact the server, though - the only case where this
-	is called outside of ResizeBy() is as reaction of resizing a view
-	in the server (a.k.a. B_WINDOW_RESIZED).
-	It also calls the BView's FrameResized() hook.
+        the children as well.
+        It doesn't contact the server, though - the only case where this
+        is called outside of ResizeBy() is as reaction of resizing a view
+        in the server (a.k.a. B_WINDOW_RESIZED).
+        It also calls the BView's FrameResized() hook.
 */
-void
-BView::_ResizeBy(int32 deltaWidth, int32 deltaHeight)
-{
-	fBounds.right += deltaWidth;
-	fBounds.bottom += deltaHeight;
+void BView::_ResizeBy(int32 deltaWidth, int32 deltaHeight) {
+  fBounds.right += deltaWidth;
+  fBounds.bottom += deltaHeight;
 
-	if (Window() == NULL) {
-		// we're not supposed to exercise the resizing code in case
-		// we haven't been attached to a window yet
-		return;
-	}
+  if (Window() == NULL) {
+    // we're not supposed to exercise the resizing code in case
+    // we haven't been attached to a window yet
+    return;
+  }
 
-	// layout the children
-	if ((fFlags & B_SUPPORTS_LAYOUT) != 0) {
-		Relayout();
-	} else {
-		for (BView* child = fFirstChild; child; child = child->fNextSibling)
-			child->_ParentResizedBy(deltaWidth, deltaHeight);
-	}
+  // layout the children
+  if ((fFlags & B_SUPPORTS_LAYOUT) != 0) {
+    Relayout();
+  } else {
+    for (BView *child = fFirstChild; child; child = child->fNextSibling)
+      child->_ParentResizedBy(deltaWidth, deltaHeight);
+  }
 
-	if (fFlags & B_FRAME_EVENTS) {
-		BMessage resized(B_VIEW_RESIZED);
-		resized.AddInt64("when", system_time());
-		resized.AddInt32("width", fBounds.IntegerWidth());
-		resized.AddInt32("height", fBounds.IntegerHeight());
+  if (fFlags & B_FRAME_EVENTS) {
+    BMessage resized(B_VIEW_RESIZED);
+    resized.AddInt64("when", system_time());
+    resized.AddInt32("width", fBounds.IntegerWidth());
+    resized.AddInt32("height", fBounds.IntegerHeight());
 
-		BMessenger target(this);
-		target.SendMessage(&resized);
-	}
+    BMessenger target(this);
+    target.SendMessage(&resized);
+  }
 }
-
 
 /*!	Relayouts the view according to its resizing mode. */
-void
-BView::_ParentResizedBy(int32 x, int32 y)
-{
-	uint32 resizingMode = fFlags & _RESIZE_MASK_;
-	BRect newFrame = Frame();
+void BView::_ParentResizedBy(int32 x, int32 y) {
+  uint32 resizingMode = fFlags & _RESIZE_MASK_;
+  BRect newFrame = Frame();
 
-	// follow with left side
-	if ((resizingMode & 0x0F00U) == _VIEW_RIGHT_ << 8)
-		newFrame.left += x;
-	else if ((resizingMode & 0x0F00U) == _VIEW_CENTER_ << 8)
-		newFrame.left += x / 2;
+  // follow with left side
+  if ((resizingMode & 0x0F00U) == _VIEW_RIGHT_ << 8)
+    newFrame.left += x;
+  else if ((resizingMode & 0x0F00U) == _VIEW_CENTER_ << 8)
+    newFrame.left += x / 2;
 
-	// follow with right side
-	if ((resizingMode & 0x000FU) == _VIEW_RIGHT_)
-		newFrame.right += x;
-	else if ((resizingMode & 0x000FU) == _VIEW_CENTER_)
-		newFrame.right += x / 2;
+  // follow with right side
+  if ((resizingMode & 0x000FU) == _VIEW_RIGHT_)
+    newFrame.right += x;
+  else if ((resizingMode & 0x000FU) == _VIEW_CENTER_)
+    newFrame.right += x / 2;
 
-	// follow with top side
-	if ((resizingMode & 0xF000U) == _VIEW_BOTTOM_ << 12)
-		newFrame.top += y;
-	else if ((resizingMode & 0xF000U) == _VIEW_CENTER_ << 12)
-		newFrame.top += y / 2;
+  // follow with top side
+  if ((resizingMode & 0xF000U) == _VIEW_BOTTOM_ << 12)
+    newFrame.top += y;
+  else if ((resizingMode & 0xF000U) == _VIEW_CENTER_ << 12)
+    newFrame.top += y / 2;
 
-	// follow with bottom side
-	if ((resizingMode & 0x00F0U) == _VIEW_BOTTOM_ << 4)
-		newFrame.bottom += y;
-	else if ((resizingMode & 0x00F0U) == _VIEW_CENTER_ << 4)
-		newFrame.bottom += y / 2;
+  // follow with bottom side
+  if ((resizingMode & 0x00F0U) == _VIEW_BOTTOM_ << 4)
+    newFrame.bottom += y;
+  else if ((resizingMode & 0x00F0U) == _VIEW_CENTER_ << 4)
+    newFrame.bottom += y / 2;
 
-	if (newFrame.LeftTop() != fParentOffset) {
-		// move view
-		_MoveTo((int32)roundf(newFrame.left), (int32)roundf(newFrame.top));
-	}
+  if (newFrame.LeftTop() != fParentOffset) {
+    // move view
+    _MoveTo((int32)roundf(newFrame.left), (int32)roundf(newFrame.top));
+  }
 
-	if (newFrame != Frame()) {
-		// resize view
-		int32 widthDiff = (int32)(newFrame.Width() - fBounds.Width());
-		int32 heightDiff = (int32)(newFrame.Height() - fBounds.Height());
-		_ResizeBy(widthDiff, heightDiff);
-	}
+  if (newFrame != Frame()) {
+    // resize view
+    int32 widthDiff = (int32)(newFrame.Width() - fBounds.Width());
+    int32 heightDiff = (int32)(newFrame.Height() - fBounds.Height());
+    _ResizeBy(widthDiff, heightDiff);
+  }
 }
 
+void BView::_Activate(bool active) {
+  WindowActivated(active);
 
-void
-BView::_Activate(bool active)
-{
-	WindowActivated(active);
-
-	for (BView* child = fFirstChild; child != NULL;
-			child = child->fNextSibling) {
-		child->_Activate(active);
-	}
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling) {
+    child->_Activate(active);
+  }
 }
 
+void BView::_Attach() {
+  if (fOwner != NULL) {
+    // unmask state flags to force [re]syncing with the app_server
+    fState->valid_flags &=
+        ~(B_VIEW_WHICH_VIEW_COLOR_BIT | B_VIEW_WHICH_LOW_COLOR_BIT |
+          B_VIEW_WHICH_HIGH_COLOR_BIT);
 
-void
-BView::_Attach()
-{
-	if (fOwner != NULL) {
-		// unmask state flags to force [re]syncing with the app_server
-		fState->valid_flags &= ~(B_VIEW_WHICH_VIEW_COLOR_BIT
-			| B_VIEW_WHICH_LOW_COLOR_BIT | B_VIEW_WHICH_HIGH_COLOR_BIT);
+    if (fState->which_view_color != B_NO_COLOR)
+      SetViewUIColor(fState->which_view_color, fState->which_view_color_tint);
 
-		if (fState->which_view_color != B_NO_COLOR)
-			SetViewUIColor(fState->which_view_color,
-				fState->which_view_color_tint);
+    if (fState->which_high_color != B_NO_COLOR)
+      SetHighUIColor(fState->which_high_color, fState->which_high_color_tint);
 
-		if (fState->which_high_color != B_NO_COLOR)
-			SetHighUIColor(fState->which_high_color,
-				fState->which_high_color_tint);
+    if (fState->which_low_color != B_NO_COLOR)
+      SetLowUIColor(fState->which_low_color, fState->which_low_color_tint);
+  }
 
-		if (fState->which_low_color != B_NO_COLOR)
-			SetLowUIColor(fState->which_low_color,
-				fState->which_low_color_tint);
-	}
+  AttachedToWindow();
 
-	AttachedToWindow();
+  fAttached = true;
 
-	fAttached = true;
+  // after giving the view a chance to do this itself,
+  // check for the B_PULSE_NEEDED flag and make sure the
+  // window set's up the pulse messaging
+  if (fOwner) {
+    if (fFlags & B_PULSE_NEEDED) {
+      _CheckLock();
+      if (fOwner->fPulseRunner == NULL)
+        fOwner->SetPulseRate(fOwner->PulseRate());
+    }
 
-	// after giving the view a chance to do this itself,
-	// check for the B_PULSE_NEEDED flag and make sure the
-	// window set's up the pulse messaging
-	if (fOwner) {
-		if (fFlags & B_PULSE_NEEDED) {
-			_CheckLock();
-			if (fOwner->fPulseRunner == NULL)
-				fOwner->SetPulseRate(fOwner->PulseRate());
-		}
+    if (!fOwner->IsHidden())
+      Invalidate();
+  }
 
-		if (!fOwner->IsHidden())
-			Invalidate();
-	}
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling) {
+    // we need to check for fAttached as new views could have been
+    // added in AttachedToWindow() - and those are already attached
+    if (!child->fAttached)
+      child->_Attach();
+  }
 
-	for (BView* child = fFirstChild; child != NULL;
-			child = child->fNextSibling) {
-		// we need to check for fAttached as new views could have been
-		// added in AttachedToWindow() - and those are already attached
-		if (!child->fAttached)
-			child->_Attach();
-	}
-
-	AllAttached();
+  AllAttached();
 }
 
+void BView::_ColorsUpdated(BMessage *message) {
+  if (fTopLevelView && fLayoutData->fLayout != NULL &&
+      !fState->IsValid(B_VIEW_WHICH_VIEW_COLOR_BIT)) {
+    SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
+    SetHighUIColor(B_PANEL_TEXT_COLOR);
+  }
 
-void
-BView::_ColorsUpdated(BMessage* message)
-{
-	if (fTopLevelView
-		&& fLayoutData->fLayout != NULL
-		&& !fState->IsValid(B_VIEW_WHICH_VIEW_COLOR_BIT)) {
-		SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
-		SetHighUIColor(B_PANEL_TEXT_COLOR);
-	}
+  rgb_color color;
 
-	rgb_color color;
+  const char *colorName = ui_color_name(fState->which_view_color);
+  if (colorName != NULL && message->FindColor(colorName, &color) == B_OK) {
+    fState->view_color = tint_color(color, fState->which_view_color_tint);
+    fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
+  }
 
-	const char* colorName = ui_color_name(fState->which_view_color);
-	if (colorName != NULL && message->FindColor(colorName, &color) == B_OK) {
-		fState->view_color = tint_color(color, fState->which_view_color_tint);
-		fState->valid_flags |= B_VIEW_VIEW_COLOR_BIT;
-	}
+  colorName = ui_color_name(fState->which_low_color);
+  if (colorName != NULL && message->FindColor(colorName, &color) == B_OK) {
+    fState->low_color = tint_color(color, fState->which_low_color_tint);
+    fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
+  }
 
-	colorName = ui_color_name(fState->which_low_color);
-	if (colorName != NULL && message->FindColor(colorName, &color) == B_OK) {
-		fState->low_color = tint_color(color, fState->which_low_color_tint);
-		fState->valid_flags |= B_VIEW_LOW_COLOR_BIT;
-	}
+  colorName = ui_color_name(fState->which_high_color);
+  if (colorName != NULL && message->FindColor(colorName, &color) == B_OK) {
+    fState->high_color = tint_color(color, fState->which_high_color_tint);
+    fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
+  }
 
-	colorName = ui_color_name(fState->which_high_color);
-	if (colorName != NULL && message->FindColor(colorName, &color) == B_OK) {
-		fState->high_color = tint_color(color, fState->which_high_color_tint);
-		fState->valid_flags |= B_VIEW_HIGH_COLOR_BIT;
-	}
+  MessageReceived(message);
 
-	MessageReceived(message);
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling)
+    child->_ColorsUpdated(message);
 
-	for (BView* child = fFirstChild; child != NULL;
-			child = child->fNextSibling)
-		child->_ColorsUpdated(message);
-
-	Invalidate();
+  Invalidate();
 }
 
+void BView::_Detach() {
+  DetachedFromWindow();
+  fAttached = false;
 
-void
-BView::_Detach()
-{
-	DetachedFromWindow();
-	fAttached = false;
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling) {
+    child->_Detach();
+  }
 
-	for (BView* child = fFirstChild; child != NULL;
-			child = child->fNextSibling) {
-		child->_Detach();
-	}
+  AllDetached();
 
-	AllDetached();
+  if (fOwner) {
+    _CheckLock();
 
-	if (fOwner) {
-		_CheckLock();
+    if (!fOwner->IsHidden())
+      Invalidate();
 
-		if (!fOwner->IsHidden())
-			Invalidate();
+    // make sure our owner doesn't need us anymore
 
-		// make sure our owner doesn't need us anymore
+    if (fOwner->CurrentFocus() == this) {
+      MakeFocus(false);
+      // MakeFocus() is virtual and might not be
+      // passing through to the BView version,
+      // but we need to make sure at this point
+      // that we are not the focus view anymore.
+      if (fOwner->CurrentFocus() == this)
+        fOwner->_SetFocus(NULL, true);
+    }
 
-		if (fOwner->CurrentFocus() == this) {
-			MakeFocus(false);
-			// MakeFocus() is virtual and might not be
-			// passing through to the BView version,
-			// but we need to make sure at this point
-			// that we are not the focus view anymore.
-			if (fOwner->CurrentFocus() == this)
-				fOwner->_SetFocus(NULL, true);
-		}
+    if (fOwner->fDefaultButton == this)
+      fOwner->SetDefaultButton(NULL);
 
-		if (fOwner->fDefaultButton == this)
-			fOwner->SetDefaultButton(NULL);
+    if (fOwner->fKeyMenuBar == this)
+      fOwner->fKeyMenuBar = NULL;
 
-		if (fOwner->fKeyMenuBar == this)
-			fOwner->fKeyMenuBar = NULL;
+    if (fOwner->fLastMouseMovedView == this)
+      fOwner->fLastMouseMovedView = NULL;
 
-		if (fOwner->fLastMouseMovedView == this)
-			fOwner->fLastMouseMovedView = NULL;
+    if (fOwner->fLastViewToken == _get_object_token_(this))
+      fOwner->fLastViewToken = B_NULL_TOKEN;
 
-		if (fOwner->fLastViewToken == _get_object_token_(this))
-			fOwner->fLastViewToken = B_NULL_TOKEN;
-
-		_SetOwner(NULL);
-	}
+    _SetOwner(NULL);
+  }
 }
 
+void BView::_Draw(BRect updateRect) {
+  if (IsHidden(this) || !(Flags() & B_WILL_DRAW))
+    return;
 
-void
-BView::_Draw(BRect updateRect)
-{
-	if (IsHidden(this) || !(Flags() & B_WILL_DRAW))
-		return;
+  // NOTE: if ViewColor() == B_TRANSPARENT_COLOR and no B_WILL_DRAW
+  // -> View is simply not drawn at all
 
-	// NOTE: if ViewColor() == B_TRANSPARENT_COLOR and no B_WILL_DRAW
-	// -> View is simply not drawn at all
+  _SwitchServerCurrentView();
 
-	_SwitchServerCurrentView();
+  ConvertFromScreen(&updateRect);
 
-	ConvertFromScreen(&updateRect);
-
-	// TODO: make states robust (the hook implementation could
-	// mess things up if it uses non-matching Push- and PopState(),
-	// we would not be guaranteed to still have the same state on
-	// the stack after having called Draw())
-	PushState();
-	Draw(updateRect);
-	PopState();
-	Flush();
+  // TODO: make states robust (the hook implementation could
+  // mess things up if it uses non-matching Push- and PopState(),
+  // we would not be guaranteed to still have the same state on
+  // the stack after having called Draw())
+  PushState();
+  Draw(updateRect);
+  PopState();
+  Flush();
 }
 
+void BView::_DrawAfterChildren(BRect updateRect) {
+  if (IsHidden(this) || !(Flags() & B_WILL_DRAW) ||
+      !(Flags() & B_DRAW_ON_CHILDREN))
+    return;
 
-void
-BView::_DrawAfterChildren(BRect updateRect)
-{
-	if (IsHidden(this) || !(Flags() & B_WILL_DRAW)
-		|| !(Flags() & B_DRAW_ON_CHILDREN))
-		return;
+  _SwitchServerCurrentView();
 
-	_SwitchServerCurrentView();
+  ConvertFromScreen(&updateRect);
 
-	ConvertFromScreen(&updateRect);
-
-	// TODO: make states robust (see above)
-	PushState();
-	DrawAfterChildren(updateRect);
-	PopState();
-	Flush();
+  // TODO: make states robust (see above)
+  PushState();
+  DrawAfterChildren(updateRect);
+  PopState();
+  Flush();
 }
 
+void BView::_FontsUpdated(BMessage *message) {
+  MessageReceived(message);
 
-void
-BView::_FontsUpdated(BMessage* message)
-{
-	MessageReceived(message);
-
-	for (BView* child = fFirstChild; child != NULL;
-			child = child->fNextSibling) {
-		child->_FontsUpdated(message);
-	}
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling) {
+    child->_FontsUpdated(message);
+  }
 }
 
+void BView::_Pulse() {
+  if ((Flags() & B_PULSE_NEEDED) != 0)
+    Pulse();
 
-void
-BView::_Pulse()
-{
-	if ((Flags() & B_PULSE_NEEDED) != 0)
-		Pulse();
-
-	for (BView* child = fFirstChild; child != NULL;
-			child = child->fNextSibling) {
-		child->_Pulse();
-	}
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling) {
+    child->_Pulse();
+  }
 }
 
+void BView::_UpdateStateForRemove() {
+  // TODO: _CheckLockAndSwitchCurrent() would be good enough, no?
+  if (!_CheckOwnerLockAndSwitchCurrent())
+    return;
 
-void
-BView::_UpdateStateForRemove()
-{
-	// TODO: _CheckLockAndSwitchCurrent() would be good enough, no?
-	if (!_CheckOwnerLockAndSwitchCurrent())
-		return;
+  fState->UpdateFrom(*fOwner->fLink);
+  //	if (!fState->IsValid(B_VIEW_FRAME_BIT)) {
+  //		fOwner->fLink->StartMessage(AS_VIEW_GET_COORD);
+  //
+  //		status_t code;
+  //		if (fOwner->fLink->FlushWithReply(code) == B_OK
+  //			&& code == B_OK) {
+  //			fOwner->fLink->Read<BPoint>(&fParentOffset);
+  //			fOwner->fLink->Read<BRect>(&fBounds);
+  //			fState->valid_flags |= B_VIEW_FRAME_BIT;
+  //		}
+  //	}
 
-	fState->UpdateFrom(*fOwner->fLink);
-//	if (!fState->IsValid(B_VIEW_FRAME_BIT)) {
-//		fOwner->fLink->StartMessage(AS_VIEW_GET_COORD);
-//
-//		status_t code;
-//		if (fOwner->fLink->FlushWithReply(code) == B_OK
-//			&& code == B_OK) {
-//			fOwner->fLink->Read<BPoint>(&fParentOffset);
-//			fOwner->fLink->Read<BRect>(&fBounds);
-//			fState->valid_flags |= B_VIEW_FRAME_BIT;
-//		}
-//	}
+  // update children as well
 
-	// update children as well
-
-	for (BView* child = fFirstChild; child != NULL;
-			child = child->fNextSibling) {
-		if (child->fOwner)
-			child->_UpdateStateForRemove();
-	}
+  for (BView *child = fFirstChild; child != NULL; child = child->fNextSibling) {
+    if (child->fOwner)
+      child->_UpdateStateForRemove();
+  }
 }
 
+inline void BView::_UpdatePattern(::pattern pattern) {
+  if (fState->IsValid(B_VIEW_PATTERN_BIT) && pattern == fState->pattern)
+    return;
 
-inline void
-BView::_UpdatePattern(::pattern pattern)
-{
-	if (fState->IsValid(B_VIEW_PATTERN_BIT) && pattern == fState->pattern)
-		return;
+  if (fOwner) {
+    _CheckLockAndSwitchCurrent();
 
-	if (fOwner) {
-		_CheckLockAndSwitchCurrent();
+    fOwner->fLink->StartMessage(AS_VIEW_SET_PATTERN);
+    fOwner->fLink->Attach< ::pattern>(pattern);
 
-		fOwner->fLink->StartMessage(AS_VIEW_SET_PATTERN);
-		fOwner->fLink->Attach< ::pattern>(pattern);
+    fState->valid_flags |= B_VIEW_PATTERN_BIT;
+  }
 
-		fState->valid_flags |= B_VIEW_PATTERN_BIT;
-	}
-
-	fState->pattern = pattern;
+  fState->pattern = pattern;
 }
 
-
-void
-BView::_FlushIfNotInTransaction()
-{
-	if (!fOwner->fInTransaction) {
-		fOwner->Flush();
-	}
+void BView::_FlushIfNotInTransaction() {
+  if (!fOwner->fInTransaction) {
+    fOwner->Flush();
+  }
 }
 
+BShelf *BView::_Shelf() const { return fShelf; }
 
-BShelf*
-BView::_Shelf() const
-{
-	return fShelf;
+void BView::_SetShelf(BShelf *shelf) {
+  if (fShelf != NULL && fOwner != NULL)
+    fOwner->RemoveHandler(fShelf);
+
+  fShelf = shelf;
+
+  if (fShelf != NULL && fOwner != NULL)
+    fOwner->AddHandler(fShelf);
 }
 
+status_t BView::_SetViewBitmap(const BBitmap *bitmap, BRect srcRect,
+                               BRect dstRect, uint32 followFlags,
+                               uint32 options) {
+  if (!_CheckOwnerLockAndSwitchCurrent())
+    return B_ERROR;
 
-void
-BView::_SetShelf(BShelf* shelf)
-{
-	if (fShelf != NULL && fOwner != NULL)
-		fOwner->RemoveHandler(fShelf);
+  int32 serverToken = bitmap ? bitmap->_ServerToken() : -1;
 
-	fShelf = shelf;
+  fOwner->fLink->StartMessage(AS_VIEW_SET_VIEW_BITMAP);
+  fOwner->fLink->Attach<int32>(serverToken);
+  fOwner->fLink->Attach<BRect>(srcRect);
+  fOwner->fLink->Attach<BRect>(dstRect);
+  fOwner->fLink->Attach<int32>(followFlags);
+  fOwner->fLink->Attach<int32>(options);
 
-	if (fShelf != NULL && fOwner != NULL)
-		fOwner->AddHandler(fShelf);
+  status_t status = B_ERROR;
+  fOwner->fLink->FlushWithReply(status);
+
+  return status;
 }
 
+bool BView::_CheckOwnerLockAndSwitchCurrent() const {
+  STRACE(("BView(%s)::_CheckOwnerLockAndSwitchCurrent()\n", Name()));
 
-status_t
-BView::_SetViewBitmap(const BBitmap* bitmap, BRect srcRect, BRect dstRect,
-	uint32 followFlags, uint32 options)
-{
-	if (!_CheckOwnerLockAndSwitchCurrent())
-		return B_ERROR;
+  if (fOwner == NULL) {
+    debugger("View method requires owner and doesn't have one.");
+    return false;
+  }
 
-	int32 serverToken = bitmap ? bitmap->_ServerToken() : -1;
+  _CheckLockAndSwitchCurrent();
 
-	fOwner->fLink->StartMessage(AS_VIEW_SET_VIEW_BITMAP);
-	fOwner->fLink->Attach<int32>(serverToken);
-	fOwner->fLink->Attach<BRect>(srcRect);
-	fOwner->fLink->Attach<BRect>(dstRect);
-	fOwner->fLink->Attach<int32>(followFlags);
-	fOwner->fLink->Attach<int32>(options);
-
-	status_t status = B_ERROR;
-	fOwner->fLink->FlushWithReply(status);
-
-	return status;
+  return true;
 }
 
-
-bool
-BView::_CheckOwnerLockAndSwitchCurrent() const
-{
-	STRACE(("BView(%s)::_CheckOwnerLockAndSwitchCurrent()\n", Name()));
-
-	if (fOwner == NULL) {
-		debugger("View method requires owner and doesn't have one.");
-		return false;
-	}
-
-	_CheckLockAndSwitchCurrent();
-
-	return true;
+bool BView::_CheckOwnerLock() const {
+  if (fOwner) {
+    fOwner->check_lock();
+    return true;
+  } else {
+    debugger("View method requires owner and doesn't have one.");
+    return false;
+  }
 }
 
+void BView::_CheckLockAndSwitchCurrent() const {
+  STRACE(("BView(%s)::_CheckLockAndSwitchCurrent()\n", Name()));
 
-bool
-BView::_CheckOwnerLock() const
-{
-	if (fOwner) {
-		fOwner->check_lock();
-		return true;
-	} else {
-		debugger("View method requires owner and doesn't have one.");
-		return false;
-	}
+  if (!fOwner)
+    return;
+
+  fOwner->check_lock();
+
+  _SwitchServerCurrentView();
 }
 
-
-void
-BView::_CheckLockAndSwitchCurrent() const
-{
-	STRACE(("BView(%s)::_CheckLockAndSwitchCurrent()\n", Name()));
-
-	if (!fOwner)
-		return;
-
-	fOwner->check_lock();
-
-	_SwitchServerCurrentView();
+void BView::_CheckLock() const {
+  if (fOwner)
+    fOwner->check_lock();
 }
 
+void BView::_SwitchServerCurrentView() const {
+  int32 serverToken = _get_object_token_(this);
 
-void
-BView::_CheckLock() const
-{
-	if (fOwner)
-		fOwner->check_lock();
+  if (fOwner->fLastViewToken != serverToken) {
+    STRACE(("contacting app_server... sending token: %" B_PRId32 "\n",
+            serverToken));
+    fOwner->fLink->StartMessage(AS_SET_CURRENT_VIEW);
+    fOwner->fLink->Attach<int32>(serverToken);
+
+    fOwner->fLastViewToken = serverToken;
+  }
 }
 
+status_t BView::ScrollWithMouseWheelDelta(BScrollBar *scrollBar, float delta) {
+  if (scrollBar == NULL || delta == 0.0f)
+    return B_BAD_VALUE;
 
-void
-BView::_SwitchServerCurrentView() const
-{
-	int32 serverToken = _get_object_token_(this);
+  float smallStep;
+  float largeStep;
+  scrollBar->GetSteps(&smallStep, &largeStep);
 
-	if (fOwner->fLastViewToken != serverToken) {
-		STRACE(("contacting app_server... sending token: %" B_PRId32 "\n",
-			serverToken));
-		fOwner->fLink->StartMessage(AS_SET_CURRENT_VIEW);
-		fOwner->fLink->Attach<int32>(serverToken);
+  // pressing the shift key scrolls faster (following the pseudo-standard set
+  // by other desktop environments).
+  if ((modifiers() & B_SHIFT_KEY) != 0)
+    delta *= largeStep;
+  else
+    delta *= smallStep * 3;
 
-		fOwner->fLastViewToken = serverToken;
-	}
+  scrollBar->SetValue(scrollBar->Value() + delta);
+
+  return B_OK;
 }
 
-
-status_t
-BView::ScrollWithMouseWheelDelta(BScrollBar* scrollBar, float delta)
-{
-	if (scrollBar == NULL || delta == 0.0f)
-		return B_BAD_VALUE;
-
-	float smallStep;
-	float largeStep;
-	scrollBar->GetSteps(&smallStep, &largeStep);
-
-	// pressing the shift key scrolls faster (following the pseudo-standard set
-	// by other desktop environments).
-	if ((modifiers() & B_SHIFT_KEY) != 0)
-		delta *= largeStep;
-	else
-		delta *= smallStep * 3;
-
-	scrollBar->SetValue(scrollBar->Value() + delta);
-
-	return B_OK;
+extern "C" bool B_IF_GCC_2(_ReservedView11__5BView,
+                           _ZN5BView15_ReservedView11Ev)(BView *view,
+                                                         BPoint point,
+                                                         BToolTip **_toolTip) {
+  // GetToolTipAt()
+  perform_data_get_tool_tip_at data;
+  data.point = point;
+  data.tool_tip = _toolTip;
+  view->Perform(PERFORM_CODE_GET_TOOL_TIP_AT, &data);
+  return data.return_value;
 }
 
-
-extern "C" bool
-B_IF_GCC_2(_ReservedView11__5BView, _ZN5BView15_ReservedView11Ev)(
-	BView* view, BPoint point, BToolTip** _toolTip)
-{
-	// GetToolTipAt()
-	perform_data_get_tool_tip_at data;
-	data.point = point;
-	data.tool_tip = _toolTip;
-	view->Perform(PERFORM_CODE_GET_TOOL_TIP_AT, &data);
-	return data.return_value;
+extern "C" void B_IF_GCC_2(_ReservedView12__5BView,
+                           _ZN5BView15_ReservedView12Ev)(BView *view) {
+  // LayoutChanged();
+  view->Perform(PERFORM_CODE_LAYOUT_CHANGED, NULL);
 }
-
-
-extern "C" void
-B_IF_GCC_2(_ReservedView12__5BView, _ZN5BView15_ReservedView12Ev)(
-	BView* view)
-{
-	// LayoutChanged();
-	view->Perform(PERFORM_CODE_LAYOUT_CHANGED, NULL);
-}
-
 
 void BView::_ReservedView13() {}
 void BView::_ReservedView14() {}
 void BView::_ReservedView15() {}
 void BView::_ReservedView16() {}
 
-
-BView::BView(const BView& other)
-	:
-	BHandler()
-{
-	// this is private and not functional, but exported
+BView::BView(const BView &other) : BHandler() {
+  // this is private and not functional, but exported
 }
 
-
-BView&
-BView::operator=(const BView& other)
-{
-	// this is private and not functional, but exported
-	return *this;
+BView &BView::operator=(const BView &other) {
+  // this is private and not functional, but exported
+  return *this;
 }
 
+void BView::_PrintToStream() {
+  printf("BView::_PrintToStream()\n");
+  printf("\tName: %s\n"
+         "\tParent: %s\n"
+         "\tFirstChild: %s\n"
+         "\tNextSibling: %s\n"
+         "\tPrevSibling: %s\n"
+         "\tOwner(Window): %s\n"
+         "\tToken: %" B_PRId32 "\n"
+         "\tFlags: %" B_PRId32 "\n"
+         "\tView origin: (%f,%f)\n"
+         "\tView Bounds rectangle: (%f,%f,%f,%f)\n"
+         "\tShow level: %d\n"
+         "\tTopView?: %s\n"
+         "\tBPicture: %s\n"
+         "\tVertical Scrollbar %s\n"
+         "\tHorizontal Scrollbar %s\n"
+         "\tIs Printing?: %s\n"
+         "\tShelf?: %s\n"
+         "\tEventMask: %" B_PRId32 "\n"
+         "\tEventOptions: %" B_PRId32 "\n",
+         Name(), fParent ? fParent->Name() : "NULL",
+         fFirstChild ? fFirstChild->Name() : "NULL",
+         fNextSibling ? fNextSibling->Name() : "NULL",
+         fPreviousSibling ? fPreviousSibling->Name() : "NULL",
+         fOwner ? fOwner->Name() : "NULL", _get_object_token_(this), fFlags,
+         fParentOffset.x, fParentOffset.y, fBounds.left, fBounds.top,
+         fBounds.right, fBounds.bottom, fShowLevel,
+         fTopLevelView ? "YES" : "NO", fCurrentPicture ? "YES" : "NULL",
+         fVerScroller ? "YES" : "NULL", fHorScroller ? "YES" : "NULL",
+         fIsPrinting ? "YES" : "NO", fShelf ? "YES" : "NO", fEventMask,
+         fEventOptions);
 
-void
-BView::_PrintToStream()
-{
-	printf("BView::_PrintToStream()\n");
-	printf("\tName: %s\n"
-		"\tParent: %s\n"
-		"\tFirstChild: %s\n"
-		"\tNextSibling: %s\n"
-		"\tPrevSibling: %s\n"
-		"\tOwner(Window): %s\n"
-		"\tToken: %" B_PRId32 "\n"
-		"\tFlags: %" B_PRId32 "\n"
-		"\tView origin: (%f,%f)\n"
-		"\tView Bounds rectangle: (%f,%f,%f,%f)\n"
-		"\tShow level: %d\n"
-		"\tTopView?: %s\n"
-		"\tBPicture: %s\n"
-		"\tVertical Scrollbar %s\n"
-		"\tHorizontal Scrollbar %s\n"
-		"\tIs Printing?: %s\n"
-		"\tShelf?: %s\n"
-		"\tEventMask: %" B_PRId32 "\n"
-		"\tEventOptions: %" B_PRId32 "\n",
-	Name(),
-	fParent ? fParent->Name() : "NULL",
-	fFirstChild ? fFirstChild->Name() : "NULL",
-	fNextSibling ? fNextSibling->Name() : "NULL",
-	fPreviousSibling ? fPreviousSibling->Name() : "NULL",
-	fOwner ? fOwner->Name() : "NULL",
-	_get_object_token_(this),
-	fFlags,
-	fParentOffset.x, fParentOffset.y,
-	fBounds.left, fBounds.top, fBounds.right, fBounds.bottom,
-	fShowLevel,
-	fTopLevelView ? "YES" : "NO",
-	fCurrentPicture? "YES" : "NULL",
-	fVerScroller? "YES" : "NULL",
-	fHorScroller? "YES" : "NULL",
-	fIsPrinting? "YES" : "NO",
-	fShelf? "YES" : "NO",
-	fEventMask,
-	fEventOptions);
+  printf("\tState status:\n"
+         "\t\tLocalCoordianteSystem: (%f,%f)\n"
+         "\t\tPenLocation: (%f,%f)\n"
+         "\t\tPenSize: %f\n"
+         "\t\tHighColor: [%d,%d,%d,%d]\n"
+         "\t\tLowColor: [%d,%d,%d,%d]\n"
+         "\t\tViewColor: [%d,%d,%d,%d]\n"
+         "\t\tPattern: %" B_PRIx64 "\n"
+         "\t\tDrawingMode: %d\n"
+         "\t\tLineJoinMode: %d\n"
+         "\t\tLineCapMode: %d\n"
+         "\t\tMiterLimit: %f\n"
+         "\t\tAlphaSource: %d\n"
+         "\t\tAlphaFuntion: %d\n"
+         "\t\tScale: %f\n"
+         "\t\t(Print)FontAliasing: %s\n"
+         "\t\tFont Info:\n",
+         fState->origin.x, fState->origin.y, fState->pen_location.x,
+         fState->pen_location.y, fState->pen_size, fState->high_color.red,
+         fState->high_color.blue, fState->high_color.green,
+         fState->high_color.alpha, fState->low_color.red,
+         fState->low_color.blue, fState->low_color.green,
+         fState->low_color.alpha, fState->view_color.red,
+         fState->view_color.blue, fState->view_color.green,
+         fState->view_color.alpha, *((uint64 *)&(fState->pattern)),
+         fState->drawing_mode, fState->line_join, fState->line_cap,
+         fState->miter_limit, fState->alpha_source_mode,
+         fState->alpha_function_mode, fState->scale,
+         fState->font_aliasing ? "YES" : "NO");
 
-	printf("\tState status:\n"
-		"\t\tLocalCoordianteSystem: (%f,%f)\n"
-		"\t\tPenLocation: (%f,%f)\n"
-		"\t\tPenSize: %f\n"
-		"\t\tHighColor: [%d,%d,%d,%d]\n"
-		"\t\tLowColor: [%d,%d,%d,%d]\n"
-		"\t\tViewColor: [%d,%d,%d,%d]\n"
-		"\t\tPattern: %" B_PRIx64 "\n"
-		"\t\tDrawingMode: %d\n"
-		"\t\tLineJoinMode: %d\n"
-		"\t\tLineCapMode: %d\n"
-		"\t\tMiterLimit: %f\n"
-		"\t\tAlphaSource: %d\n"
-		"\t\tAlphaFuntion: %d\n"
-		"\t\tScale: %f\n"
-		"\t\t(Print)FontAliasing: %s\n"
-		"\t\tFont Info:\n",
-	fState->origin.x, fState->origin.y,
-	fState->pen_location.x, fState->pen_location.y,
-	fState->pen_size,
-	fState->high_color.red, fState->high_color.blue, fState->high_color.green, fState->high_color.alpha,
-	fState->low_color.red, fState->low_color.blue, fState->low_color.green, fState->low_color.alpha,
-	fState->view_color.red, fState->view_color.blue, fState->view_color.green, fState->view_color.alpha,
-	*((uint64*)&(fState->pattern)),
-	fState->drawing_mode,
-	fState->line_join,
-	fState->line_cap,
-	fState->miter_limit,
-	fState->alpha_source_mode,
-	fState->alpha_function_mode,
-	fState->scale,
-	fState->font_aliasing? "YES" : "NO");
+  fState->font.PrintToStream();
 
-	fState->font.PrintToStream();
-
-	// TODO: also print the line array.
+  // TODO: also print the line array.
 }
 
+void BView::_PrintTree() {
+  int32 spaces = 2;
+  BView *c = fFirstChild; // c = short for: current
+  printf("'%s'\n", Name());
+  if (c != NULL) {
+    while (true) {
+      // action block
+      {
+        for (int i = 0; i < spaces; i++)
+          printf(" ");
 
-void
-BView::_PrintTree()
-{
-	int32 spaces = 2;
-	BView* c = fFirstChild; //c = short for: current
-	printf( "'%s'\n", Name() );
-	if (c != NULL) {
-		while(true) {
-			// action block
-			{
-				for (int i = 0; i < spaces; i++)
-					printf(" ");
+        printf("'%s'\n", c->Name());
+      }
 
-				printf( "'%s'\n", c->Name() );
-			}
+      // go deep
+      if (c->fFirstChild) {
+        c = c->fFirstChild;
+        spaces += 2;
+      } else {
+        // go right
+        if (c->fNextSibling) {
+          c = c->fNextSibling;
+        } else {
+          // go up
+          while (!c->fParent->fNextSibling && c->fParent != this) {
+            c = c->fParent;
+            spaces -= 2;
+          }
 
-			// go deep
-			if (c->fFirstChild) {
-				c = c->fFirstChild;
-				spaces += 2;
-			} else {
-				// go right
-				if (c->fNextSibling) {
-					c = c->fNextSibling;
-				} else {
-					// go up
-					while (!c->fParent->fNextSibling && c->fParent != this) {
-						c = c->fParent;
-						spaces -= 2;
-					}
+          // that enough! We've reached this view.
+          if (c->fParent == this)
+            break;
 
-					// that enough! We've reached this view.
-					if (c->fParent == this)
-						break;
-
-					c = c->fParent->fNextSibling;
-					spaces -= 2;
-				}
-			}
-		}
-	}
+          c = c->fParent->fNextSibling;
+          spaces -= 2;
+        }
+      }
+    }
+  }
 }
-
 
 // #pragma mark -
 
-
-BLayoutItem*
-BView::Private::LayoutItemAt(int32 index)
-{
-	return fView->fLayoutData->fLayoutItems.ItemAt(index);
+BLayoutItem *BView::Private::LayoutItemAt(int32 index) {
+  return fView->fLayoutData->fLayoutItems.ItemAt(index);
 }
 
-
-int32
-BView::Private::CountLayoutItems()
-{
-	return fView->fLayoutData->fLayoutItems.CountItems();
+int32 BView::Private::CountLayoutItems() {
+  return fView->fLayoutData->fLayoutItems.CountItems();
 }
 
-
-void
-BView::Private::RegisterLayoutItem(BLayoutItem* item)
-{
-	fView->fLayoutData->fLayoutItems.AddItem(item);
+void BView::Private::RegisterLayoutItem(BLayoutItem *item) {
+  fView->fLayoutData->fLayoutItems.AddItem(item);
 }
 
-
-void
-BView::Private::DeregisterLayoutItem(BLayoutItem* item)
-{
-	fView->fLayoutData->fLayoutItems.RemoveItem(item);
+void BView::Private::DeregisterLayoutItem(BLayoutItem *item) {
+  fView->fLayoutData->fLayoutItems.RemoveItem(item);
 }
 
+bool BView::Private::MinMaxValid() { return fView->fLayoutData->fMinMaxValid; }
 
-bool
-BView::Private::MinMaxValid()
-{
-	return fView->fLayoutData->fMinMaxValid;
-}
-
-
-bool
-BView::Private::WillLayout()
-{
-	BView::LayoutData* data = fView->fLayoutData;
-	if (data->fLayoutInProgress)
-		return false;
-	if (data->fNeedsRelayout || !data->fLayoutValid || !data->fMinMaxValid)
-		return true;
-	return false;
+bool BView::Private::WillLayout() {
+  BView::LayoutData *data = fView->fLayoutData;
+  if (data->fLayoutInProgress)
+    return false;
+  if (data->fNeedsRelayout || !data->fLayoutValid || !data->fMinMaxValid)
+    return true;
+  return false;
 }

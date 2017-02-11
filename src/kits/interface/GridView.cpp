@@ -5,72 +5,44 @@
  * Distributed under the terms of the MIT License.
  */
 
-
 #include <os/interface/GridView.h>
 
-
 BGridView::BGridView(float horizontalSpacing, float verticalSpacing)
-	:
-	BView(NULL, 0, new BGridLayout(horizontalSpacing, verticalSpacing))
-{
-	AdoptSystemColors();
+    : BView(NULL, 0, new BGridLayout(horizontalSpacing, verticalSpacing)) {
+  AdoptSystemColors();
 }
 
-
-BGridView::BGridView(const char* name, float horizontalSpacing,
-	float verticalSpacing)
-	:
-	BView(name, 0, new BGridLayout(horizontalSpacing, verticalSpacing))
-{
-	AdoptSystemColors();
+BGridView::BGridView(const char *name, float horizontalSpacing,
+                     float verticalSpacing)
+    : BView(name, 0, new BGridLayout(horizontalSpacing, verticalSpacing)) {
+  AdoptSystemColors();
 }
 
+BGridView::BGridView(BMessage *from) : BView(from) {}
 
-BGridView::BGridView(BMessage* from)
-	:
-	BView(from)
-{
+BGridView::~BGridView() {}
+
+void BGridView::SetLayout(BLayout *layout) {
+  // only BGridLayouts are allowed
+  if (!dynamic_cast<BGridLayout *>(layout))
+    return;
+
+  BView::SetLayout(layout);
 }
 
-
-BGridView::~BGridView()
-{
+BGridLayout *BGridView::GridLayout() const {
+  return dynamic_cast<BGridLayout *>(GetLayout());
 }
 
-
-void
-BGridView::SetLayout(BLayout* layout)
-{
-	// only BGridLayouts are allowed
-	if (!dynamic_cast<BGridLayout*>(layout))
-		return;
-
-	BView::SetLayout(layout);
+BArchivable *BGridView::Instantiate(BMessage *from) {
+  if (validate_instantiation(from, "BGridView"))
+    return new BGridView(from);
+  return NULL;
 }
 
-
-BGridLayout*
-BGridView::GridLayout() const
-{
-	return dynamic_cast<BGridLayout*>(GetLayout());
+status_t BGridView::Perform(perform_code code, void *_data) {
+  return BView::Perform(code, _data);
 }
-
-
-BArchivable*
-BGridView::Instantiate(BMessage* from)
-{
-	if (validate_instantiation(from, "BGridView"))
-		return new BGridView(from);
-	return NULL;
-}
-
-
-status_t
-BGridView::Perform(perform_code code, void* _data)
-{
-	return BView::Perform(code, _data);
-}
-
 
 void BGridView::_ReservedGridView1() {}
 void BGridView::_ReservedGridView2() {}

@@ -8,55 +8,43 @@
 #ifndef __LINE_BUFFER_H
 #define __LINE_BUFFER_H
 
-
-#include <os/support/SupportDefs.h>
 #include <os/interface/TextView.h>
+#include <os/support/SupportDefs.h>
 
 #include "private/interface/TextViewSupportBuffer.h"
 
 struct STELine {
-	long		offset;		// offset of first character of line
-	float		origin;		// pixel position of top of line
-	float		ascent;		// maximum ascent for line
-	float		width;		// cached width of line in pixels
+  long offset;  // offset of first character of line
+  float origin; // pixel position of top of line
+  float ascent; // maximum ascent for line
+  float width;  // cached width of line in pixels
 };
-
 
 class BTextView::LineBuffer : public _BTextViewSupportBuffer_<STELine> {
 
 public:
-								LineBuffer();
-	virtual						~LineBuffer();
+  LineBuffer();
+  virtual ~LineBuffer();
 
-			void				InsertLine(STELine* inLine, int32 index);
-			void				RemoveLines(int32 index, int32 count = 1);
-			void				RemoveLineRange(int32 fromOffset,
-									int32 toOffset);
+  void InsertLine(STELine *inLine, int32 index);
+  void RemoveLines(int32 index, int32 count = 1);
+  void RemoveLineRange(int32 fromOffset, int32 toOffset);
 
-			int32				OffsetToLine(int32 offset) const;
-			int32				PixelToLine(float pixel) const;
+  int32 OffsetToLine(int32 offset) const;
+  int32 PixelToLine(float pixel) const;
 
-			void				BumpOrigin(float delta, int32 index);
-			void				BumpOffset(int32 delta, int32 index);
+  void BumpOrigin(float delta, int32 index);
+  void BumpOffset(int32 delta, int32 index);
 
-			int32				NumLines() const;
-			float				MaxWidth() const;
-			STELine*			operator[](int32 index) const;
+  int32 NumLines() const;
+  float MaxWidth() const;
+  STELine *operator[](int32 index) const;
 };
 
+inline int32 BTextView::LineBuffer::NumLines() const { return fItemCount - 1; }
 
-inline int32
-BTextView::LineBuffer::NumLines() const
-{
-	return fItemCount - 1;
+inline STELine *BTextView::LineBuffer::operator[](int32 index) const {
+  return &fBuffer[index];
 }
 
-
-inline STELine *
-BTextView::LineBuffer::operator[](int32 index) const
-{
-	return &fBuffer[index];
-}
-
-
-#endif	// __LINE_BUFFER_H
+#endif // __LINE_BUFFER_H

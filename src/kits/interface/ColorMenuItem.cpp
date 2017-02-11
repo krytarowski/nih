@@ -6,7 +6,6 @@
  *		John Scipione, jscipione@gmail.com
  */
 
-
 #include "private/interface/ColorMenuItem.h"
 
 #include <math.h>
@@ -18,198 +17,153 @@
 #include <os/interface/MenuField.h>
 #include <private/interface/MenuPrivate.h>
 
-
 // golden ratio
 #ifdef M_PHI
-#	undef M_PHI
+#undef M_PHI
 #endif
 #define M_PHI 1.61803398874989484820
 
-
 //	#pragma - ColorMenuItem
 
+BColorMenuItem::BColorMenuItem(const char *label, BMessage *message,
+                               rgb_color color, char shortcut, uint32 modifiers)
+    : BMenuItem(label, message, shortcut, modifiers), fColor(color) {}
 
-BColorMenuItem::BColorMenuItem(const char* label, BMessage* message,
-	rgb_color color, char shortcut, uint32 modifiers)
-	:
-	BMenuItem(label, message, shortcut, modifiers),
-	fColor(color)
-{
+BColorMenuItem::BColorMenuItem(BMenu *menu, rgb_color color, BMessage *message)
+    : BMenuItem(menu, message), fColor(color) {}
+
+BColorMenuItem::BColorMenuItem(BMessage *data) : BMenuItem(data) {
+  if (data->HasColor("_color")) {
+    rgb_color color;
+
+    color = data->GetColor("_color", (rgb_color){0, 0, 0});
+    fColor = color;
+  } else
+    fColor = (rgb_color){0, 0, 0};
 }
 
+BArchivable *BColorMenuItem::Instantiate(BMessage *data) {
+  if (validate_instantiation(data, "BColorMenuItem"))
+    return new BColorMenuItem(data);
 
-BColorMenuItem::BColorMenuItem(BMenu* menu, rgb_color color,
-	BMessage* message)
-	:
-	BMenuItem(menu, message),
-	fColor(color)
-{
+  return NULL;
 }
 
+status_t BColorMenuItem::Archive(BMessage *data, bool deep) const {
+  status_t result = BMenuItem::Archive(data, deep);
 
-BColorMenuItem::BColorMenuItem(BMessage* data)
-	:
-	BMenuItem(data)
-{
-	if (data->HasColor("_color")) {
-		rgb_color color;
+  if (result == B_OK)
+    result = data->AddColor("_color", fColor);
 
-		color = data->GetColor("_color", (rgb_color){ 0, 0, 0 });
-		fColor = color;
-	} else
-		fColor = (rgb_color){ 0, 0, 0 };
+  return result;
 }
 
+void BColorMenuItem::DrawContent() {
+  float leftMargin = _LeftMargin();
+  float padding = _Padding();
+  float colorRectWidth = _ColorRectWidth();
 
-BArchivable*
-BColorMenuItem::Instantiate(BMessage* data)
-{
-	if (validate_instantiation(data, "BColorMenuItem"))
-		return new BColorMenuItem(data);
+  BRect colorRect(Frame().InsetByCopy(2.0f, 2.0f));
+  colorRect.left = colorRect.right = leftMargin;
+  colorRect.right += colorRectWidth;
 
-	return NULL;
+  rgb_color highColor = Menu()->HighColor();
+
+  Menu()->SetDrawingMode(B_OP_OVER);
+
+  Menu()->SetHighColor(fColor);
+  Menu()->FillRect(colorRect);
+
+  Menu()->SetHighColor(ui_color(B_CONTROL_BORDER_COLOR));
+  Menu()->StrokeRect(colorRect);
+
+  float width = colorRectWidth + padding;
+
+  Menu()->MovePenBy(width, 0.0f);
+  Menu()->SetHighColor(highColor);
+
+  BMenuItem::DrawContent();
 }
 
+void BColorMenuItem::GetContentSize(float *_width, float *_height) {
+  float labelWidth;
+  float height;
+  BMenuItem::GetContentSize(&labelWidth, &height);
 
-status_t
-BColorMenuItem::Archive(BMessage* data, bool deep) const
-{
-	status_t result = BMenuItem::Archive(data, deep);
+  if (_width != NULL)
+    *_width = _LeftMargin() + _ColorRectWidth() + _Padding() + labelWidth;
 
-	if (result == B_OK)
-		result = data->AddColor("_color", fColor);
-
-	return result;
+  if (_height != NULL)
+    *_height = height;
 }
 
+void BColorMenuItem::SetMarked(bool mark) {
+  BMenuItem::SetMarked(mark);
 
-void
-BColorMenuItem::DrawContent()
-{
-	float leftMargin = _LeftMargin();
-	float padding = _Padding();
-	float colorRectWidth = _ColorRectWidth();
+  if (!mark)
+    return;
 
-	BRect colorRect(Frame().InsetByCopy(2.0f, 2.0f));
-	colorRect.left = colorRect.right = leftMargin;
-	colorRect.right += colorRectWidth;
+  // we are marking the item
 
-	rgb_color highColor = Menu()->HighColor();
+  BMenu *menu = Menu();
+  if (menu == NULL)
+    return;
 
-	Menu()->SetDrawingMode(B_OP_OVER);
+  // we have a parent menu
 
-	Menu()->SetHighColor(fColor);
-	Menu()->FillRect(colorRect);
+  BMenu *_menu = menu;
+  while ((_menu = _menu->Supermenu()) != NULL)
+    menu = _menu;
 
-	Menu()->SetHighColor(ui_color(B_CONTROL_BORDER_COLOR));
-	Menu()->StrokeRect(colorRect);
+  // went up the hierarchy to found the topmost menu
 
-	float width = colorRectWidth + padding;
+  if (menu == NULL || menu->Parent() == NULL)
+    return;
 
-	Menu()->MovePenBy(width, 0.0f);
-	Menu()->SetHighColor(highColor);
+  // our topmost menu has a parent
 
-	BMenuItem::DrawContent();
+  if (dynamic_cast<BMenuField *>(menu->Parent()) == NULL)
+    return;
+
+  // our topmost menu's parent is a BMenuField
+
+  BMenuItem *topLevelItem = menu->ItemAt((int32)0);
+
+  if (topLevelItem == NULL)
+    return;
+
+  // our topmost menu has a menu item
+
+  BColorMenuItem *topLevelColorMenuItem =
+      dynamic_cast<BColorMenuItem *>(topLevelItem);
+  if (topLevelColorMenuItem == NULL)
+    return;
+
+  // our topmost menu's item is a BColorMenuItem
+
+  // update the color
+  topLevelColorMenuItem->SetColor(fColor);
+  menu->Invalidate();
 }
-
-
-void
-BColorMenuItem::GetContentSize(float* _width, float* _height)
-{
-	float labelWidth;
-	float height;
-	BMenuItem::GetContentSize(&labelWidth, &height);
-
-	if (_width != NULL)
-		*_width = _LeftMargin() + _ColorRectWidth() + _Padding() + labelWidth;
-
-	if (_height != NULL)
-		*_height = height;
-}
-
-
-void
-BColorMenuItem::SetMarked(bool mark)
-{
-	BMenuItem::SetMarked(mark);
-
-	if (!mark)
-		return;
-
-	// we are marking the item
-
-	BMenu* menu = Menu();
-	if (menu == NULL)
-		return;
-
-	// we have a parent menu
-
-	BMenu* _menu = menu;
-	while ((_menu = _menu->Supermenu()) != NULL)
-		menu = _menu;
-
-	// went up the hierarchy to found the topmost menu
-
-	if (menu == NULL || menu->Parent() == NULL)
-		return;
-
-	// our topmost menu has a parent
-
-	if (dynamic_cast<BMenuField*>(menu->Parent()) == NULL)
-		return;
-
-	// our topmost menu's parent is a BMenuField
-
-	BMenuItem* topLevelItem = menu->ItemAt((int32)0);
-
-	if (topLevelItem == NULL)
-		return;
-
-	// our topmost menu has a menu item
-
-	BColorMenuItem* topLevelColorMenuItem
-		= dynamic_cast<BColorMenuItem*>(topLevelItem);
-	if (topLevelColorMenuItem == NULL)
-		return;
-
-	// our topmost menu's item is a BColorMenuItem
-
-	// update the color
-	topLevelColorMenuItem->SetColor(fColor);
-	menu->Invalidate();
-}
-
 
 //	#pragma mark - BColorMenuItem private methods
 
-
-float
-BColorMenuItem::_LeftMargin()
-{
-	BPrivate::MenuPrivate menuPrivate(Menu());
-	float leftMargin;
-	menuPrivate.GetItemMargins(&leftMargin, NULL, NULL, NULL);
-	return leftMargin;
+float BColorMenuItem::_LeftMargin() {
+  BPrivate::MenuPrivate menuPrivate(Menu());
+  float leftMargin;
+  menuPrivate.GetItemMargins(&leftMargin, NULL, NULL, NULL);
+  return leftMargin;
 }
 
-
-float
-BColorMenuItem::_Padding()
-{
-	return floorf(std::max(14.0f, be_plain_font->Size() + 2) / 2);
+float BColorMenuItem::_Padding() {
+  return floorf(std::max(14.0f, be_plain_font->Size() + 2) / 2);
 }
 
-
-float
-BColorMenuItem::_ColorRectWidth()
-{
-	return floorf(std::max(14.0f, be_plain_font->Size() + 2) * M_PHI);
+float BColorMenuItem::_ColorRectWidth() {
+  return floorf(std::max(14.0f, be_plain_font->Size() + 2) * M_PHI);
 }
-
-
 
 // #pragma mark - BColorMenuItem reserved virtual methods
-
 
 void BColorMenuItem::_ReservedColorMenuItem1() {}
 void BColorMenuItem::_ReservedColorMenuItem2() {}

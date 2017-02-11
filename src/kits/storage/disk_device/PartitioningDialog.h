@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-//  This software is part of the OpenBeOS distribution and is covered 
+//  This software is part of the OpenBeOS distribution and is covered
 //  by the OpenBeOS license.
 //---------------------------------------------------------------------
 
@@ -15,27 +15,27 @@ namespace BPrivate {
 
 class PartitioningDialog : public BWindow {
 public:
-	PartitioningDialog(BRect dialogCenter);
-	virtual ~PartitioningDialog();
+  PartitioningDialog(BRect dialogCenter);
+  virtual ~PartitioningDialog();
 
-	virtual void MessageReceived(BMessage *message);
-	virtual bool QuitRequested();
+  virtual void MessageReceived(BMessage *message);
+  virtual bool QuitRequested();
 
-	status_t Go(BDiskScannerParameterEditor *editor, bool *cancelled);
-
-private:
-	status_t _Init(BDiskScannerParameterEditor *editor);
+  status_t Go(BDiskScannerParameterEditor *editor, bool *cancelled);
 
 private:
-	BDiskScannerParameterEditor	*fEditor;
-	BView						*fEditorView;
-	sem_id						fBlocker;
-	bool						*fCancelled;
-	BPoint						fCenter;
+  status_t _Init(BDiskScannerParameterEditor *editor);
+
+private:
+  BDiskScannerParameterEditor *fEditor;
+  BView *fEditorView;
+  sem_id fBlocker;
+  bool *fCancelled;
+  BPoint fCenter;
 };
 
-}	// namespace BPrivate
+} // namespace BPrivate
 
 using BPrivate::PartitioningDialog;
 
-#endif	// _PARTITIONING_DIALOG_H
+#endif // _PARTITIONING_DIALOG_H

@@ -1,34 +1,20 @@
 //----------------------------------------------------------------------
-//  This software is part of the OpenBeOS distribution and is covered 
+//  This software is part of the OpenBeOS distribution and is covered
 //  by the OpenBeOS license.
 //---------------------------------------------------------------------
 /*!
-	\file DisjList.cpp
-	MIME sniffer Disjunction List class implementation
+        \file DisjList.cpp
+        MIME sniffer Disjunction List class implementation
 */
 
 #include <private/storage/sniffer/DisjList.h>
 
 using namespace BPrivate::Storage::Sniffer;
 
-DisjList::DisjList()
-	: fCaseInsensitive(false)
-{
-}
+DisjList::DisjList() : fCaseInsensitive(false) {}
 
-DisjList::~DisjList() {
-}
+DisjList::~DisjList() {}
 
-void
-DisjList::SetCaseInsensitive(bool how) {
-	fCaseInsensitive = how;
-}
+void DisjList::SetCaseInsensitive(bool how) { fCaseInsensitive = how; }
 
-bool
-DisjList::IsCaseInsensitive() {
-	return fCaseInsensitive;
-}
-
-
-
-
+bool DisjList::IsCaseInsensitive() { return fCaseInsensitive; }

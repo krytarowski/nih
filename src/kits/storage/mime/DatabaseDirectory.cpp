@@ -6,74 +6,56 @@
  *		Ingo Weinhold <ingo_weinhold@gmx.de>
  */
 
-
 #include <private/storage/mime/DatabaseDirectory.h>
 
 #include <os/kernel/fs_attr.h>
 #include <os/storage/Node.h>
 #include <os/support/StringList.h>
 
-#include <private/storage/mime/database_support.h>
 #include <private/storage/mime/DatabaseLocation.h>
-
+#include <private/storage/mime/database_support.h>
 
 namespace BPrivate {
 namespace Storage {
 namespace Mime {
 
+DatabaseDirectory::DatabaseDirectory() : BMergedDirectory(B_COMPARE) {}
 
-DatabaseDirectory::DatabaseDirectory()
-	:
-	BMergedDirectory(B_COMPARE)
-{
+DatabaseDirectory::~DatabaseDirectory() {}
+
+status_t DatabaseDirectory::Init(DatabaseLocation *databaseLocation,
+                                 const char *superType) {
+  status_t error = BMergedDirectory::Init();
+  if (error != B_OK)
+    return error;
+
+  const BStringList &directories = databaseLocation->Directories();
+  int32 count = directories.CountStrings();
+  for (int32 i = 0; i < count; i++) {
+    BString directory = directories.StringAt(i);
+    if (superType != NULL)
+      directory << '/' << superType;
+
+    AddDirectory(directory);
+  }
+
+  return B_OK;
 }
 
-
-DatabaseDirectory::~DatabaseDirectory()
-{
+bool DatabaseDirectory::ShallPreferFirstEntry(const entry_ref &entry1,
+                                              int32 index1,
+                                              const entry_ref &entry2,
+                                              int32 index2) {
+  return _IsValidMimeTypeEntry(entry1) || !_IsValidMimeTypeEntry(entry2);
 }
 
-
-status_t
-DatabaseDirectory::Init(DatabaseLocation* databaseLocation,
-	const char* superType)
-{
-	status_t error = BMergedDirectory::Init();
-	if (error != B_OK)
-		return error;
-
-	const BStringList& directories = databaseLocation->Directories();
-	int32 count = directories.CountStrings();
-	for (int32 i = 0; i < count; i++) {
-		BString directory = directories.StringAt(i);
-		if (superType != NULL)
-			directory << '/' << superType;
-
-		AddDirectory(directory);
-	}
-
-	return B_OK;
+bool DatabaseDirectory::_IsValidMimeTypeEntry(const entry_ref &entry) {
+  // check whether the MIME:TYPE attribute exists
+  BNode node;
+  attr_info info;
+  return node.SetTo(&entry) == B_OK &&
+         node.GetAttrInfo(BPrivate::Storage::Mime::kTypeAttr, &info) == B_OK;
 }
-
-
-bool
-DatabaseDirectory::ShallPreferFirstEntry(const entry_ref& entry1, int32 index1,
-	const entry_ref& entry2, int32 index2)
-{
-	return _IsValidMimeTypeEntry(entry1) || !_IsValidMimeTypeEntry(entry2);
-}
-
-
-bool
-DatabaseDirectory::_IsValidMimeTypeEntry(const entry_ref& entry)
-{
-	// check whether the MIME:TYPE attribute exists
-	BNode node;
-	attr_info info;
-	return node.SetTo(&entry) == B_OK
-		&& node.GetAttrInfo(BPrivate::Storage::Mime::kTypeAttr, &info) == B_OK;
-}
-
 
 } // namespace Mime
 } // namespace Storage

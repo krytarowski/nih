@@ -7,158 +7,114 @@
  *		Ingo Weinhold, ingo_weinhold@gmx.de
  */
 
-
 #include <new>
 #include <string.h>
 
-#include <os/storage/SymLink.h>
 #include <os/storage/Directory.h>
 #include <os/storage/Entry.h>
 #include <os/storage/Path.h>
+#include <os/storage/SymLink.h>
 
 #include "private/storage/storage_support.h"
 
-
 using namespace std;
 
-
 // Creates an uninitialized BSymLink object.
-BSymLink::BSymLink()
-{
-}
-
+BSymLink::BSymLink() {}
 
 // Creates a copy of the supplied BSymLink object.
-BSymLink::BSymLink(const BSymLink& other)
-	:
-	BNode(other)
-{
-}
-
+BSymLink::BSymLink(const BSymLink &other) : BNode(other) {}
 
 // Creates a BSymLink object and initializes it to the symbolic link referred
 // to by the supplied entry_ref.
-BSymLink::BSymLink(const entry_ref* ref)
-	:
-	BNode(ref)
-{
-}
-
+BSymLink::BSymLink(const entry_ref *ref) : BNode(ref) {}
 
 // Creates a BSymLink object and initializes it to the symbolic link referred
 // to by the supplied BEntry.
-BSymLink::BSymLink(const BEntry* entry)
-		: BNode(entry)
-{
-}
-
+BSymLink::BSymLink(const BEntry *entry) : BNode(entry) {}
 
 // Creates a BSymLink object and initializes it to the symbolic link referred
 // to by the supplied path name.
-BSymLink::BSymLink(const char* path)
-	:
-	BNode(path)
-{
-}
-
+BSymLink::BSymLink(const char *path) : BNode(path) {}
 
 // Creates a BSymLink object and initializes it to the symbolic link referred
 // to by the supplied path name relative to the specified BDirectory.
-BSymLink::BSymLink(const BDirectory* dir, const char* path)
-	:
-	BNode(dir, path)
-{
-}
-
+BSymLink::BSymLink(const BDirectory *dir, const char *path)
+    : BNode(dir, path) {}
 
 // Destroys the object and frees all allocated resources.
-BSymLink::~BSymLink()
-{
-}
-
+BSymLink::~BSymLink() {}
 
 // Reads the contents of the symbolic link into a buffer.
-ssize_t
-BSymLink::ReadLink(char* buffer, size_t size)
-{
-	if (buffer == NULL)
-		return B_BAD_VALUE;
+ssize_t BSymLink::ReadLink(char *buffer, size_t size) {
+  if (buffer == NULL)
+    return B_BAD_VALUE;
 
-	if (InitCheck() != B_OK)
-		return B_FILE_ERROR;
+  if (InitCheck() != B_OK)
+    return B_FILE_ERROR;
 
-	size_t linkLen = size;
-	status_t result = _kern_read_link(get_fd(), NULL, buffer, &linkLen);
-	if (result < B_OK)
-		return result;
+  size_t linkLen = size;
+  status_t result = _kern_read_link(get_fd(), NULL, buffer, &linkLen);
+  if (result < B_OK)
+    return result;
 
 #if !defined(__NetBSD__)
-	// null-terminate
-	if (linkLen >= size)
-		return B_BUFFER_OVERFLOW;
+  // null-terminate
+  if (linkLen >= size)
+    return B_BUFFER_OVERFLOW;
 #endif
 
-	buffer[linkLen] = '\0';
+  buffer[linkLen] = '\0';
 
-	return linkLen;
+  return linkLen;
 }
-
 
 // Combines a directory path and the contents of this symbolic link to form an
 // absolute path.
-ssize_t
-BSymLink::MakeLinkedPath(const char* dirPath, BPath* path)
-{
-	// BeOS seems to convert the dirPath to a BDirectory, which causes links
-	// to be resolved. This means that the dirPath must exist!
-	if (dirPath == NULL || path == NULL)
-		return B_BAD_VALUE;
+ssize_t BSymLink::MakeLinkedPath(const char *dirPath, BPath *path) {
+  // BeOS seems to convert the dirPath to a BDirectory, which causes links
+  // to be resolved. This means that the dirPath must exist!
+  if (dirPath == NULL || path == NULL)
+    return B_BAD_VALUE;
 
-	BDirectory dir(dirPath);
-	ssize_t result = dir.InitCheck();
-	if (result == B_OK)
-		result = MakeLinkedPath(&dir, path);
+  BDirectory dir(dirPath);
+  ssize_t result = dir.InitCheck();
+  if (result == B_OK)
+    result = MakeLinkedPath(&dir, path);
 
-	return result;
+  return result;
 }
-
 
 // Combines a directory path and the contents of this symbolic link to form an
 // absolute path.
-ssize_t
-BSymLink::MakeLinkedPath(const BDirectory* dir, BPath* path)
-{
-	if (dir == NULL || path == NULL)
-		return B_BAD_VALUE;
+ssize_t BSymLink::MakeLinkedPath(const BDirectory *dir, BPath *path) {
+  if (dir == NULL || path == NULL)
+    return B_BAD_VALUE;
 
-	char contents[B_PATH_NAME_LENGTH];
-	ssize_t result = ReadLink(contents, sizeof(contents));
-	if (result >= 0) {
-		if (BPrivate::Storage::is_absolute_path(contents))
-			result = path->SetTo(contents);
-		else
-			result = path->SetTo(dir, contents);
+  char contents[B_PATH_NAME_LENGTH];
+  ssize_t result = ReadLink(contents, sizeof(contents));
+  if (result >= 0) {
+    if (BPrivate::Storage::is_absolute_path(contents))
+      result = path->SetTo(contents);
+    else
+      result = path->SetTo(dir, contents);
 
-		if (result == B_OK)
-			result = strlen(path->Path());
-	}
+    if (result == B_OK)
+      result = strlen(path->Path());
+  }
 
-	return result;
+  return result;
 }
-
 
 // Returns whether or not the object refers to an absolute path.
-bool
-BSymLink::IsAbsolute()
-{
-	char contents[B_PATH_NAME_LENGTH];
-	bool result = (ReadLink(contents, sizeof(contents)) >= 0);
-	if (result)
-		result = BPrivate::Storage::is_absolute_path(contents);
+bool BSymLink::IsAbsolute() {
+  char contents[B_PATH_NAME_LENGTH];
+  bool result = (ReadLink(contents, sizeof(contents)) >= 0);
+  if (result)
+    result = BPrivate::Storage::is_absolute_path(contents);
 
-	return result;
+  return result;
 }
-
 
 void BSymLink::_MissingSymLink1() {}
 void BSymLink::_MissingSymLink2() {}
@@ -167,16 +123,11 @@ void BSymLink::_MissingSymLink4() {}
 void BSymLink::_MissingSymLink5() {}
 void BSymLink::_MissingSymLink6() {}
 
-
 /*!	Returns the file descriptor of the BSymLink.
 
-	This method should be used instead of accessing the private \c fFd member
-	of the BNode directly.
+        This method should be used instead of accessing the private \c fFd
+   member of the BNode directly.
 
-	\return The object's file descriptor, or -1 if not properly initialized.
+        \return The object's file descriptor, or -1 if not properly initialized.
 */
-int
-BSymLink::get_fd() const
-{
-	return fFd;
-}
+int BSymLink::get_fd() const { return fFd; }

@@ -3,38 +3,24 @@
  * Distributed under the terms of the MIT License.
  */
 
-
 #include <os/add-ons/registrar/MimeSnifferAddon.h>
 
-
 // constructor
-BMimeSnifferAddon::BMimeSnifferAddon()
-{
-}
+BMimeSnifferAddon::BMimeSnifferAddon() {}
 
 // destructor
-BMimeSnifferAddon::~BMimeSnifferAddon()
-{
-}
+BMimeSnifferAddon::~BMimeSnifferAddon() {}
 
 // MinimalBufferSize
-size_t
-BMimeSnifferAddon::MinimalBufferSize()
-{
-	return 0;
+size_t BMimeSnifferAddon::MinimalBufferSize() { return 0; }
+
+// GuessMimeType
+float BMimeSnifferAddon::GuessMimeType(const char *fileName, BMimeType *type) {
+  return -1;
 }
 
 // GuessMimeType
-float
-BMimeSnifferAddon::GuessMimeType(const char* fileName, BMimeType* type)
-{
-	return -1;
-}
-
-// GuessMimeType
-float
-BMimeSnifferAddon::GuessMimeType(BFile* file, const void* buffer, int32 length,
-	BMimeType* type)
-{
-	return -1;
+float BMimeSnifferAddon::GuessMimeType(BFile *file, const void *buffer,
+                                       int32 length, BMimeType *type) {
+  return -1;
 }

@@ -5,59 +5,29 @@
 
 #include "PartitionReference.h"
 
-
 // constructor
 PartitionReference::PartitionReference(partition_id id, int32 changeCounter)
-	:
-	BReferenceable(),
-	fID(id),
-	fChangeCounter(changeCounter)
-{
-}
-
+    : BReferenceable(), fID(id), fChangeCounter(changeCounter) {}
 
 // destructor
-PartitionReference::~PartitionReference()
-{
-}
-
+PartitionReference::~PartitionReference() {}
 
 // SetTo
-void
-PartitionReference::SetTo(partition_id id, int32 changeCounter)
-{
-	fID = id;
-	fChangeCounter = changeCounter;
+void PartitionReference::SetTo(partition_id id, int32 changeCounter) {
+  fID = id;
+  fChangeCounter = changeCounter;
 }
-
 
 // PartitionID
-partition_id
-PartitionReference::PartitionID() const
-{
-	return fID;
-}
-
+partition_id PartitionReference::PartitionID() const { return fID; }
 
 // SetPartitionID
-void
-PartitionReference::SetPartitionID(partition_id id)
-{
-	fID = id;
-}
-
+void PartitionReference::SetPartitionID(partition_id id) { fID = id; }
 
 // ChangeCounter
-int32
-PartitionReference::ChangeCounter() const
-{
-	return fChangeCounter;
-}
-
+int32 PartitionReference::ChangeCounter() const { return fChangeCounter; }
 
 // SetChangeCounter
-void
-PartitionReference::SetChangeCounter(int32 counter)
-{
-	fChangeCounter = counter;
+void PartitionReference::SetChangeCounter(int32 counter) {
+  fChangeCounter = counter;
 }

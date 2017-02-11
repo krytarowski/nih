@@ -6,7 +6,6 @@
  *		Andrew Bachmann
  */
 
-
 #include "private/storage/AddOnMonitor.h"
 #include "private/storage/AddOnMonitorHandler.h"
 #include <os/app/Message.h>
@@ -14,83 +13,60 @@
 #include <os/app/Messenger.h>
 #include <stdio.h>
 
-
 AddOnMonitor::AddOnMonitor()
-	:
-	BLooper("AddOnMonitor"),
-	fInitCheck(B_NO_INIT),
-	fPulseRunner(NULL)
-{
+    : BLooper("AddOnMonitor"), fInitCheck(B_NO_INIT), fPulseRunner(NULL) {}
+
+AddOnMonitor::AddOnMonitor(AddOnMonitorHandler *handler)
+    : BLooper("AddOnMonitor"), fInitCheck(B_NO_INIT), fPulseRunner(NULL) {
+  SetHandler(handler);
+
+  thread_id id = Run();
+  if (id < 0) {
+    fInitCheck = (status_t)id;
+    fprintf(stderr, "AddOnMonitor() : bad id returned by Run()\n");
+    return;
+  }
 }
 
+AddOnMonitor::~AddOnMonitor() { delete fPulseRunner; }
 
-AddOnMonitor::AddOnMonitor(AddOnMonitorHandler* handler)
-	:
-	BLooper("AddOnMonitor"),
-	fInitCheck(B_NO_INIT),
-	fPulseRunner(NULL)
-{
-	SetHandler(handler);
+status_t AddOnMonitor::InitCheck() { return fInitCheck; }
 
-	thread_id id = Run();
-	if (id < 0) {
-		fInitCheck = (status_t)id;
-		fprintf(stderr, "AddOnMonitor() : bad id returned by Run()\n");
-		return;
-	}
-}
+void AddOnMonitor::SetHandler(AddOnMonitorHandler *handler) {
+  if (handler == NULL)
+    return;
 
+  AddHandler(handler);
+  SetPreferredHandler(handler);
 
-AddOnMonitor::~AddOnMonitor()
-{
-	delete fPulseRunner;
-}
+  delete fPulseRunner;
+  fPulseRunner = NULL;
 
+  status_t status;
+  BMessenger messenger(handler, this, &status);
+  if (status != B_OK) {
+    fInitCheck = status;
+    return;
+  }
 
-status_t
-AddOnMonitor::InitCheck()
-{
-	return fInitCheck;
-}
+  BMessage pulseMessage(B_PULSE);
+  fPulseRunner =
+      new (std::nothrow) BMessageRunner(messenger, &pulseMessage, 1000000);
+  if (fPulseRunner == NULL) {
+    fInitCheck = B_NO_MEMORY;
+    return;
+  }
 
+  status = fPulseRunner->InitCheck();
+  if (status != B_OK) {
+    fInitCheck = status;
+    fprintf(stderr, "AddOnMonitor() : bad status returned by "
+                    "fPulseRunner->InitCheck()\n");
+    return;
+  }
 
-void
-AddOnMonitor::SetHandler(AddOnMonitorHandler* handler)
-{
-	if (handler == NULL)
-		return;
+  // Send an initial message to process added directories immediately
+  messenger.SendMessage(&pulseMessage);
 
-	AddHandler(handler);
-	SetPreferredHandler(handler);
-
-	delete fPulseRunner;
-	fPulseRunner = NULL;
-
-	status_t status;
-	BMessenger messenger(handler, this, &status);
-	if (status != B_OK) {
-		fInitCheck = status;
-		return;
-	}
-
-	BMessage pulseMessage(B_PULSE);
-	fPulseRunner = new(std::nothrow) BMessageRunner(messenger, &pulseMessage,
-		1000000);
-	if (fPulseRunner == NULL) {
-		fInitCheck = B_NO_MEMORY;
-		return;
-	}
-
-	status = fPulseRunner->InitCheck();
-	if (status != B_OK) {
-		fInitCheck = status;
-		fprintf(stderr, "AddOnMonitor() : bad status returned by "
-			"fPulseRunner->InitCheck()\n");
-		return;
-	}
-
-	// Send an initial message to process added directories immediately
-	messenger.SendMessage(&pulseMessage);
-
-	fInitCheck = B_OK;
+  fInitCheck = B_OK;
 }

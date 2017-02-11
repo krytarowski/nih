@@ -7,28 +7,22 @@
 
 #include "PartitionReference.h"
 
-
 // constructor
-DiskDeviceJob::DiskDeviceJob(PartitionReference* partition,
-		PartitionReference* child)
-	:
-	fPartition(partition),
-	fChild(child)
-{
-	if (fPartition)
-		fPartition->AcquireReference();
+DiskDeviceJob::DiskDeviceJob(PartitionReference *partition,
+                             PartitionReference *child)
+    : fPartition(partition), fChild(child) {
+  if (fPartition)
+    fPartition->AcquireReference();
 
-	if (fChild)
-		fChild->AcquireReference();
+  if (fChild)
+    fChild->AcquireReference();
 }
 
-
 // destructor
-DiskDeviceJob::~DiskDeviceJob()
-{
-	if (fPartition)
-		fPartition->ReleaseReference();
+DiskDeviceJob::~DiskDeviceJob() {
+  if (fPartition)
+    fPartition->ReleaseReference();
 
-	if (fChild)
-		fChild->ReleaseReference();
+  if (fChild)
+    fChild->ReleaseReference();
 }

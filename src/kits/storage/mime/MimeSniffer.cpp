@@ -6,19 +6,13 @@
  *		Ingo Weinhold <ingo_weinhold@gmx.de>
  */
 
-
 #include <private/storage/mime/MimeSniffer.h>
-
 
 namespace BPrivate {
 namespace Storage {
 namespace Mime {
 
-
-MimeSniffer::~MimeSniffer()
-{
-}
-
+MimeSniffer::~MimeSniffer() {}
 
 } // namespace Mime
 } // namespace Storage

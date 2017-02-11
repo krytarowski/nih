@@ -7,29 +7,25 @@
 
 #include <SupportDefs.h>
 
-
 namespace BPrivate {
-
 
 class PartitionReference;
 
-
 class DiskDeviceJob {
 public:
-								DiskDeviceJob(PartitionReference* partition,
-									PartitionReference* child = NULL);
-	virtual						~DiskDeviceJob();
+  DiskDeviceJob(PartitionReference *partition,
+                PartitionReference *child = NULL);
+  virtual ~DiskDeviceJob();
 
-	virtual	status_t			Do() = 0;
+  virtual status_t Do() = 0;
 
 protected:
-			PartitionReference*	fPartition;
-			PartitionReference*	fChild;
+  PartitionReference *fPartition;
+  PartitionReference *fChild;
 };
 
-
-}	// namespace BPrivate
+} // namespace BPrivate
 
 using BPrivate::DiskDeviceJob;
 
-#endif	// _DISK_DEVICE_JOB_H
+#endif // _DISK_DEVICE_JOB_H

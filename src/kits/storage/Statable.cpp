@@ -7,7 +7,6 @@
  *		Ingo Weinhold, bonefish@users.sf.net
  */
 
-
 #include <os/storage/Statable.h>
 
 #include <sys/stat.h>
@@ -16,289 +15,224 @@
 #include <os/storage/NodeMonitor.h>
 #include <os/storage/Volume.h>
 
-
 class BStatable::Private {
 public:
-	Private(const BStatable* object)
-		:
-		fObject(object)
-	{
-	}
+  Private(const BStatable *object) : fObject(object) {}
 
-	status_t GetStatBeOS(struct stat* stat)
-	{
-		return fObject->GetStat(stat);
-	}
+  status_t GetStatBeOS(struct stat *stat) { return fObject->GetStat(stat); }
 
 private:
-	const BStatable*	fObject;
+  const BStatable *fObject;
 };
 
-
-BStatable::~BStatable()
-{
-}
-
+BStatable::~BStatable() {}
 
 // Returns whether or not the current node is a file.
-bool
-BStatable::IsFile() const
-{
-	struct stat stat;
-	if (GetStat(&stat) == B_OK)
-		return S_ISREG(stat.st_mode);
-	else
-		return false;
+bool BStatable::IsFile() const {
+  struct stat stat;
+  if (GetStat(&stat) == B_OK)
+    return S_ISREG(stat.st_mode);
+  else
+    return false;
 }
-
 
 // Returns whether or not the current node is a directory.
-bool
-BStatable::IsDirectory() const
-{
-	struct stat stat;
-	if (GetStat(&stat) == B_OK)
-		return S_ISDIR(stat.st_mode);
-	else
-		return false;
+bool BStatable::IsDirectory() const {
+  struct stat stat;
+  if (GetStat(&stat) == B_OK)
+    return S_ISDIR(stat.st_mode);
+  else
+    return false;
 }
-
 
 // Returns whether or not the current node is a symbolic link.
-bool
-BStatable::IsSymLink() const
-{
-	struct stat stat;
-	if (GetStat(&stat) == B_OK)
-		return S_ISLNK(stat.st_mode);
-	else
-		return false;
+bool BStatable::IsSymLink() const {
+  struct stat stat;
+  if (GetStat(&stat) == B_OK)
+    return S_ISLNK(stat.st_mode);
+  else
+    return false;
 }
-
 
 // Fills out ref with the node_ref of the node.
-status_t
-BStatable::GetNodeRef(node_ref* ref) const
-{
-	status_t result = (ref ? B_OK : B_BAD_VALUE);
-	struct stat stat;
+status_t BStatable::GetNodeRef(node_ref *ref) const {
+  status_t result = (ref ? B_OK : B_BAD_VALUE);
+  struct stat stat;
 
-	if (result == B_OK)
-		result = GetStat(&stat);
+  if (result == B_OK)
+    result = GetStat(&stat);
 
-	if (result == B_OK) {
-		ref->device  = stat.st_dev;
-		ref->node = stat.st_ino;
-	}
+  if (result == B_OK) {
+    ref->device = stat.st_dev;
+    ref->node = stat.st_ino;
+  }
 
-	return result;
+  return result;
 }
-
 
 // Fills out the node's UID into owner.
-status_t
-BStatable::GetOwner(uid_t* owner) const
-{
-	status_t result = (owner ? B_OK : B_BAD_VALUE);
-	struct stat stat;
+status_t BStatable::GetOwner(uid_t *owner) const {
+  status_t result = (owner ? B_OK : B_BAD_VALUE);
+  struct stat stat;
 
-	if (result == B_OK)
-		result = GetStat(&stat);
+  if (result == B_OK)
+    result = GetStat(&stat);
 
-	if (result == B_OK)
-		*owner = stat.st_uid;
+  if (result == B_OK)
+    *owner = stat.st_uid;
 
-	return result;
+  return result;
 }
-
 
 // Sets the node's UID to owner.
-status_t
-BStatable::SetOwner(uid_t owner)
-{
-	struct stat stat;
-	stat.st_uid = owner;
+status_t BStatable::SetOwner(uid_t owner) {
+  struct stat stat;
+  stat.st_uid = owner;
 
-	return set_stat(stat, B_STAT_UID);
+  return set_stat(stat, B_STAT_UID);
 }
-
 
 // Fills out the node's GID into group.
-status_t
-BStatable::GetGroup(gid_t* group) const
-{
-	status_t result = (group ? B_OK : B_BAD_VALUE);
-	struct stat stat;
+status_t BStatable::GetGroup(gid_t *group) const {
+  status_t result = (group ? B_OK : B_BAD_VALUE);
+  struct stat stat;
 
-	if (result == B_OK)
-		result = GetStat(&stat);
+  if (result == B_OK)
+    result = GetStat(&stat);
 
-	if (result == B_OK)
-		*group = stat.st_gid;
+  if (result == B_OK)
+    *group = stat.st_gid;
 
-	return result;
+  return result;
 }
-
 
 // Sets the node's GID to group.
-status_t
-BStatable::SetGroup(gid_t group)
-{
-	struct stat stat;
-	stat.st_gid = group;
+status_t BStatable::SetGroup(gid_t group) {
+  struct stat stat;
+  stat.st_gid = group;
 
-	return set_stat(stat, B_STAT_GID);
+  return set_stat(stat, B_STAT_GID);
 }
-
 
 // Fills out permissions with the node's permissions.
-status_t
-BStatable::GetPermissions(mode_t* permissions) const
-{
-	status_t result = (permissions ? B_OK : B_BAD_VALUE);
-	struct stat stat;
+status_t BStatable::GetPermissions(mode_t *permissions) const {
+  status_t result = (permissions ? B_OK : B_BAD_VALUE);
+  struct stat stat;
 
-	if (result == B_OK)
-		result = GetStat(&stat);
+  if (result == B_OK)
+    result = GetStat(&stat);
 
 #if !defined(__NetBSD__)
-	if (result == B_OK)
-		*permissions = (stat.st_mode & S_IUMSK);
+  if (result == B_OK)
+    *permissions = (stat.st_mode & S_IUMSK);
 #endif
 
-	return result;
+  return result;
 }
-
 
 // Sets the node's permissions to permissions.
-status_t
-BStatable::SetPermissions(mode_t permissions)
-{
-	struct stat stat;
-	// the FS should do the correct masking -- only the S_IUMSK part is
-	// modifiable
-	stat.st_mode = permissions;
+status_t BStatable::SetPermissions(mode_t permissions) {
+  struct stat stat;
+  // the FS should do the correct masking -- only the S_IUMSK part is
+  // modifiable
+  stat.st_mode = permissions;
 
-	return set_stat(stat, B_STAT_MODE);
+  return set_stat(stat, B_STAT_MODE);
 }
-
 
 // Fills out the size of the node's data (not counting attributes) into size.
-status_t
-BStatable::GetSize(off_t* size) const
-{
-	status_t result = (size ? B_OK : B_BAD_VALUE);
-	struct stat stat;
+status_t BStatable::GetSize(off_t *size) const {
+  status_t result = (size ? B_OK : B_BAD_VALUE);
+  struct stat stat;
 
-	if (result == B_OK)
-		result = GetStat(&stat);
+  if (result == B_OK)
+    result = GetStat(&stat);
 
-	if (result == B_OK)
-		*size = stat.st_size;
+  if (result == B_OK)
+    *size = stat.st_size;
 
-	return result;
+  return result;
 }
-
 
 // Fills out mtime with the last modification time of the node.
-status_t
-BStatable::GetModificationTime(time_t* mtime) const
-{
-	status_t result = (mtime ? B_OK : B_BAD_VALUE);
-	struct stat stat;
+status_t BStatable::GetModificationTime(time_t *mtime) const {
+  status_t result = (mtime ? B_OK : B_BAD_VALUE);
+  struct stat stat;
 
-	if (result == B_OK)
-		result = GetStat(&stat);
+  if (result == B_OK)
+    result = GetStat(&stat);
 
-	if (result == B_OK)
-		*mtime = stat.st_mtime;
+  if (result == B_OK)
+    *mtime = stat.st_mtime;
 
-	return result;
+  return result;
 }
-
 
 // Sets the node's last modification time to mtime.
-status_t
-BStatable::SetModificationTime(time_t mtime)
-{
-	struct stat stat;
-	stat.st_mtime = mtime;
+status_t BStatable::SetModificationTime(time_t mtime) {
+  struct stat stat;
+  stat.st_mtime = mtime;
 
-	return set_stat(stat, B_STAT_MODIFICATION_TIME);
+  return set_stat(stat, B_STAT_MODIFICATION_TIME);
 }
-
 
 // Fills out ctime with the creation time of the node
-status_t
-BStatable::GetCreationTime(time_t* ctime) const
-{
-	status_t result = (ctime ? B_OK : B_BAD_VALUE);
-	struct stat stat;
+status_t BStatable::GetCreationTime(time_t *ctime) const {
+  status_t result = (ctime ? B_OK : B_BAD_VALUE);
+  struct stat stat;
 
-	if (result == B_OK)
-		result = GetStat(&stat);
+  if (result == B_OK)
+    result = GetStat(&stat);
 
 #if !defined(__NetBSD__)
-	if (result == B_OK)
-		*ctime = stat.st_crtime;
+  if (result == B_OK)
+    *ctime = stat.st_crtime;
 #endif
 
-	return result;
+  return result;
 }
-
 
 // Sets the node's creation time to ctime.
-status_t
-BStatable::SetCreationTime(time_t ctime)
-{
-	struct stat stat;
+status_t BStatable::SetCreationTime(time_t ctime) {
+  struct stat stat;
 #if !defined(__NetBSD__)
-	stat.st_crtime = ctime;
+  stat.st_crtime = ctime;
 #endif
 
-	return set_stat(stat, B_STAT_CREATION_TIME);
+  return set_stat(stat, B_STAT_CREATION_TIME);
 }
-
 
 // Fills out atime with the access time of the node.
-status_t
-BStatable::GetAccessTime(time_t* atime) const
-{
-	status_t result = (atime ? B_OK : B_BAD_VALUE);
-	struct stat stat;
+status_t BStatable::GetAccessTime(time_t *atime) const {
+  status_t result = (atime ? B_OK : B_BAD_VALUE);
+  struct stat stat;
 
-	if (result == B_OK)
-		result = GetStat(&stat);
+  if (result == B_OK)
+    result = GetStat(&stat);
 
-	if (result == B_OK)
-		*atime = stat.st_atime;
+  if (result == B_OK)
+    *atime = stat.st_atime;
 
-	return result;
+  return result;
 }
-
 
 // Sets the node's access time to atime.
-status_t
-BStatable::SetAccessTime(time_t atime)
-{
-	struct stat stat;
-	stat.st_atime = atime;
+status_t BStatable::SetAccessTime(time_t atime) {
+  struct stat stat;
+  stat.st_atime = atime;
 
-	return set_stat(stat, B_STAT_ACCESS_TIME);
+  return set_stat(stat, B_STAT_ACCESS_TIME);
 }
 
-
 // Fills out vol with the the volume that the node lives on.
-status_t
-BStatable::GetVolume(BVolume* volume) const
-{
-	status_t result = (volume ? B_OK : B_BAD_VALUE);
-	struct stat stat;
-	if (result == B_OK)
-		result = GetStat(&stat);
+status_t BStatable::GetVolume(BVolume *volume) const {
+  status_t result = (volume ? B_OK : B_BAD_VALUE);
+  struct stat stat;
+  if (result == B_OK)
+    result = GetStat(&stat);
 
-	if (result == B_OK)
-		result = volume->SetTo(stat.st_dev);
+  if (result == B_OK)
+    result = volume->SetTo(stat.st_dev);
 
-	return result;
+  return result;
 }

@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-//  This software is part of the OpenBeOS distribution and is covered 
+//  This software is part of the OpenBeOS distribution and is covered
 //  by the OpenBeOS license.
 //---------------------------------------------------------------------
 
@@ -12,21 +12,21 @@ namespace BPrivate {
 
 class AddOnImage {
 public:
-	AddOnImage();
-	~AddOnImage();
+  AddOnImage();
+  ~AddOnImage();
 
-	status_t Load(const char* path);
-	void Unload();
+  status_t Load(const char *path);
+  void Unload();
 
-	void SetID(image_id id);
-	image_id ID() const	{ return fID; }
+  void SetID(image_id id);
+  image_id ID() const { return fID; }
 
 private:
-	image_id	fID;
+  image_id fID;
 };
 
-}	// namespace BPrivate
+} // namespace BPrivate
 
 using BPrivate::AddOnImage;
 
-#endif	// _ADD_ON_IMAGE_H
+#endif // _ADD_ON_IMAGE_H

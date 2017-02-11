@@ -1,20 +1,13 @@
 //----------------------------------------------------------------------
-//  This software is part of the OpenBeOS distribution and is covered 
+//  This software is part of the OpenBeOS distribution and is covered
 //  by the OpenBeOS license.
 //---------------------------------------------------------------------
 
 #include <os/storage/EntryList.h>
 
+BEntryList::BEntryList() {}
 
-BEntryList::BEntryList()
-{
-}
-
-
-BEntryList::~BEntryList()
-{
-}
-
+BEntryList::~BEntryList() {}
 
 // Currently unused
 void BEntryList::_ReservedEntryList1() {}

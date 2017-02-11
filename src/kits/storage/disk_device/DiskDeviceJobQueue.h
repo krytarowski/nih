@@ -8,31 +8,27 @@
 #include <DiskDeviceDefs.h>
 #include <ObjectList.h>
 
-
 namespace BPrivate {
-
 
 class DiskDeviceJob;
 
-
 class DiskDeviceJobQueue {
 public:
-								DiskDeviceJobQueue();
-								~DiskDeviceJobQueue();
+  DiskDeviceJobQueue();
+  ~DiskDeviceJobQueue();
 
-			status_t			AddJob(DiskDeviceJob* job);
+  status_t AddJob(DiskDeviceJob *job);
 
-			status_t			Execute();
+  status_t Execute();
 
 private:
-	typedef	BObjectList<DiskDeviceJob> JobList;
+  typedef BObjectList<DiskDeviceJob> JobList;
 
-			JobList				fJobs;
+  JobList fJobs;
 };
 
-
-}	// namespace BPrivate
+} // namespace BPrivate
 
 using BPrivate::DiskDeviceJobQueue;
 
-#endif	// _DISK_DEVICE_JOB_QUEUE_H
+#endif // _DISK_DEVICE_JOB_QUEUE_H

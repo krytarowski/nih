@@ -6,33 +6,21 @@
  *		Axel Dörfler, axeld@pinc-software.de
  */
 
-
 #include <private/app/DesktopLink.h>
 
 #include <private/app/AppMisc.h>
 #include <private/app/ServerProtocol.h>
 
-
 namespace BPrivate {
 
-
-DesktopLink::DesktopLink()
-{
-	create_desktop_connection(this, "desktop reply", 1);
+DesktopLink::DesktopLink() {
+  create_desktop_connection(this, "desktop reply", 1);
 }
 
+DesktopLink::~DesktopLink() { delete_port(fReceiver->Port()); }
 
-DesktopLink::~DesktopLink()
-{
-	delete_port(fReceiver->Port());
+status_t DesktopLink::InitCheck() const {
+  return fReceiver->Port() < B_OK ? fReceiver->Port() : B_OK;
 }
 
-
-status_t
-DesktopLink::InitCheck() const
-{
-	return fReceiver->Port() < B_OK ? fReceiver->Port() : B_OK;
-}
-
-
-}	// namespace BPrivate
+} // namespace BPrivate

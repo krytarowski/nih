@@ -6,19 +6,14 @@
  *		Ingo Weinhold (bonefish@users.sf.net)
  */
 
-
 //! API classes - registrar interface.
-
 
 #include <private/app/AppMisc.h>
 #include <private/app/RegistrarDefs.h>
 
-
 namespace BPrivate {
 
-
 // names
-const char* kRAppLooperPortName = "rAppLooperPort";
+const char *kRAppLooperPortName = "rAppLooperPort";
 
-
-}	// namespace BPrivate
+} // namespace BPrivate

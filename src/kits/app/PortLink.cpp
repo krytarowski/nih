@@ -6,25 +6,18 @@
  *		Axel Dörfler, axeld@pinc-software.de
  */
 
-
 #include <private/app/PortLink.h>
-
 
 namespace BPrivate {
 
-
-PortLink::PortLink(port_id send, port_id receive)
-{
-	fSender = new LinkSender(send);
-	fReceiver = new LinkReceiver(receive);
+PortLink::PortLink(port_id send, port_id receive) {
+  fSender = new LinkSender(send);
+  fReceiver = new LinkReceiver(receive);
 }
 
-
-PortLink::~PortLink()
-{
-	delete fReceiver;
-	delete fSender;
+PortLink::~PortLink() {
+  delete fReceiver;
+  delete fSender;
 }
 
-
-}	// namespace BPrivate
+} // namespace BPrivate

@@ -4,21 +4,20 @@
  * Distributed under the terms of the MIT License.
  */
 
-
 #include <unicode/uversion.h>
 #include <os/locale/Country.h>
 
-#include <private/shared/AutoDeleter.h>
 #include <os/interface/IconUtils.h>
-#include <os/support/List.h>
 #include <os/locale/Language.h>
 #include <os/locale/LocaleRoster.h>
 #include <os/storage/Resources.h>
+#include <os/support/List.h>
 #include <os/support/String.h>
+#include <private/shared/AutoDeleter.h>
 
+#include <private/locale/ICUWrapper.h>
 #include <unicode/locid.h>
 #include <unicode/ulocdata.h>
-#include <private/locale/ICUWrapper.h>
 
 #include <iostream>
 #include <map>
@@ -27,99 +26,67 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+BCountry::BCountry(const char *countryCode)
+    : fICULocale(new icu::Locale("", countryCode)) {}
 
-BCountry::BCountry(const char* countryCode)
-	:
-	fICULocale(new icu::Locale("", countryCode))
-{
+BCountry::BCountry(const BCountry &other)
+    : fICULocale(new icu::Locale(*other.fICULocale)) {}
+
+BCountry &BCountry::operator=(const BCountry &other) {
+  if (this == &other)
+    return *this;
+
+  *fICULocale = *other.fICULocale;
+
+  return *this;
 }
 
+BCountry::~BCountry() { delete fICULocale; }
 
-BCountry::BCountry(const BCountry& other)
-	:
-	fICULocale(new icu::Locale(*other.fICULocale))
-{
+status_t BCountry::GetNativeName(BString &name) const {
+  UnicodeString string;
+  fICULocale->getDisplayName(*fICULocale, string);
+  string.toTitle(NULL, *fICULocale);
+
+  name.Truncate(0);
+  BStringByteSink converter(&name);
+  string.toUTF8(converter);
+
+  return B_OK;
 }
 
+status_t BCountry::GetName(BString &name,
+                           const BLanguage *displayLanguage) const {
+  status_t status = B_OK;
+  BString appLanguage;
+  if (displayLanguage == NULL) {
+    BMessage preferredLanguages;
+    status =
+        BLocaleRoster::Default()->GetPreferredLanguages(&preferredLanguages);
+    if (status == B_OK)
+      status = preferredLanguages.FindString("language", 0, &appLanguage);
+  } else {
+    appLanguage = displayLanguage->Code();
+  }
 
-BCountry&
-BCountry::operator=(const BCountry& other)
-{
-	if (this == &other)
-		return *this;
+  if (status == B_OK) {
+    UnicodeString uString;
+    fICULocale->getDisplayName(Locale(appLanguage), uString);
+    name.Truncate(0);
+    BStringByteSink stringConverter(&name);
+    uString.toUTF8(stringConverter);
+  }
 
-	*fICULocale = *other.fICULocale;
-
-	return *this;
+  return status;
 }
 
+const char *BCountry::Code() const { return fICULocale->getCountry(); }
 
-BCountry::~BCountry()
-{
-	delete fICULocale;
+status_t BCountry::GetIcon(BBitmap *result) const {
+  return BLocaleRoster::Default()->GetFlagIconForCountry(result, Code());
 }
 
-
-status_t
-BCountry::GetNativeName(BString& name) const
-{
-	UnicodeString string;
-	fICULocale->getDisplayName(*fICULocale, string);
-	string.toTitle(NULL, *fICULocale);
-
-	name.Truncate(0);
-	BStringByteSink converter(&name);
-	string.toUTF8(converter);
-
-	return B_OK;
+status_t BCountry::GetAvailableTimeZones(BMessage *timeZones) const {
+  return BLocaleRoster::Default()->GetAvailableTimeZonesForCountry(timeZones,
+                                                                   Code());
 }
-
-
-status_t
-BCountry::GetName(BString& name, const BLanguage* displayLanguage) const
-{
-	status_t status = B_OK;
-	BString appLanguage;
-	if (displayLanguage == NULL) {
-		BMessage preferredLanguages;
-		status = BLocaleRoster::Default()->GetPreferredLanguages(
-			&preferredLanguages);
-		if (status == B_OK)
-			status = preferredLanguages.FindString("language", 0, &appLanguage);
-	} else {
-		appLanguage = displayLanguage->Code();
-	}
-
-	if (status == B_OK) {
-		UnicodeString uString;
-		fICULocale->getDisplayName(Locale(appLanguage), uString);
-		name.Truncate(0);
-		BStringByteSink stringConverter(&name);
-		uString.toUTF8(stringConverter);
-	}
-
-	return status;
-}
-
-
-const char*
-BCountry::Code() const
-{
-	return fICULocale->getCountry();
-}
-
-
-status_t
-BCountry::GetIcon(BBitmap* result) const
-{
-	return BLocaleRoster::Default()->GetFlagIconForCountry(result, Code());
-}
-
-
-status_t
-BCountry::GetAvailableTimeZones(BMessage* timeZones) const
-{
-	return BLocaleRoster::Default()->GetAvailableTimeZonesForCountry(timeZones,
-		Code());
-}
-

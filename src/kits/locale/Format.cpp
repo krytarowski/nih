@@ -2,77 +2,54 @@
 
 #include <new>
 
-#include <os/support/Autolock.h>
 #include <os/locale/Locale.h>
 #include <os/locale/LocaleRoster.h>
+#include <os/support/Autolock.h>
 
+BFormat::BFormat(const BLocale *locale) {
+  if (locale == NULL)
+    locale = BLocaleRoster::Default()->GetDefaultLocale();
 
-BFormat::BFormat(const BLocale* locale)
-{
-	if (locale == NULL)
-		locale = BLocaleRoster::Default()->GetDefaultLocale();
+  if (locale == NULL) {
+    fInitStatus = B_BAD_DATA;
+    return;
+  }
 
-	if (locale == NULL) {
-		fInitStatus = B_BAD_DATA;
-		return;
-	}
-
-	_Initialize(*locale);
+  _Initialize(*locale);
 }
 
-
-BFormat::BFormat(const BLanguage& language,
-	const BFormattingConventions& conventions)
-{
-	_Initialize(language, conventions);
+BFormat::BFormat(const BLanguage &language,
+                 const BFormattingConventions &conventions) {
+  _Initialize(language, conventions);
 }
-
 
 BFormat::BFormat(const BFormat &other)
-	:
-	fConventions(other.fConventions),
-	fLanguage(other.fLanguage),
-	fInitStatus(other.fInitStatus)
-{
+    : fConventions(other.fConventions), fLanguage(other.fLanguage),
+      fInitStatus(other.fInitStatus) {}
+
+BFormat::~BFormat() {}
+
+status_t BFormat::InitCheck() const { return fInitStatus; }
+
+status_t BFormat::_Initialize(const BLocale &locale) {
+  BFormattingConventions conventions;
+  BLanguage language;
+
+  fInitStatus = locale.GetFormattingConventions(&conventions);
+  if (fInitStatus != B_OK)
+    return fInitStatus;
+
+  fInitStatus = locale.GetLanguage(&language);
+  if (fInitStatus != B_OK)
+    return fInitStatus;
+
+  return _Initialize(language, conventions);
 }
 
-
-BFormat::~BFormat()
-{
-}
-
-
-status_t
-BFormat::InitCheck() const
-{
-	return fInitStatus;
-}
-
-
-status_t
-BFormat::_Initialize(const BLocale& locale)
-{
-	BFormattingConventions conventions;
-	BLanguage language;
-
-	fInitStatus = locale.GetFormattingConventions(&conventions);
-	if (fInitStatus != B_OK)
-		return fInitStatus;
-
-	fInitStatus = locale.GetLanguage(&language);
-	if (fInitStatus != B_OK)
-		return fInitStatus;
-
-	return _Initialize(language, conventions);
-}
-
-
-status_t
-BFormat::_Initialize(const BLanguage& language,
-	const BFormattingConventions& conventions)
-{
-	fConventions = conventions;
-	fLanguage = language;
-	fInitStatus = B_OK;
-	return fInitStatus;
+status_t BFormat::_Initialize(const BLanguage &language,
+                              const BFormattingConventions &conventions) {
+  fConventions = conventions;
+  fLanguage = language;
+  fInitStatus = B_OK;
+  return fInitStatus;
 }

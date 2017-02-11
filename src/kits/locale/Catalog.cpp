@@ -7,211 +7,168 @@
 #include <os/locale/Catalog.h>
 
 #include <os/app/Application.h>
-#include <os/support/Autolock.h>
+#include <os/app/Roster.h>
 #include <os/locale/CatalogData.h>
 #include <os/locale/Locale.h>
-#include <private/locale/MutableLocaleRoster.h>
 #include <os/storage/Node.h>
-#include <os/app/Roster.h>
-
+#include <os/support/Autolock.h>
+#include <private/locale/MutableLocaleRoster.h>
 
 using BPrivate::MutableLocaleRoster;
 
-
 //#pragma mark - BCatalog
-BCatalog::BCatalog()
-	:
-	fCatalogData(NULL),
-	fLock("Catalog")
-{
+BCatalog::BCatalog() : fCatalogData(NULL), fLock("Catalog") {}
+
+BCatalog::BCatalog(const entry_ref &catalogOwner, const char *language,
+                   uint32 fingerprint)
+    : fCatalogData(NULL), fLock("Catalog") {
+  SetTo(catalogOwner, language, fingerprint);
 }
 
-
-BCatalog::BCatalog(const entry_ref& catalogOwner, const char* language,
-	uint32 fingerprint)
-	:
-	fCatalogData(NULL),
-	fLock("Catalog")
-{
-	SetTo(catalogOwner, language, fingerprint);
+BCatalog::~BCatalog() {
+  MutableLocaleRoster::Default()->UnloadCatalog(fCatalogData);
 }
 
+const char *BCatalog::GetString(const char *string, const char *context,
+                                const char *comment) {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return string;
 
-BCatalog::~BCatalog()
-{
-	MutableLocaleRoster::Default()->UnloadCatalog(fCatalogData);
+  const char *translated;
+  for (BCatalogData *cat = fCatalogData; cat != NULL; cat = cat->fNext) {
+    translated = cat->GetString(string, context, comment);
+    if (translated != NULL)
+      return translated;
+  }
+
+  return string;
 }
 
+const char *BCatalog::GetString(uint32 id) {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return "";
 
-const char*
-BCatalog::GetString(const char* string, const char* context,
-	const char* comment)
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return string;
+  const char *translated;
+  for (BCatalogData *cat = fCatalogData; cat != NULL; cat = cat->fNext) {
+    translated = cat->GetString(id);
+    if (translated != NULL)
+      return translated;
+  }
 
-	const char* translated;
-	for (BCatalogData* cat = fCatalogData; cat != NULL; cat = cat->fNext) {
-		translated = cat->GetString(string, context, comment);
-		if (translated != NULL)
-			return translated;
-	}
-
-	return string;
+  return "";
 }
 
+status_t BCatalog::GetData(const char *name, BMessage *msg) {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return B_ERROR;
 
-const char*
-BCatalog::GetString(uint32 id)
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return "";
+  if (fCatalogData == NULL)
+    return B_NO_INIT;
 
-	const char* translated;
-	for (BCatalogData* cat = fCatalogData; cat != NULL; cat = cat->fNext) {
-		translated = cat->GetString(id);
-		if (translated != NULL)
-			return translated;
-	}
+  status_t res;
+  for (BCatalogData *cat = fCatalogData; cat != NULL; cat = cat->fNext) {
+    res = cat->GetData(name, msg);
+    if (res != B_NAME_NOT_FOUND && res != EOPNOTSUPP)
+      return res; // return B_OK if found, or specific error-code
+  }
 
-	return "";
+  return B_NAME_NOT_FOUND;
 }
 
+status_t BCatalog::GetData(uint32 id, BMessage *msg) {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return B_ERROR;
 
-status_t
-BCatalog::GetData(const char* name, BMessage* msg)
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return B_ERROR;
+  if (fCatalogData == NULL)
+    return B_NO_INIT;
 
-	if (fCatalogData == NULL)
-		return B_NO_INIT;
+  status_t res;
+  for (BCatalogData *cat = fCatalogData; cat != NULL; cat = cat->fNext) {
+    res = cat->GetData(id, msg);
+    if (res != B_NAME_NOT_FOUND && res != EOPNOTSUPP)
+      return res; // return B_OK if found, or specific error-code
+  }
 
-	status_t res;
-	for (BCatalogData* cat = fCatalogData; cat != NULL; cat = cat->fNext) {
-		res = cat->GetData(name, msg);
-		if (res != B_NAME_NOT_FOUND && res != EOPNOTSUPP)
-			return res;	// return B_OK if found, or specific error-code
-	}
-
-	return B_NAME_NOT_FOUND;
+  return B_NAME_NOT_FOUND;
 }
 
+status_t BCatalog::GetSignature(BString *sig) {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return B_ERROR;
 
-status_t
-BCatalog::GetData(uint32 id, BMessage* msg)
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return B_ERROR;
+  if (sig == NULL)
+    return B_BAD_VALUE;
 
-	if (fCatalogData == NULL)
-		return B_NO_INIT;
+  if (fCatalogData == NULL)
+    return B_NO_INIT;
 
-	status_t res;
-	for (BCatalogData* cat = fCatalogData; cat != NULL; cat = cat->fNext) {
-		res = cat->GetData(id, msg);
-		if (res != B_NAME_NOT_FOUND && res != EOPNOTSUPP)
-			return res;	// return B_OK if found, or specific error-code
-	}
+  *sig = fCatalogData->fSignature;
 
-	return B_NAME_NOT_FOUND;
+  return B_OK;
 }
 
+status_t BCatalog::GetLanguage(BString *lang) {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return B_ERROR;
 
-status_t
-BCatalog::GetSignature(BString* sig)
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return B_ERROR;
+  if (lang == NULL)
+    return B_BAD_VALUE;
 
-	if (sig == NULL)
-		return B_BAD_VALUE;
+  if (fCatalogData == NULL)
+    return B_NO_INIT;
 
-	if (fCatalogData == NULL)
-		return B_NO_INIT;
+  *lang = fCatalogData->fLanguageName;
 
-	*sig = fCatalogData->fSignature;
-
-	return B_OK;
+  return B_OK;
 }
 
+status_t BCatalog::GetFingerprint(uint32 *fp) {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return B_ERROR;
 
-status_t
-BCatalog::GetLanguage(BString* lang)
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return B_ERROR;
+  if (fp == NULL)
+    return B_BAD_VALUE;
 
-	if (lang == NULL)
-		return B_BAD_VALUE;
+  if (fCatalogData == NULL)
+    return B_NO_INIT;
 
-	if (fCatalogData == NULL)
-		return B_NO_INIT;
+  *fp = fCatalogData->fFingerprint;
 
-	*lang = fCatalogData->fLanguageName;
-
-	return B_OK;
+  return B_OK;
 }
 
+status_t BCatalog::SetTo(const entry_ref &catalogOwner, const char *language,
+                         uint32 fingerprint) {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return B_ERROR;
 
-status_t
-BCatalog::GetFingerprint(uint32* fp)
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return B_ERROR;
+  MutableLocaleRoster::Default()->UnloadCatalog(fCatalogData);
+  fCatalogData = MutableLocaleRoster::Default()->LoadCatalog(
+      catalogOwner, language, fingerprint);
 
-	if (fp == NULL)
-		return B_BAD_VALUE;
-
-	if (fCatalogData == NULL)
-		return B_NO_INIT;
-
-	*fp = fCatalogData->fFingerprint;
-
-	return B_OK;
+  return B_OK;
 }
 
+status_t BCatalog::InitCheck() const {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return B_ERROR;
 
-status_t
-BCatalog::SetTo(const entry_ref& catalogOwner, const char* language,
-	uint32 fingerprint)
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return B_ERROR;
-
-	MutableLocaleRoster::Default()->UnloadCatalog(fCatalogData);
-	fCatalogData = MutableLocaleRoster::Default()->LoadCatalog(catalogOwner,
-		language, fingerprint);
-
-	return B_OK;
+  return fCatalogData != NULL ? fCatalogData->InitCheck() : B_NO_INIT;
 }
 
+int32 BCatalog::CountItems() const {
+  BAutolock lock(&fLock);
+  if (!lock.IsLocked())
+    return 0;
 
-status_t
-BCatalog::InitCheck() const
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return B_ERROR;
-
-	return fCatalogData != NULL	? fCatalogData->InitCheck() : B_NO_INIT;
-}
-
-
-int32
-BCatalog::CountItems() const
-{
-	BAutolock lock(&fLock);
-	if (!lock.IsLocked())
-		return 0;
-
-	return fCatalogData != NULL ? fCatalogData->CountItems() : 0;
+  return fCatalogData != NULL ? fCatalogData->CountItems() : 0;
 }

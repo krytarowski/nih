@@ -3,218 +3,147 @@
  * Distributed under the terms of the MIT License.
  */
 
-
 #include <unicode/uversion.h>
 #include <os/locale/Language.h>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <iostream>
 
 #include <os/locale/Catalog.h>
 #include <os/locale/Locale.h>
 #include <os/locale/LocaleRoster.h>
+#include <os/storage/FindDirectory.h>
 #include <os/storage/Path.h>
 #include <os/support/String.h>
-#include <os/storage/FindDirectory.h>
 
 #include <private/locale/ICUWrapper.h>
 
 #include <unicode/locid.h>
 
-
-BLanguage::BLanguage()
-	:
-	fDirection(B_LEFT_TO_RIGHT),
-	fICULocale(NULL)
-{
-	SetTo(NULL);
+BLanguage::BLanguage() : fDirection(B_LEFT_TO_RIGHT), fICULocale(NULL) {
+  SetTo(NULL);
 }
 
-
-BLanguage::BLanguage(const char* language)
-	:
-	fDirection(B_LEFT_TO_RIGHT),
-	fICULocale(NULL)
-{
-	SetTo(language);
+BLanguage::BLanguage(const char *language)
+    : fDirection(B_LEFT_TO_RIGHT), fICULocale(NULL) {
+  SetTo(language);
 }
 
-
-BLanguage::BLanguage(const BLanguage& other)
-	:
-	fICULocale(NULL)
-{
-	*this = other;
+BLanguage::BLanguage(const BLanguage &other) : fICULocale(NULL) {
+  *this = other;
 }
 
+BLanguage::~BLanguage() { delete fICULocale; }
 
-BLanguage::~BLanguage()
-{
-	delete fICULocale;
+status_t BLanguage::SetTo(const char *language) {
+  delete fICULocale;
+  fICULocale = new icu::Locale(language);
+  if (fICULocale == NULL)
+    return B_NO_MEMORY;
+
+  return B_OK;
 }
 
+status_t BLanguage::GetNativeName(BString &name) const {
+  UnicodeString string;
+  fICULocale->getDisplayName(*fICULocale, string);
+  string.toTitle(NULL, *fICULocale);
 
-status_t
-BLanguage::SetTo(const char* language)
-{
-	delete fICULocale;
-	fICULocale = new icu::Locale(language);
-	if (fICULocale == NULL)
-		return B_NO_MEMORY;
+  name.Truncate(0);
+  BStringByteSink converter(&name);
+  string.toUTF8(converter);
 
-	return B_OK;
+  return B_OK;
 }
 
+status_t BLanguage::GetName(BString &name,
+                            const BLanguage *displayLanguage) const {
+  status_t status = B_OK;
 
-status_t
-BLanguage::GetNativeName(BString& name) const
-{
-	UnicodeString string;
-	fICULocale->getDisplayName(*fICULocale, string);
-	string.toTitle(NULL, *fICULocale);
+  BString appLanguage;
+  if (displayLanguage == NULL) {
+    BMessage preferredLanguage;
+    status =
+        BLocaleRoster::Default()->GetPreferredLanguages(&preferredLanguage);
+    if (status == B_OK)
+      status = preferredLanguage.FindString("language", 0, &appLanguage);
+  } else {
+    appLanguage = displayLanguage->Code();
+  }
 
-	name.Truncate(0);
-	BStringByteSink converter(&name);
-	string.toUTF8(converter);
+  if (status == B_OK) {
+    UnicodeString string;
+    fICULocale->getDisplayName(Locale(appLanguage), string);
 
-	return B_OK;
+    name.Truncate(0);
+    BStringByteSink converter(&name);
+    string.toUTF8(converter);
+  }
+
+  return status;
 }
 
-
-status_t
-BLanguage::GetName(BString& name, const BLanguage* displayLanguage) const
-{
-	status_t status = B_OK;
-
-	BString appLanguage;
-	if (displayLanguage == NULL) {
-		BMessage preferredLanguage;
-		status = BLocaleRoster::Default()->GetPreferredLanguages(
-			&preferredLanguage);
-		if (status == B_OK)
-			status = preferredLanguage.FindString("language", 0, &appLanguage);
-	} else {
-		appLanguage = displayLanguage->Code();
-	}
-
-	if (status == B_OK) {
-		UnicodeString string;
-		fICULocale->getDisplayName(Locale(appLanguage), string);
-
-		name.Truncate(0);
-		BStringByteSink converter(&name);
-		string.toUTF8(converter);
-	}
-
-	return status;
+status_t BLanguage::GetIcon(BBitmap *result) const {
+  return BLocaleRoster::Default()->GetFlagIconForCountry(result, Code());
 }
 
+const char *BLanguage::GetString(uint32 id) const {
+  if (id < B_LANGUAGE_STRINGS_BASE ||
+      id >= B_LANGUAGE_STRINGS_BASE + B_NUM_LANGUAGE_STRINGS)
+    return NULL;
 
-status_t
-BLanguage::GetIcon(BBitmap* result) const
-{
-	return BLocaleRoster::Default()->GetFlagIconForCountry(result, Code());
+  return NULL;
+
+  // TODO: fetch string from ICU
+
+  //	return fStrings[id - B_LANGUAGE_STRINGS_BASE];
 }
 
+const char *BLanguage::Code() const { return fICULocale->getLanguage(); }
 
-const char*
-BLanguage::GetString(uint32 id) const
-{
-	if (id < B_LANGUAGE_STRINGS_BASE
-		|| id >= B_LANGUAGE_STRINGS_BASE + B_NUM_LANGUAGE_STRINGS)
-		return NULL;
+const char *BLanguage::CountryCode() const {
+  const char *country = fICULocale->getCountry();
+  if (country == NULL || country[0] == '\0')
+    return NULL;
 
-	return NULL;
-
-	// TODO: fetch string from ICU
-
-//	return fStrings[id - B_LANGUAGE_STRINGS_BASE];
+  return country;
 }
 
+const char *BLanguage::ScriptCode() const {
+  const char *script = fICULocale->getScript();
+  if (script == NULL || script[0] == '\0')
+    return NULL;
 
-const char*
-BLanguage::Code() const
-{
-	return fICULocale->getLanguage();
+  return script;
 }
 
+const char *BLanguage::Variant() const {
+  const char *variant = fICULocale->getVariant();
+  if (variant == NULL || variant[0] == '\0')
+    return NULL;
 
-const char*
-BLanguage::CountryCode() const
-{
-	const char* country = fICULocale->getCountry();
-	if (country == NULL || country[0] == '\0')
-		return NULL;
-
-	return country;
+  return variant;
 }
 
+const char *BLanguage::ID() const { return fICULocale->getName(); }
 
-const char*
-BLanguage::ScriptCode() const
-{
-	const char* script = fICULocale->getScript();
-	if (script == NULL || script[0] == '\0')
-		return NULL;
+bool BLanguage::IsCountrySpecific() const { return CountryCode() != NULL; }
 
-	return script;
-}
+bool BLanguage::IsVariant() const { return Variant() != NULL; }
 
+uint8 BLanguage::Direction() const { return fDirection; }
 
-const char*
-BLanguage::Variant() const
-{
-	const char* variant = fICULocale->getVariant();
-	if (variant == NULL || variant[0] == '\0')
-		return NULL;
+BLanguage &BLanguage::operator=(const BLanguage &source) {
+  if (&source != this) {
+    delete fICULocale;
 
-	return variant;
-}
+    fICULocale = source.fICULocale != NULL ? source.fICULocale->clone() : NULL;
+    fDirection = source.fDirection;
+  }
 
-
-const char*
-BLanguage::ID() const
-{
-	return fICULocale->getName();
-}
-
-
-bool
-BLanguage::IsCountrySpecific() const
-{
-	return CountryCode() != NULL;
-}
-
-
-bool
-BLanguage::IsVariant() const
-{
-	return Variant() != NULL;
-}
-
-
-uint8
-BLanguage::Direction() const
-{
-	return fDirection;
-}
-
-
-BLanguage&
-BLanguage::operator=(const BLanguage& source)
-{
-	if (&source != this) {
-		delete fICULocale;
-
-		fICULocale = source.fICULocale != NULL
-			? source.fICULocale->clone()
-			: NULL;
-		fDirection = source.fDirection;
-	}
-
-	return *this;
+  return *this;
 }
